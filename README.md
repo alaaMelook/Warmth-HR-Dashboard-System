@@ -84,12 +84,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Authors
 
-- **Alaa Hassn Melook** - *Initial Design* - [@yourusername](https://github.com/alaaMelook)
-- **Nadine Rasmy** - *Initial Design* - [@yourusername](https://github.com/nadine-rasmy23)
-- **Yumna Medhat Anter** - *Initial Design* - [@yourusername](https://github.com/YUMNAANTER0099)
+- **Alaa Hassn Melook** - *Initial Design* - [@alaaMelook](https://github.com/alaaMelook)
+- **Nadine Rasmy** - *Initial Design* - [@nadine-rasmy23](https://github.com/nadine-rasmy23)
+- **Yumna Medhat Anter** - *Initial Design* - [@YUMNAANTER0099](https://github.com/YUMNAANTER0099)
 - **Manar Ahmed** - *Initial Design* - [@yourusername](https://github.com/)
-- **Mahmoud zaghloula** - *Initial Design* - [@yourusername](https://github.com/zaghloula)
-- **Abdelrahman Elmoghazy** - *Initial Design* - [@yourusername](https://github.com/abdelrahman-elmoghazy)
+- **Mahmoud zaghloula** - *Initial Design* - [@zaghloula](https://github.com/zaghloula)
+- **Abdelrahman Elmoghazy** - *Initial Design* - [@abdelrahman-elmoghazy](https://github.com/abdelrahman-elmoghazy)
 
 
 ---
