@@ -1,4 +1,4 @@
-# 🎨 Warmth HR Dashboard UI
+# 🎨 Warmth HR Dashboard System
 
 > A modern, elegant, and user-friendly HR Management System interface designed with warmth and professionalism in mind.
 
