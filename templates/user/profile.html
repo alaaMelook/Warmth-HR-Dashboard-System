@@ -1,0 +1,116 @@
+{% extends "user/base.html" %}
+{% set active = "profile" %}
+
+{% block content %}
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;">
+    <div>
+      <h1 class="page-title">My Profile</h1>
+      <p class="page-sub">Manage your personal information</p>
+    </div>
+    <button class="btn-sm primary" style="padding:10px 14px;border-radius:12px;">✏️ Edit Profile</button>
+  </div>
+
+  <div class="row-2" style="grid-template-columns: 1.1fr 1.9fr;">
+    <div>
+      <div class="card pad" style="text-align:center;">
+        <div class="avatar" style="width:96px;height:96px;margin:10px auto 12px;font-size:26px;">
+          {{ (d.user.first_name[:1] ~ d.user.last_name[:1]).upper() }}
+        </div>
+
+        <div style="font-weight:900;color:#6f4e3f;font-size:18px;">{{ d.user.full_name }}</div>
+        <div class="page-sub" style="margin:6px 0 12px;">
+          {{ d.user.position }}
+        </div>
+
+        <div class="card pad" style="box-shadow:none;background:#faf3ec;border:1px solid var(--line);margin-top:10px;">
+          <div style="font-size:12px;color:#8a7f76;">Employee ID</div>
+          <div style="font-weight:900;color:#6f4e3f;margin-top:4px;">{{ d.user.employee_id }}</div>
+        </div>
+      </div>
+
+      <div class="card pad" style="margin-top:16px;">
+        <div style="font-weight:900;color:#8e6e5e;margin-bottom:14px;font-size:16px;">Quick Stats</div>
+
+        <div style="display:flex;justify-content:space-between;margin:12px 0;padding:8px 0;">
+          <div class="time">Tenure</div>
+          <div style="font-weight:900;color:#6f4e3f;">{{ d.user.tenure_years }} years</div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;margin:12px 0;padding:8px 0;border-top:1px solid var(--line);">
+          <div class="time">Attendance</div>
+          <div style="font-weight:900;color:#2f8c52;">{{ d.user.attendance_rate }}%</div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;margin:12px 0;padding:8px 0;border-top:1px solid var(--line);">
+          <div class="time">Leaves Taken</div>
+          <div style="font-weight:900;color:#6f4e3f;">{{ d.user.leaves_taken }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card pad">
+        <div style="font-weight:900;color:#8e6e5e;margin-bottom:14px;font-size:16px;">Personal Information</div>
+
+        <div style="display:grid;grid-template-columns:1fr;gap:12px;">
+          <div>
+            <div class="time" style="margin-bottom:6px;">Full Name</div>
+            <input class="input" value="{{ d.user.full_name }}" disabled />
+          </div>
+
+          <div>
+            <div class="time" style="margin-bottom:6px;">Email Address</div>
+            <input class="input" value="{{ d.user.email }}" disabled />
+          </div>
+
+          <div>
+            <div class="time" style="margin-bottom:6px;">Phone Number</div>
+            <input class="input" value="{{ d.user.phone }}" disabled />
+          </div>
+
+          <div>
+            <div class="time" style="margin-bottom:6px;">Address</div>
+            <input class="input" value="{{ d.user.address }}" disabled />
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div>
+              <div class="time" style="margin-bottom:6px;">Department</div>
+              <input class="input" value="{{ d.user.department }}" disabled />
+            </div>
+
+            <div>
+              <div class="time" style="margin-bottom:6px;">Position</div>
+              <input class="input" value="{{ d.user.position }}" disabled />
+            </div>
+          </div>
+
+          <div>
+            <div class="time" style="margin-bottom:6px;">Join Date</div>
+            <input class="input" value="{{ d.user.join_date }}" disabled />
+          </div>
+        </div>
+      </div>
+
+      <div class="card pad" style="margin-top:16px;">
+        <div style="font-weight:900;color:#8e6e5e;margin-bottom:14px;font-size:16px;">Emergency Contact</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <div class="time" style="margin-bottom:6px;">Contact Name</div>
+            <input class="input" value="Jane Doe" disabled />
+          </div>
+
+          <div>
+            <div class="time" style="margin-bottom:6px;">Relationship</div>
+            <input class="input" value="Spouse" disabled />
+          </div>
+
+          <div style="grid-column:1/-1;">
+            <div class="time" style="margin-bottom:6px;">Phone Number</div>
+            <input class="input" value="+1 (555) 123-0000" disabled />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
