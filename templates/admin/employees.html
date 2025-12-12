@@ -4,571 +4,267 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employees - Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #F5F5F5;
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 250px;
-            height: 100vh;
-            background: #FFFFFF;
-            padding: 20px;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-            z-index: 1000;
-            border-right: 1px solid #E5E7EB;
-        }
-
-        .logo {
-            text-align: center;
-            padding: 20px 0;
-            color: #957C62;
-            border-bottom: 1px solid #E5E7EB;
-            margin-bottom: 30px;
-        }
-
-        .logo h2 {
-            font-size: 22px;
-            margin-top: 10px;
-        }
-
-        .logo-icon {
-            width: 50px;
-            height: 50px;
-            background: #957C62;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-            font-size: 24px;
-            color: white;
-        }
-
-        .nav-menu {
-            list-style: none;
-        }
-
-        .nav-item {
-            margin-bottom: 8px;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
-            color: #6B7280;
-            text-decoration: none;
-            border-radius: 10px;
-            transition: all 0.3s;
-            font-size: 15px;
-        }
-
-        .nav-link:hover {
-            background: #F3F4F6;
-            color: #957C62;
-        }
-
-        .nav-link.active {
-            background: #B4957A;
-            color: white;
-        }
-
-        .user-section {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            padding: 15px;
-            background: #F9FAFB;
-            border-radius: 10px;
-            border: 1px solid #E5E7EB;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: #957C62;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
-
-        .logout-btn {
-            width: 100%;
-            padding: 10px;
-            background: #E5E7EB;
-            border: none;
-            border-radius: 8px;
-            color: #374151;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .logout-btn:hover {
-            background: #D1D5DB;
-        }
-
-        .main-content {
-            margin-left: 250px;
-            padding: 30px;
-        }
-
-        .header {
-            background: white;
-            padding: 25px 30px;
-            border-radius: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            color: #333;
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-
-        .header p {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .content-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            overflow: hidden;
-        }
-
-        .card-header {
-            padding: 20px 30px;
-            border-bottom: 1px solid #E5E7EB;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .filter-container {
-            position: relative;
-        }
-
+        /* Dropdown specific styles */
+        .filter-container { position: relative; }
+        
         .filter-btn {
-            padding: 10px 20px;
-            background: white;
-            border: 2px solid #E2B59A;
-            border-radius: 10px;
+            padding: 10px 16px;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 12px;
             font-size: 14px;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
-            color: #7D5A50;
+            color: var(--text);
             font-weight: 500;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
-
+        
         .filter-btn:hover {
-            background: #FFE1AF20;
-            border-color: #957C62;
+            background: #faf3ec;
+            border-color: var(--brown1);
         }
-
+        
         .dropdown-menu {
             position: absolute;
             top: 100%;
             left: 0;
             margin-top: 8px;
             background: white;
-            border: 1px solid #E5E7EB;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
             min-width: 200px;
             display: none;
             z-index: 100;
             overflow: hidden;
         }
-
-        .dropdown-menu.show {
-            display: block;
-        }
-
+        
+        .dropdown-menu.show { display: block; }
+        
         .dropdown-item {
-            padding: 12px 20px;
+            padding: 10px 16px;
             cursor: pointer;
             transition: all 0.2s;
-            color: #374151;
+            color: #6e625a;
             font-size: 14px;
         }
-
+        
         .dropdown-item:hover {
-            background: #F3F4F6;
-            color: #957C62;
+            background: #faf3ec;
+            color: var(--brown1);
         }
-
+        
         .dropdown-item.active {
-            background: #B4957A;
+            background: var(--brown1);
             color: white;
         }
-
-        .btn-add {
-            padding: 12px 24px;
-            background: linear-gradient(135deg, #957C62, #B77466);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-        }
-
-        .btn-add:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(149, 124, 98, 0.4);
-        }
-
-        .employees-table {
+        
+        /* Table styles */
+        .table-wrapper { overflow-x: auto; }
+        
+        .data-table {
             width: 100%;
             border-collapse: collapse;
         }
-
-        .employees-table thead {
-            background: #F9FAFB;
+        
+        .data-table thead {
+            background: #faf3ec;
         }
-
-        .employees-table th {
-            padding: 16px 24px;
+        
+        .data-table th {
+            padding: 14px 20px;
             text-align: left;
-            font-size: 13px;
-            color: #6B7280;
-            font-weight: 600;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-
-        .employees-table td {
-            padding: 16px 24px;
-            border-top: 1px solid #F3F4F6;
-            color: #374151;
+        
+        .data-table td {
+            padding: 14px 20px;
+            border-top: 1px solid var(--line);
+            color: #6e625a;
             font-size: 14px;
         }
-
-        .employees-table tbody tr {
+        
+        .data-table tbody tr {
             transition: background 0.2s;
         }
-
-        .employees-table tbody tr:hover {
-            background: #F9FAFB;
+        
+        .data-table tbody tr:hover {
+            background: #faf9f7;
         }
-
-        .employee-info {
+        
+        .employee-cell {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
-
-        .employee-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-
-        .avatar-1 { background: #C4A084; }
-        .avatar-2 { background: #B89784; }
-        .avatar-3 { background: #D4A574; }
-        .avatar-4 { background: #C19174; }
-        .avatar-5 { background: #BA8B74; }
-
-        .employee-details {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
+        
         .employee-name {
             font-weight: 600;
-            color: #111827;
+            color: #6f4e3f;
             font-size: 14px;
         }
-
+        
         .employee-email {
-            font-size: 13px;
-            color: #6B7280;
-        }
-
-        .badge {
-            padding: 5px 12px;
-            border-radius: 20px;
             font-size: 12px;
-            font-weight: 500;
-            display: inline-block;
+            color: var(--muted);
         }
-
-        .badge-engineering,
-        .badge-product,
-        .badge-design,
-        .badge-hr,
-        .badge-human-resources,
-        .badge-marketing,
-        .badge-sales {
-            background: #FEF3E2;
-            color: #B4957A;
-        }
-
-        .badge-active {
-            background: #D1FAE5;
-            color: #065F46;
-        }
-
-        .badge-inactive {
-            background: #FEE2E2;
-            color: #991B1B;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-icon {
-            width: 36px;
-            height: 36px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            background: transparent;
-            color: #6B7280;
-            font-size: 16px;
-        }
-
-        .btn-icon:hover {
-            background: #F3F4F6;
-        }
-
-        .btn-delete:hover {
-            background: #FEE2E2;
-            color: #DC2626;
-        }
-
-        .btn-edit:hover {
-            background: #FEF3E2;
-            color: #B4957A;
-        }
-
+        
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            color: #9CA3AF;
-        }
-
-        .search-bar {
-            margin-bottom: 20px;
-            padding: 0 30px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #E2B59A;
-            border-radius: 10px;
-            font-size: 14px;
-            background: #FFE1AF20;
-            transition: all 0.3s;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #957C62;
-            background: white;
-        }
-
-        .search-input::placeholder {
-            color: #9CA3AF;
+            color: var(--muted);
         }
     </style>
 </head>
 <body>
-    <aside class="sidebar">
-        <div class="logo">
-            <div class="logo-icon">👥</div>
-            <h2>HR System</h2>
-        </div>
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <span>👥 HR System</span>
+            </div>
 
-        <ul class="nav-menu">
-            <li class="nav-item">
-                <a href="{{ url_for('admin_dashboard') }}" class="nav-link">
-                    📊 Dashboard
+            <nav class="nav">
+                <a href="{{ url_for('admin_dashboard') }}">
+                    <span class="icon">📊</span>
+                    Dashboard
                 </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ url_for('admin_employees') }}" class="nav-link active">
-                    👥 Employees
+                <a href="{{ url_for('admin_employees') }}" class="active">
+                    <span class="icon">👥</span>
+                    Employees
                 </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ url_for('admin_attendance') }}" class="nav-link">
-                    📅 Attendance
+                <a href="{{ url_for('admin_attendance') }}">
+                    <span class="icon">📅</span>
+                    Attendance
                 </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ url_for('admin_leaves') }}" class="nav-link">
-                    📄 Leaves
+                <a href="{{ url_for('admin_leaves') }}">
+                    <span class="icon">📄</span>
+                    Leaves
                 </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ url_for('admin_payroll') }}" class="nav-link">
-                    💰 Payroll
+                <a href="{{ url_for('admin_payroll') }}">
+                    <span class="icon">💰</span>
+                    Payroll
                 </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    ⚙️ Settings
-                </a>
-            </li>
-        </ul>
+            </nav>
 
-        <div class="user-section">
-            <div class="user-info">
-                <div class="user-avatar">AD</div>
-                <div>
-                    <div style="font-weight: 600; color: #111827;">{{ session.user_name if session.user_name else 'Admin' }}</div>
-                    <div style="font-size: 12px; color: #6B7280;">Administrator</div>
+            <div class="sidebar-footer">
+                <div class="avatar">AD</div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-weight:600; font-size:14px; color:#6e625a;">{{ session.user_name if session.user_name else 'Admin' }}</div>
+                    <div style="font-size:11px; color:#9b8f86;">Administrator</div>
                 </div>
             </div>
-            <form action="{{ url_for('logout') }}" method="GET">
-                <button type="submit" class="logout-btn">Logout</button>
-            </form>
-        </div>
-    </aside>
+        </aside>
 
-    <main class="main-content">
-        <div class="header">
-            <h1>Employee Management</h1>
-            <p>Manage your organization's employees and their information.</p>
-        </div>
-
-        <div class="content-card">
-            <div class="search-bar">
-                <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search employees, departments, or records...">
+        <!-- Main Content -->
+        <main class="main">
+            <div class="header-hero">
+                <h1>Employee Management</h1>
+                <p>Manage your organization's employees and their information.</p>
             </div>
 
-            <div class="card-header">
-                <div class="filter-container">
-                    <button class="filter-btn" id="departmentFilter">
-                        <span>🔽</span>
-                        <span id="filterText">All Departments</span>
-                    </button>
-                    <div class="dropdown-menu" id="dropdownMenu">
-                        <div class="dropdown-item active" data-value="all">All Departments</div>
-                        <div class="dropdown-item" data-value="engineering">Engineering</div>
-                        <div class="dropdown-item" data-value="product">Product</div>
-                        <div class="dropdown-item" data-value="design">Design</div>
-                        <div class="dropdown-item" data-value="human-resources">Human Resources</div>
-                        <div class="dropdown-item" data-value="marketing">Marketing</div>
-                        <div class="dropdown-item" data-value="sales">Sales</div>
+            <div class="card">
+                <!-- Search Bar -->
+                <div style="padding:18px 20px; border-bottom:1px solid var(--line);">
+                    <input type="text" id="searchInput" class="input" style="margin:0;" placeholder="🔍 Search employees, departments, or records...">
+                </div>
+
+                <!-- Filter & Add Header -->
+                <div style="padding:18px 20px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;">
+                    <div class="filter-container">
+                        <button class="filter-btn" id="departmentFilter">
+                            <span>📁</span>
+                            <span id="filterText">All Departments</span>
+                        </button>
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <div class="dropdown-item active" data-value="all">All Departments</div>
+                            <div class="dropdown-item" data-value="engineering">Engineering</div>
+                            <div class="dropdown-item" data-value="product">Product</div>
+                            <div class="dropdown-item" data-value="design">Design</div>
+                            <div class="dropdown-item" data-value="human-resources">Human Resources</div>
+                            <div class="dropdown-item" data-value="marketing">Marketing</div>
+                            <div class="dropdown-item" data-value="sales">Sales</div>
+                        </div>
                     </div>
+                    <a href="{{ url_for('admin_add_employee') }}" class="btn-sm primary">+ Add Employee</a>
                 </div>
-                <a href="{{ url_for('admin_add_employee') }}" class="btn-add">
-                    <span>+</span>
-                    <span>Add Employee</span>
-                </a>
-            </div>
 
-            <table class="employees-table" id="employeesTable">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Role</th>
-                        <th>Department</th>
-                        <th>Contact</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if employees %}
-                        {% for emp in employees %}
-                        <tr data-employee-id="{{ emp[0] }}" data-department="{{ emp[6]|lower|replace(' ', '-') if emp[6] else '' }}">
-                            <td>
-                                <div class="employee-info">
-                                    <div class="employee-avatar avatar-{{ loop.index % 5 + 1 }}">
-                                        {{ emp[2][0]|upper }}{{ emp[3][0]|upper }}
-                                    </div>
-                                    <div class="employee-details">
-                                        <span class="employee-name">{{ emp[2] }} {{ emp[3] }}</span>
-                                        <span class="employee-email">{{ emp[4] }}</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>{{ emp[8] if emp[8] else 'Not Assigned' }}</td>
-                            <td>
-                                <span class="badge badge-{{ (emp[6]|lower)|replace(' ', '-') if emp[6] else 'engineering' }}">
-                                    {{ emp[6] if emp[6] else 'Not Assigned' }}
-                                </span>
-                            </td>
-                            <td>{{ emp[5] if emp[5] else 'N/A' }}</td>
-                            <td>
-                                <span class="badge badge-{{ emp[10] if emp[10] else 'active' }}">
-                                    {{ emp[10]|capitalize if emp[10] else 'Active' }}
-                                </span>
-                            </td>
-                            <td>
-                                <div class="action-buttons">
-                                    <a href="{{ url_for('admin_edit_employee', employee_id=emp[0]) }}" class="btn-icon btn-edit" title="Edit">✏️</a>
-                                    <button class="btn-icon btn-delete" onclick="deleteEmployee('{{ emp[0] }}, {{ emp[2] }} {{ emp[3] }}')" title="Delete">🗑️</button>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    {% else %}
-                        <tr>
-                            <td colspan="6" class="empty-state">
-                                <div style="font-size: 48px; margin-bottom: 16px;">📋</div>
-                                <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">No employees found</div>
-                                <div style="font-size: 14px;">Add your first employee to get started</div>
-                            </td>
-                        </tr>
-                    {% endif %}
-                </tbody>
-            </table>
-        </div>
-    </main>
+                <!-- Employees Table -->
+                <div class="table-wrapper">
+                    <table class="data-table" id="employeesTable">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Role</th>
+                                <th>Department</th>
+                                <th>Contact</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if employees %}
+                                {% for emp in employees %}
+                                <tr data-employee-id="{{ emp[0] }}" data-department="{{ emp[6]|lower|replace(' ', '-') if emp[6] else '' }}">
+                                    <td>
+                                        <div class="employee-cell">
+                                            <div class="avatar" style="width:38px; height:38px;">
+                                                {{ emp[2][0]|upper }}{{ emp[3][0]|upper }}
+                                            </div>
+                                            <div>
+                                                <div class="employee-name">{{ emp[2] }} {{ emp[3] }}</div>
+                                                <div class="employee-email">{{ emp[4] }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ emp[8] if emp[8] else 'Not Assigned' }}</td>
+                                    <td>
+                                        <span class="pill">{{ emp[6] if emp[6] else 'Not Assigned' }}</span>
+                                    </td>
+                                    <td>{{ emp[5] if emp[5] else 'N/A' }}</td>
+                                    <td>
+                                        {% if emp[10] == 'active' %}
+                                            <span class="pill" style="background:#dff8ea; border-color:#c9efd9; color:#2f8c52;">
+                                                {{ emp[10]|capitalize }}
+                                            </span>
+                                        {% else %}
+                                            <span class="pill" style="background:#fde2e2; border-color:#f7c9c9; color:#c54949;">
+                                                {{ emp[10]|capitalize if emp[10] else 'Inactive' }}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="actions">
+                                            <a href="{{ url_for('admin_edit_employee', employee_id=emp[0]) }}" class="btn-sm">✏️ Edit</a>
+                                            <button class="btn-sm" onclick="deleteEmployee('{{ emp[0] }}', '{{ emp[2] }} {{ emp[3] }}')" style="background:#fde2e2; border-color:#f7c9c9; color:#c54949;">🗑️ Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="6" class="empty-state">
+                                        <div style="font-size:48px; margin-bottom:12px;">📋</div>
+                                        <div style="font-size:16px; font-weight:600; margin-bottom:6px;">No employees found</div>
+                                        <div style="font-size:14px;">Add your first employee to get started</div>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
 
     <script>
         // Dropdown functionality
@@ -582,30 +278,22 @@
             dropdownMenu.classList.toggle('show');
         });
 
-        // Close dropdown when clicking outside
         document.addEventListener('click', function(e) {
             if (!filterBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
                 dropdownMenu.classList.remove('show');
             }
         });
 
-        // Handle dropdown item click
         dropdownItems.forEach(item => {
             item.addEventListener('click', function() {
                 const value = this.getAttribute('data-value');
                 const text = this.textContent;
                 
-                // Update active state
                 dropdownItems.forEach(i => i.classList.remove('active'));
                 this.classList.add('active');
                 
-                // Update button text
                 filterText.textContent = text;
-                
-                // Filter table
                 filterByDepartment(value);
-                
-                // Close dropdown
                 dropdownMenu.classList.remove('show');
             });
         });
@@ -614,76 +302,61 @@
             const rows = document.querySelectorAll('#employeesTable tbody tr');
             
             rows.forEach(row => {
-                if (row.querySelector('.empty-state')) {
-                    return;
-                }
+                if (row.querySelector('.empty-state')) return;
                 
                 if (department === 'all') {
                     row.style.display = '';
                 } else {
-                    const rowDepartment = row.getAttribute('data-department');
-                    row.style.display = rowDepartment === department ? '' : 'none';
+                    const rowDept = row.getAttribute('data-department');
+                    row.style.display = rowDept === department ? '' : 'none';
                 }
             });
         }
 
         // Search functionality
-        const searchInput = document.getElementById('searchInput');
-        const employeesTable = document.getElementById('employeesTable');
-
-        if (searchInput && employeesTable) {
-            searchInput.addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase().trim();
-                const rows = employeesTable.querySelectorAll('tbody tr');
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            const rows = document.querySelectorAll('#employeesTable tbody tr');
+            
+            rows.forEach(row => {
+                if (row.querySelector('.empty-state')) return;
                 
-                rows.forEach(row => {
-                    if (row.querySelector('.empty-state')) {
-                        return;
-                    }
-                    
-                    const name = row.querySelector('.employee-name')?.textContent.toLowerCase() || '';
-                    const email = row.querySelector('.employee-email')?.textContent.toLowerCase() || '';
-                    const cells = row.querySelectorAll('td');
-                    const role = cells[1]?.textContent.toLowerCase() || '';
-                    const department = cells[2]?.textContent.toLowerCase() || '';
-                    const contact = cells[3]?.textContent.toLowerCase() || '';
-                    
-                    const matchFound = name.includes(searchTerm) || 
-                                      email.includes(searchTerm) || 
-                                      role.includes(searchTerm) || 
-                                      department.includes(searchTerm) ||
-                                      contact.includes(searchTerm);
-                    
-                    row.style.display = matchFound ? '' : 'none';
-                });
+                const name = row.querySelector('.employee-name')?.textContent.toLowerCase() || '';
+                const email = row.querySelector('.employee-email')?.textContent.toLowerCase() || '';
+                const cells = row.querySelectorAll('td');
+                const role = cells[1]?.textContent.toLowerCase() || '';
+                const department = cells[2]?.textContent.toLowerCase() || '';
+                const contact = cells[3]?.textContent.toLowerCase() || '';
+                
+                const matchFound = name.includes(searchTerm) || 
+                                  email.includes(searchTerm) || 
+                                  role.includes(searchTerm) || 
+                                  department.includes(searchTerm) ||
+                                  contact.includes(searchTerm);
+                
+                row.style.display = matchFound ? '' : 'none';
             });
-        }
+        });
 
-        // Delete employee function
-        function deleteEmployee(employeeId, employeeName) {
-            if (confirm(`Are you sure you want to delete ${employeeName}?`)) {
-                fetch(`/admin/employees/delete/${employeeId}`, {
+        // Delete employee
+        function deleteEmployee(id, name) {
+            if(confirm(`Are you sure you want to delete ${name}?`)) {
+                fetch(`/admin/employees/delete/${id}`, {
                     method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: {'Content-Type': 'application/json'}
                 })
-                .then(response => response.json())
+                .then(res => res.json())
                 .then(data => {
-                    if (data.success) {
-                        const row = document.querySelector(`tr[data-employee-id="${employeeId}"]`);
-                        if (row) {
-                            row.remove();
-                        }
+                    if(data.success) {
                         alert('Employee deleted successfully');
                         location.reload();
                     } else {
                         alert('Failed to delete employee');
                     }
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while deleting employee');
+                .catch(err => {
+                    console.error('Error:', err);
+                    alert('An error occurred');
                 });
             }
         }

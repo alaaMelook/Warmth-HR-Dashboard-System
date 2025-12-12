@@ -1,27 +1,132 @@
-{% extends "base.html" %}
-{% block content %}
-<h2 style="margin-bottom:12px;">Register</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - HR System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
+    <style>
+        .auth-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+            padding: 20px;
+        }
+        
+        .auth-card {
+            width: 100%;
+            max-width: 420px;
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .auth-logo {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--brown1), var(--brown2));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 32px;
+            color: white;
+        }
+        
+        .auth-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text);
+            margin: 0 0 6px;
+        }
+        
+        .auth-subtitle {
+            font-size: 14px;
+            color: var(--muted);
+        }
+        
+        .auth-form-group {
+            margin-bottom: 16px;
+        }
+        
+        .auth-form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #6e625a;
+            margin-bottom: 6px;
+        }
+        
+        .auth-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--muted);
+        }
+        
+        .auth-link a {
+            color: var(--brown1);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        
+        .auth-link a:hover {
+            color: var(--brown2);
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-logo">👥</div>
+                <h1 class="auth-title">Create Account</h1>
+                <p class="auth-subtitle">Join our HR management system</p>
+            </div>
 
-<form method="POST" action="{{ url_for('register') }}">
-  <div class="form-group">
-    <label for="name" class="form-label">Full name</label>
-    <input type="text" id="name" name="name" class="form-control custom" placeholder="Your full name" required>
-  </div>
+            <div class="card pad">
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, msg in messages %}
+                            <div class="alert-{{ category }}" style="margin-bottom:16px;">
+                                {{ msg }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
 
-  <div class="form-group">
-    <label for="email" class="form-label">Email address</label>
-    <input type="email" id="email" name="email" class="form-control custom" placeholder="you@example.com" required>
-  </div>
+                <form method="POST" action="{{ url_for('register') }}">
+                    <div class="auth-form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" class="input" placeholder="Your full name" required autofocus>
+                    </div>
 
-  <div class="form-group">
-    <label for="password" class="form-label">Password</label>
-    <input type="password" id="password" name="password" class="form-control custom" placeholder="Choose a password" required>
-  </div>
+                    <div class="auth-form-group">
+                        <label for="email">Email address</label>
+                        <input type="email" id="email" name="email" class="input" placeholder="you@example.com" required>
+                    </div>
 
-  <button type="submit" class="btn btn-primary custom">Register</button>
-</form>
+                    <div class="auth-form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" class="input" placeholder="Choose a strong password" required>
+                    </div>
 
-<div class="register-link">
-  Already have an account? <a href="{{ url_for('login') }}">Login</a>
-</div>
-{% endblock %}
+                    <button type="submit" class="btn" style="margin-top: 8px;">
+                        ✓ Create Account
+                    </button>
+                </form>
+
+                <div class="auth-link">
+                    Already have an account? <a href="{{ url_for('login') }}">Sign in</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
