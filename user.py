@@ -79,6 +79,10 @@ def login():
     else:
         return jsonify({"error": "Invalid credentials"}), 401
 
+@app.route("/logout")
+def logout():
+    return redirect(url_for("login_page"))
+
 
 # --------------------
 # Add Employee (Only Admin)

@@ -50,6 +50,12 @@
           <div style="font-size:12px;color:#8a7f76;">ID: {{ d.user.employee_id }}</div>
         </div>
       </div>
+      
+      <!-- LOGOUT BUTTON -->
+     <a href="{{ url_for('logout') }}" class="logout-btn">
+      <span class="icon">🚪</span>
+      Logout
+     </a>
     </aside>
 
     <main class="main">

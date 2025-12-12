@@ -482,3 +482,22 @@ textarea{ min-height:92px; resize:none; }
 select, textarea{
   font-family: inherit;
 }
+
+.logout-btn{
+  margin-top:12px;
+  padding:10px 12px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:#c54949;
+  background:#fff3f3;
+  border:1px solid #f2bcbc;
+  font-weight:700;
+  transition:all .2s ease;
+}
+
+.logout-btn:hover{
+  background:#ffe6e6;
+  transform: translateX(2px);
+}
