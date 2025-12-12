@@ -1,9 +1,12 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect, url_for
 from flask_mysqldb import MySQL
 from flask_bcrypt import Bcrypt
-from flask_jwt_extended import (JWTManager, create_access_token,jwt_required, get_jwt_identity,verify_jwt_in_request)
+from flask_jwt_extended import (
+    JWTManager, create_access_token,
+    jwt_required, get_jwt_identity,
+    verify_jwt_in_request
+)
 from datetime import date, datetime, timedelta
-from flask import redirect, url_for
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -23,16 +26,20 @@ mysql = MySQL(app)
 app.config['JWT_SECRET_KEY'] = 'super-secret'
 jwt = JWTManager(app)
 
+
 # --------------------
 # Register User (Signup)
 # --------------------
 @app.route('/register', methods=['POST'])
 def register():
-    data = request.json
-    first_name = data['first_name']
-    last_name = data['last_name']
-    email = data['email']
-    password = data['password']
+    data = request.json or {}
+    first_name = data.get('first_name')
+    last_name = data.get('last_name')
+    email = data.get('email')
+    password = data.get('password')
+
+    if not first_name or not last_name or not email or not password:
+        return jsonify({"error": "Missing required fields"}), 400
 
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
@@ -45,16 +52,21 @@ def register():
         mysql.connection.commit()
         return jsonify({"message": "User registered successfully!"}), 201
     except Exception as e:
+        mysql.connection.rollback()
         return jsonify({"error": str(e)}), 400
+
 
 # --------------------
 # Login
 # --------------------
 @app.route('/login', methods=['POST'])
 def login():
-    data = request.json
-    email = data['email']
-    password = data['password']
+    data = request.json or {}
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({"error": "Missing email or password"}), 400
 
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT user_id, password, role_id FROM users WHERE email=%s", (email,))
@@ -66,6 +78,7 @@ def login():
         return jsonify({"token": access_token, "role": role}), 200
     else:
         return jsonify({"error": "Invalid credentials"}), 401
+
 
 # --------------------
 # Add Employee (Only Admin)
@@ -85,10 +98,13 @@ def add_employee():
     if role != 2:
         return jsonify({"error": "Access denied"}), 403
 
-    data = request.json
-    user_id = data['user_id']
+    data = request.json or {}
+    user_id = data.get('user_id')
     department_id = data.get('department_id')
     job_title_id = data.get('job_title_id')
+
+    if not user_id:
+        return jsonify({"error": "Missing user_id"}), 400
 
     cursor.execute(
         "INSERT INTO employees (user_id, department_id, job_title_id, hire_date) VALUES (%s,%s,%s,CURDATE())",
@@ -97,17 +113,21 @@ def add_employee():
     mysql.connection.commit()
     return jsonify({"message": "Employee added successfully"}), 201
 
+
 # --------------------
 # Attendance
 # --------------------
 @app.route('/attendance', methods=['POST'])
 @jwt_required()
 def attendance():
-    data = request.json
-    employee_id = data['employee_id']
+    data = request.json or {}
+    employee_id = data.get('employee_id')
     check_in = data.get('check_in')
     check_out = data.get('check_out')
     status = data.get('status', 'present')
+
+    if not employee_id:
+        return jsonify({"error": "Missing employee_id"}), 400
 
     cursor = mysql.connection.cursor()
     cursor.execute(
@@ -118,17 +138,21 @@ def attendance():
     mysql.connection.commit()
     return jsonify({"message": "Attendance recorded"}), 201
 
+
 # --------------------
 # Request Leave
 # --------------------
 @app.route('/leave', methods=['POST'])
 @jwt_required()
 def request_leave():
-    data = request.json
-    employee_id = data['employee_id']
-    leave_type = data['leave_type']
-    start_date = data['start_date']
-    end_date = data['end_date']
+    data = request.json or {}
+    employee_id = data.get('employee_id')
+    leave_type = data.get('leave_type')
+    start_date = data.get('start_date')
+    end_date = data.get('end_date')
+
+    if not employee_id or not leave_type or not start_date or not end_date:
+        return jsonify({"error": "Missing required fields"}), 400
 
     cursor = mysql.connection.cursor()
     cursor.execute(
@@ -140,9 +164,8 @@ def request_leave():
 
 
 # ==============================
-# USER PORTAL PAGES (DB-READY)
+# USER PORTAL HELPERS
 # ==============================
-
 def _fmt_time(t):
     if not t:
         return None
@@ -168,6 +191,7 @@ def _currency(v):
         return str(v)
 
 def _get_user_id_from_request(default=1):
+    # 1) JWT (optional)
     try:
         verify_jwt_in_request(optional=True)
         uid = get_jwt_identity()
@@ -176,6 +200,7 @@ def _get_user_id_from_request(default=1):
     except Exception:
         pass
 
+    # 2) query param
     q = request.args.get("user_id")
     if q and str(q).isdigit():
         return int(q)
@@ -190,6 +215,10 @@ def _fetchall(cursor, q, params=()):
     cursor.execute(q, params)
     return cursor.fetchall()
 
+
+# ==============================
+# USER PORTAL DATA (DB-READY)
+# ==============================
 def get_portal_data():
     uid = _get_user_id_from_request(default=1)
     today = date.today()
@@ -198,8 +227,11 @@ def get_portal_data():
 
     cursor = mysql.connection.cursor()
 
+    # ✅ هنا عدلنا select يجيب address + emergency_*
     u = _fetchone(cursor, """
-        SELECT u.user_id, u.first_name, u.last_name, u.email, u.phone, u.created_at,
+        SELECT u.user_id, u.first_name, u.last_name, u.email, u.phone,
+               u.address, u.emergency_name, u.emergency_relationship, u.emergency_phone,
+               u.created_at,
                e.employee_id, e.hire_date,
                dep.department_name,
                jt.title_name
@@ -223,6 +255,9 @@ def get_portal_data():
             "email": "",
             "phone": "",
             "address": "—",
+            "emergency_name": None,
+            "emergency_relationship": None,
+            "emergency_phone": None,
             "join_date": "",
             "tenure_years": "0.0",
             "attendance_rate": 0,
@@ -230,7 +265,15 @@ def get_portal_data():
         }
         employee_id = None
     else:
-        user_id, first, last, email, phone, created_at, employee_id, hire_date, dep_name, title_name = u
+        (
+            user_id, first, last, email, phone,
+            address, em_name, em_rel, em_phone,
+            created_at,
+            employee_id, hire_date,
+            dep_name,
+            title_name
+        ) = u
+
         full_name = f"{first} {last}".strip()
         join_date = hire_date.strftime("%m/%d/%Y") if hire_date else ""
         tenure_years = "0.0"
@@ -247,11 +290,15 @@ def get_portal_data():
             "department": dep_name or "N/A",
             "email": email,
             "phone": phone or "",
-            "address": "—",
+            "address": address or "—",
+            "emergency_name": em_name,
+            "emergency_relationship": em_rel,
+            "emergency_phone": em_phone,
             "join_date": join_date,
             "tenure_years": tenure_years,
         }
 
+    # كروت الهوم (placeholder – زي ما كنت عامل)
     home_cards = {
         "today_status": "No Record",
         "check_in": "—",
@@ -261,9 +308,6 @@ def get_portal_data():
         "month_days": "0/0",
         "attendance_rate": 0,
     }
-
-    # باقي الداتا زي ما هي عندك (أنا سايبها زي ما كتبتها)
-    # ... لو تحب أرجع أكملك نفس الكود بتاعك بالكامل هنا بدون تغيير ...
 
     # علشان الصفحات تشتغل حتى لو مفيش بيانات كفاية:
     d["home_cards"] = home_cards
@@ -290,9 +334,74 @@ def get_portal_data():
     return d
 
 
-# ---------- Portal Routes ----------
+# ==============================
+# UPDATE PROFILE API (for profile.html fetch)
+# ==============================
+@app.route("/update_profile", methods=["POST"])
+def update_profile():
+    data = request.get_json(silent=True) or {}
+
+    user_id = data.get("user_id")
+    if not user_id or not str(user_id).isdigit():
+        return jsonify({"success": False, "message": "Invalid user_id"}), 400
+    user_id = int(user_id)
+
+    first_name = (data.get("first_name") or "").strip()
+    last_name = (data.get("last_name") or "").strip()
+    email = (data.get("email") or "").strip()
+    phone = (data.get("phone") or "").strip() or None
+    address = (data.get("address") or "").strip() or None
+
+    emergency_name = (data.get("emergency_name") or "").strip() or None
+    emergency_relationship = (data.get("emergency_relationship") or "").strip() or None
+    emergency_phone = (data.get("emergency_phone") or "").strip() or None
+
+    if not first_name or not last_name or not email:
+        return jsonify({"success": False, "message": "First name, last name, and email are required."}), 400
+
+    cursor = mysql.connection.cursor()
+
+    # user exists?
+    cursor.execute("SELECT user_id FROM users WHERE user_id=%s", (user_id,))
+    if not cursor.fetchone():
+        return jsonify({"success": False, "message": "User not found"}), 404
+
+    # email unique?
+    cursor.execute("SELECT user_id FROM users WHERE email=%s AND user_id<>%s", (email, user_id))
+    if cursor.fetchone():
+        return jsonify({"success": False, "message": "Email already exists for another user."}), 400
+
+    try:
+        cursor.execute("""
+            UPDATE users
+            SET first_name=%s,
+                last_name=%s,
+                email=%s,
+                phone=%s,
+                address=%s,
+                emergency_name=%s,
+                emergency_relationship=%s,
+                emergency_phone=%s
+            WHERE user_id=%s
+        """, (
+            first_name, last_name, email, phone, address,
+            emergency_name, emergency_relationship, emergency_phone,
+            user_id
+        ))
+        mysql.connection.commit()
+        return jsonify({"success": True}), 200
+
+    except Exception as e:
+        mysql.connection.rollback()
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+# ==============================
+# PORTAL ROUTES
+# ==============================
 @app.route("/")
 def root():
+    # يفتح البورتال مباشرة
     return redirect(url_for("portal_home", user_id=1))
 
 @app.route("/portal")
@@ -321,17 +430,6 @@ def portal_profile():
     return render_template("user/profile.html", d=data)
 
 
-# ===== DEBUG: print all routes at startup =====
-# ===== DEBUG: print all routes at startup (Flask 3.x safe) =====
-print("==== REGISTERED ROUTES ====")
-for r in app.url_map.iter_rules():
-    print(r.rule)
-print("===========================")
-
-
-# --------------------
-# Run Flask App
-# --------------------
 # --------------------
 # Run Flask App
 # --------------------
@@ -340,6 +438,4 @@ if __name__ == "__main__":
     for r in app.url_map.iter_rules():
         print(r.rule)
     print("===========================")
-
     app.run(debug=True)
-

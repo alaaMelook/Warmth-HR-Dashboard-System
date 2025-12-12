@@ -293,6 +293,15 @@ ALTER TABLE `users`
   ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`);
 COMMIT;
 
+USE hr_management;
+
+ALTER TABLE `users` 
+ADD COLUMN `address` VARCHAR(255) NULL AFTER `phone`,
+ADD COLUMN `emergency_name` VARCHAR(100) NULL AFTER `address`,
+ADD COLUMN `emergency_relationship` VARCHAR(50) NULL AFTER `emergency_name`,
+ADD COLUMN `emergency_phone` VARCHAR(20) NULL AFTER `emergency_relationship`;
+
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

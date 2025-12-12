@@ -435,3 +435,50 @@ textarea{ min-height:92px; resize:none; }
   .calendar-grid{ gap:6px; }
   .cal-cell{ height:60px; }
 }
+/* ===== Profile alerts (success/error) ===== */
+.alert-success{
+  background:#e9f8ef;
+  border:1px solid #bfe8cf;
+  color:#2f8c52;
+  padding:12px 14px;
+  border-radius:14px;
+  font-weight:700;
+  box-shadow: var(--shadow);
+}
+
+.alert-error{
+  background:#fff0f0;
+  border:1px solid #f2bcbc;
+  color:#c54949;
+  padding:12px 14px;
+  border-radius:14px;
+  font-weight:700;
+  box-shadow: var(--shadow);
+}
+
+/* ===== Save button state in profile ===== */
+.btn-sm.btn-save{
+  border:none;
+  background:linear-gradient(90deg,var(--brown1),var(--brown2));
+  color:#fff;
+}
+.btn-sm:disabled{
+  opacity:.65;
+  cursor:not-allowed;
+  transform:none;
+}
+
+/* ===== Make enabled inputs look editable ===== */
+.profile-input:disabled{
+  background:#f7f7f7;
+  cursor:not-allowed;
+}
+.profile-input:not(:disabled){
+  background:#fff;
+  border-color:#d9c7ba;
+}
+
+/* small polish */
+select, textarea{
+  font-family: inherit;
+}
