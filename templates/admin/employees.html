@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employees - Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #F5F5F5;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: linear-gradient(180deg, #957C62, #B77466);
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .logo {
+            text-align: center;
+            padding: 20px 0;
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            margin-bottom: 30px;
+        }
+
+        .logo h2 {
+            font-size: 22px;
+            margin-top: 10px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            font-size: 24px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s;
+            font-size: 15px;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateX(5px);
+        }
+
+        .nav-link.active {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .user-section {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #957C62;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+
+        .header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-info h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .header-info p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .btn-add {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #957C62, #B77466);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(149, 124, 98, 0.4);
+        }
+
+        .content-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .filter-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #F5F5F5;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: #FFE1AF;
+            color: #957C62;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            background: #E2B59A;
+        }
+
+        .employees-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .employees-table thead {
+            background: #F8F9FA;
+        }
+
+        .employees-table th {
+            padding: 15px;
+            text-align: left;
+            font-size: 14px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .employees-table td {
+            padding: 15px;
+            border-bottom: 1px solid #F5F5F5;
+        }
+
+        .employees-table tr:hover {
+            background: #F8F9FA;
+        }
+
+        .employee-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .employee-avatar {
+            width: 45px;
+            height: 45px;
+            background: #E2B59A;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .employee-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .employee-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .employee-email {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .badge-engineering {
+            background: #FFE1AF;
+            color: #957C62;
+        }
+
+        .badge-product {
+            background: #E2B59A;
+            color: #7D5A50;
+        }
+
+        .badge-design {
+            background: #FFE1AF;
+            color: #957C62;
+        }
+
+        .badge-hr {
+            background: #F5DEB3;
+            color: #8B7355;
+        }
+
+        .badge-marketing {
+            background: #E2B59A;
+            color: #7D5A50;
+        }
+
+        .badge-sales {
+            background: #FFE1AF;
+            color: #957C62;
+        }
+
+        .badge-active {
+            background: #D4EDDA;
+            color: #155724;
+        }
+
+        .badge-inactive {
+            background: #F8D7DA;
+            color: #721C24;
+        }
+
+        .badge-leave {
+            background: #FFF3CD;
+            color: #856404;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .btn-edit {
+            background: #FFE1AF;
+            color: #957C62;
+        }
+
+        .btn-edit:hover {
+            background: #E2B59A;
+        }
+
+        .btn-delete {
+            background: #FFE1AF;
+            color: #B77466;
+        }
+
+        .btn-delete:hover {
+            background: #E2B59A;
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">👥</div>
+            <h2>HR System</h2>
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="{{ url_for('admin_dashboard') }}" class="nav-link">
+                    📊 Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('admin_employees') }}" class="nav-link active">
+                    👥 Employees
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('admin_attendance') }}" class="nav-link">
+                    📅 Attendance
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('admin_leaves') }}" class="nav-link">
+                    📝 Leaves
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('admin_payroll') }}" class="nav-link">
+                    💰 Payroll
+                </a>
+            </li>
+        </ul>
+
+        <div class="user-section">
+            <div class="user-info">
+                <div class="user-avatar">AD</div>
+                <div>
+                    <div style="font-weight: 600;">{{ session.user_name }}</div>
+                    <div style="font-size: 12px; opacity: 0.8;">Administrator</div>
+                </div>
+            </div>
+            <form action="{{ url_for('logout') }}" method="GET">
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="header">
+            <div class="header-info">
+                <h1>Employee Management</h1>
+                <p>Manage your organization's employees and their information.</p>
+            </div>
+            <button class="btn-add">+ Add Employee</button>
+        </div>
+
+        <div class="content-section">
+            <div class="filter-section">
+                <button class="filter-btn">🔍 All Departments</button>
+            </div>
+
+            <table class="employees-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Department</th>
+                        <th>Contact</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if employees %}
+                        {% for emp in employees %}
+                        <tr>
+                            <td>
+                                <div class="employee-info">
+                                    <div class="employee-avatar">{{ emp[1][0] }}{{ emp[2][0] }}</div>
+                                    <div class="employee-details">
+                                        <span class="employee-name">{{ emp[1] }} {{ emp[2] }}</span>
+                                        <span class="employee-email">{{ emp[3] }}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ emp[6] if emp[6] else 'Not Assigned' }}</td>
+                            <td>
+                                <span class="badge badge-{{ (emp[5]|lower)|replace(' ', '-') if emp[5] else 'engineering' }}">
+                                    {{ emp[5] if emp[5] else 'Not Assigned' }}
+                                </span>
+                            </td>
+                            <td>{{ emp[4] }}</td>
+                            <td>
+                                <span class="badge badge-{{ emp[7] if emp[7] else 'active' }}">
+                                    {{ emp[7]|capitalize if emp[7] else 'Active' }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon btn-edit">✏️</button>
+                                    <button class="btn-icon btn-delete">🗑️</button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px; color: #999;">
+                                No employees found
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+</html>
