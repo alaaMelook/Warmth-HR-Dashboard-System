@@ -76,6 +76,8 @@ def create_user(first_name, last_name, email, password, role_id=1):
     conn.commit()
     cur.close()
 
+# ==================== MAIN ROUTES ====================
+
 @app.route("/")
 def index():
     if 'user_id' in session:
@@ -163,38 +165,43 @@ def admin_dashboard():
     conn = get_db()
     cur = conn.cursor()
     
-    # Get statistics
-    cur.execute("SELECT COUNT(*) FROM employees WHERE status = 'active'")
-    total_employees = cur.fetchone()[0]
-    
-    cur.execute("SELECT COUNT(*) FROM attendance WHERE attendance_date = CURDATE() AND status = 'present'")
-    today_attendance = cur.fetchone()[0]
-    
-    cur.execute("SELECT COUNT(*) FROM leaves WHERE status = 'pending'")
-    pending_leaves = cur.fetchone()[0]
-    
-    cur.execute("SELECT COALESCE(SUM(basic_salary + bonus - deductions), 0) FROM payroll WHERE MONTH(pay_date) = MONTH(CURDATE())")
-    monthly_payroll = cur.fetchone()[0]
-    
-    # Get recent leave requests
-    cur.execute("""
-        SELECT u.first_name, u.last_name, l.leave_type, l.start_date, l.end_date, l.status
-        FROM leaves l
-        JOIN employees e ON l.employee_id = e.employee_id
-        JOIN users u ON e.user_id = u.user_id
-        ORDER BY l.leave_id DESC
-        LIMIT 5
-    """)
-    recent_leaves = cur.fetchall()
-    
-    cur.close()
-    
-    return render_template("admin/dashboard.html",
-                         total_employees=total_employees,
-                         today_attendance=today_attendance,
-                         pending_leaves=pending_leaves,
-                         monthly_payroll=monthly_payroll,
-                         recent_leaves=recent_leaves)
+    try:
+        # Get statistics
+        cur.execute("SELECT COUNT(*) FROM employees WHERE status = 'active'")
+        total_employees = cur.fetchone()[0]
+        
+        cur.execute("SELECT COUNT(*) FROM attendance WHERE attendance_date = CURDATE() AND status = 'present'")
+        today_attendance = cur.fetchone()[0]
+        
+        cur.execute("SELECT COUNT(*) FROM leaves WHERE status = 'pending'")
+        pending_leaves = cur.fetchone()[0]
+        
+        cur.execute("SELECT COALESCE(SUM(basic_salary + bonus - deductions), 0) FROM payroll WHERE MONTH(pay_date) = MONTH(CURDATE())")
+        monthly_payroll = cur.fetchone()[0]
+        
+        # Get recent leave requests
+        cur.execute("""
+            SELECT u.first_name, u.last_name, l.leave_type, l.start_date, l.end_date, l.status
+            FROM leaves l
+            JOIN employees e ON l.employee_id = e.employee_id
+            JOIN users u ON e.user_id = u.user_id
+            ORDER BY l.leave_id DESC
+            LIMIT 5
+        """)
+        recent_leaves = cur.fetchall()
+        
+        cur.close()
+        
+        return render_template("admin/dashboard.html",
+                             total_employees=total_employees,
+                             today_attendance=today_attendance,
+                             pending_leaves=pending_leaves,
+                             monthly_payroll=monthly_payroll,
+                             recent_leaves=recent_leaves)
+    except Exception as e:
+        cur.close()
+        flash(f"Error loading dashboard: {str(e)}", "danger")
+        return redirect(url_for("index"))
 
 @app.route("/admin/employees")
 @admin_required
@@ -202,43 +209,48 @@ def admin_employees():
     conn = get_db()
     cur = conn.cursor()
     
-    # Get all employees with their details
-    cur.execute("""
-        SELECT 
-            e.employee_id,
-            e.user_id,
-            u.first_name,
-            u.last_name,
-            u.email,
-            u.phone,
-            d.department_name,
-            d.department_id,
-            j.title_name,
-            j.job_title_id,
-            e.status,
-            u.role_id
-        FROM employees e
-        JOIN users u ON e.user_id = u.user_id
-        LEFT JOIN departments d ON e.department_id = d.department_id
-        LEFT JOIN job_titles j ON e.job_title_id = j.job_title_id
-        ORDER BY e.employee_id DESC
-    """)
-    employees = cur.fetchall()
-    
-    # Get departments for dropdown
-    cur.execute("SELECT department_id, department_name FROM departments ORDER BY department_name")
-    departments = cur.fetchall()
-    
-    # Get job titles for dropdown
-    cur.execute("SELECT job_title_id, title_name FROM job_titles ORDER BY title_name")
-    job_titles = cur.fetchall()
-    
-    cur.close()
-    
-    return render_template("admin/employees.html", 
-                         employees=employees, 
-                         departments=departments, 
-                         job_titles=job_titles)
+    try:
+        # Get all employees with their details
+        cur.execute("""
+            SELECT 
+                e.employee_id,
+                e.user_id,
+                u.first_name,
+                u.last_name,
+                u.email,
+                u.phone,
+                d.department_name,
+                d.department_id,
+                j.title_name,
+                j.job_title_id,
+                e.status,
+                u.role_id
+            FROM employees e
+            JOIN users u ON e.user_id = u.user_id
+            LEFT JOIN departments d ON e.department_id = d.department_id
+            LEFT JOIN job_titles j ON e.job_title_id = j.job_title_id
+            ORDER BY e.employee_id DESC
+        """)
+        employees = cur.fetchall()
+        
+        # Get departments for dropdown
+        cur.execute("SELECT department_id, department_name FROM departments ORDER BY department_name")
+        departments = cur.fetchall()
+        
+        # Get job titles for dropdown
+        cur.execute("SELECT job_title_id, title_name FROM job_titles ORDER BY title_name")
+        job_titles = cur.fetchall()
+        
+        cur.close()
+        
+        return render_template("admin/employees.html", 
+                             employees=employees, 
+                             departments=departments, 
+                             job_titles=job_titles)
+    except Exception as e:
+        cur.close()
+        flash(f"Error loading employees: {str(e)}", "danger")
+        return redirect(url_for("admin_dashboard"))
 
 @app.route("/admin/employees/add", methods=["GET", "POST"])
 @admin_required
@@ -294,17 +306,24 @@ def admin_add_employee():
             conn.rollback()
             flash(f"Error adding employee: {str(e)}", "danger")
             return redirect(url_for("admin_add_employee"))
+        finally:
+            cur.close()
     
     # GET request - show form
-    cur.execute("SELECT department_id, department_name FROM departments ORDER BY department_name")
-    departments = cur.fetchall()
-    
-    cur.execute("SELECT job_title_id, title_name FROM job_titles ORDER BY title_name")
-    job_titles = cur.fetchall()
-    
-    cur.close()
-    
-    return render_template("admin/add_employee.html", departments=departments, job_titles=job_titles)
+    try:
+        cur.execute("SELECT department_id, department_name FROM departments ORDER BY department_name")
+        departments = cur.fetchall()
+        
+        cur.execute("SELECT job_title_id, title_name FROM job_titles ORDER BY title_name")
+        job_titles = cur.fetchall()
+        
+        cur.close()
+        
+        return render_template("admin/add_employee.html", departments=departments, job_titles=job_titles)
+    except Exception as e:
+        cur.close()
+        flash(f"Error loading form: {str(e)}", "danger")
+        return redirect(url_for("admin_employees"))
 
 @app.route("/admin/employees/edit/<int:employee_id>", methods=["GET", "POST"])
 @admin_required
@@ -397,6 +416,7 @@ def admin_edit_employee(employee_id):
                              departments=departments, 
                              job_titles=job_titles)
     except Exception as e:
+        cur.close()
         flash(f"Error loading employee: {str(e)}", "danger")
         return redirect(url_for("admin_employees"))
 
@@ -411,7 +431,10 @@ def admin_delete_employee(employee_id):
         cur.execute("SELECT user_id FROM employees WHERE employee_id = %s", (employee_id,))
         result = cur.fetchone()
         if not result:
-            return jsonify({"success": False, "message": "Employee not found"}), 404
+            if request.method == "DELETE":
+                return jsonify({"success": False, "message": "Employee not found"}), 404
+            flash("Employee not found.", "danger")
+            return redirect(url_for("admin_employees"))
         
         user_id = result[0]
         
@@ -455,12 +478,209 @@ def admin_leaves():
 def admin_payroll():
     return render_template("admin/payroll.html")
 
+# ==================== SETTINGS ROUTES ====================
+
+@app.route('/admin/settings')
+@admin_required
+def admin_settings():
+    """عرض صفحة الإعدادات"""
+    conn = get_db()
+    cur = conn.cursor()
+    
+    try:
+        # جلب معلومات الشركة
+        cur.execute("SELECT * FROM company_settings ORDER BY setting_id DESC LIMIT 1")
+        company_info = cur.fetchone()
+        
+        # جلب عدد المستخدمين حسب الأدوار
+        cur.execute("""
+            SELECT 
+                SUM(CASE WHEN role_id = 2 THEN 1 ELSE 0 END) as admin_count,
+                SUM(CASE WHEN role_id = 1 THEN 1 ELSE 0 END) as employee_count
+            FROM users
+        """)
+        user_counts = cur.fetchone()
+        
+        # جلب إعدادات الإشعارات للمستخدم الحالي
+        cur.execute("""
+            SELECT * FROM notification_settings 
+            WHERE user_id = %s 
+            ORDER BY setting_id DESC LIMIT 1
+        """, (session['user_id'],))
+        notification_settings = cur.fetchone()
+        
+        # تحويل البيانات إلى قواميس
+        company_data = None
+        if company_info:
+            company_data = {
+                'name': company_info[1] if len(company_info) > 1 else 'TechCorp Inc.',
+                'industry': company_info[2] if len(company_info) > 2 else 'Technology',
+                'employee_count': company_info[3] if len(company_info) > 3 else 248
+            }
+        
+        settings_data = {
+            'email_notifications': notification_settings[2] if notification_settings and len(notification_settings) > 2 else True,
+            'leave_alerts': notification_settings[3] if notification_settings and len(notification_settings) > 3 else True,
+            'attendance_reminders': notification_settings[4] if notification_settings and len(notification_settings) > 4 else False
+        }
+        
+        cur.close()
+        
+        return render_template('admin/settings.html',
+                             company_info=company_data,
+                             admin_count=user_counts[0] if user_counts and user_counts[0] else 5,
+                             manager_count=12,
+                             employee_count=user_counts[1] if user_counts and user_counts[1] else 231,
+                             settings=settings_data)
+    
+    except Exception as e:
+        cur.close()
+        flash(f'Error loading settings: {str(e)}', 'danger')
+        return redirect(url_for('admin_dashboard'))
+
+
+@app.route('/admin/settings/company', methods=['POST'])
+@admin_required
+def admin_update_company_info():
+    """تحديث معلومات الشركة"""
+    conn = get_db()
+    cur = conn.cursor()
+    
+    try:
+        company_name = request.form.get('company_name', '').strip()
+        industry = request.form.get('industry', '').strip()
+        employee_count = request.form.get('employee_count', 0)
+        
+        # التحقق من وجود سجل
+        cur.execute("SELECT setting_id FROM company_settings LIMIT 1")
+        existing = cur.fetchone()
+        
+        if existing:
+            # تحديث السجل الموجود
+            cur.execute("""
+                UPDATE company_settings 
+                SET company_name = %s, industry = %s, employee_count = %s
+                WHERE setting_id = %s
+            """, (company_name, industry, employee_count, existing[0]))
+        else:
+            # إدخال سجل جديد
+            cur.execute("""
+                INSERT INTO company_settings (company_name, industry, employee_count)
+                VALUES (%s, %s, %s)
+            """, (company_name, industry, employee_count))
+        
+        conn.commit()
+        flash('Company information updated successfully!', 'success')
+        
+    except Exception as e:
+        conn.rollback()
+        flash(f'Error updating company info: {str(e)}', 'danger')
+    
+    finally:
+        cur.close()
+    
+    return redirect(url_for('admin_settings'))
+
+
+@app.route('/admin/settings/notifications', methods=['POST'])
+@admin_required
+def admin_update_notifications():
+    """تحديث إعدادات الإشعارات"""
+    conn = get_db()
+    cur = conn.cursor()
+    
+    try:
+        email_notifications = 1 if request.form.get('email_notifications') else 0
+        leave_alerts = 1 if request.form.get('leave_alerts') else 0
+        attendance_reminders = 1 if request.form.get('attendance_reminders') else 0
+        
+        # التحقق من وجود سجل للمستخدم
+        cur.execute("""
+            SELECT setting_id FROM notification_settings 
+            WHERE user_id = %s LIMIT 1
+        """, (session['user_id'],))
+        existing = cur.fetchone()
+        
+        if existing:
+            # تحديث السجل الموجود
+            cur.execute("""
+                UPDATE notification_settings 
+                SET email_notifications = %s, 
+                    leave_alerts = %s, 
+                    attendance_reminders = %s
+                WHERE user_id = %s
+            """, (email_notifications, leave_alerts, attendance_reminders, session['user_id']))
+        else:
+            # إدخال سجل جديد
+            cur.execute("""
+                INSERT INTO notification_settings 
+                (user_id, email_notifications, leave_alerts, attendance_reminders)
+                VALUES (%s, %s, %s, %s)
+            """, (session['user_id'], email_notifications, leave_alerts, attendance_reminders))
+        
+        conn.commit()
+        flash('Notification preferences updated successfully!', 'success')
+        
+    except Exception as e:
+        conn.rollback()
+        flash(f'Error updating notifications: {str(e)}', 'danger')
+    
+    finally:
+        cur.close()
+    
+    return redirect(url_for('admin_settings'))
+
+
+@app.route('/admin/settings/system', methods=['POST'])
+@admin_required
+def admin_update_system_prefs():
+    """تحديث تفضيلات النظام"""
+    conn = get_db()
+    cur = conn.cursor()
+    
+    try:
+        timezone = request.form.get('timezone', 'UTC-5')
+        date_format = request.form.get('date_format', 'MM/DD/YYYY')
+        language = request.form.get('language', 'en')
+        currency = request.form.get('currency', 'USD')
+        
+        # التحقق من وجود سجل
+        cur.execute("SELECT setting_id FROM company_settings LIMIT 1")
+        existing = cur.fetchone()
+        
+        if existing:
+            cur.execute("""
+                UPDATE company_settings 
+                SET timezone = %s, date_format = %s, language = %s, currency = %s
+                WHERE setting_id = %s
+            """, (timezone, date_format, language, currency, existing[0]))
+        else:
+            cur.execute("""
+                INSERT INTO company_settings 
+                (timezone, date_format, language, currency)
+                VALUES (%s, %s, %s, %s)
+            """, (timezone, date_format, language, currency))
+        
+        conn.commit()
+        flash('System preferences updated successfully!', 'success')
+        
+    except Exception as e:
+        conn.rollback()
+        flash(f'Error updating system preferences: {str(e)}', 'danger')
+    
+    finally:
+        cur.close()
+    
+    return redirect(url_for('admin_settings'))
+
 # ==================== USER ROUTES ====================
 
 @app.route("/user/dashboard")
 @login_required
 def user_dashboard():
     return f"<h1>Welcome {session.get('user_name')}!</h1><p>User Dashboard (Coming Soon)</p>"
+
+# ==================== RUN APP ====================
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000, debug=True)
