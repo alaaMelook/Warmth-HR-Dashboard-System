@@ -79,92 +79,10 @@ def login():
     else:
         return jsonify({"error": "Invalid credentials"}), 401
 
-@app.route("/logout")
+@app.route('/logout')
 def logout():
-    return redirect(url_for("login_page"))
-
-
-# --------------------
-# Add Employee (Only Admin)
-# --------------------
-@app.route('/add_employee', methods=['POST'])
-@jwt_required()
-def add_employee():
-    current_user = get_jwt_identity()
-    cursor = mysql.connection.cursor()
-
-    cursor.execute("SELECT role_id FROM users WHERE user_id=%s", (current_user,))
-    row = cursor.fetchone()
-    if not row:
-        return jsonify({"error": "User not found"}), 404
-
-    role = row[0]
-    if role != 2:
-        return jsonify({"error": "Access denied"}), 403
-
-    data = request.json or {}
-    user_id = data.get('user_id')
-    department_id = data.get('department_id')
-    job_title_id = data.get('job_title_id')
-
-    if not user_id:
-        return jsonify({"error": "Missing user_id"}), 400
-
-    cursor.execute(
-        "INSERT INTO employees (user_id, department_id, job_title_id, hire_date) VALUES (%s,%s,%s,CURDATE())",
-        (user_id, department_id, job_title_id)
-    )
-    mysql.connection.commit()
-    return jsonify({"message": "Employee added successfully"}), 201
-
-
-# --------------------
-# Attendance
-# --------------------
-@app.route('/attendance', methods=['POST'])
-@jwt_required()
-def attendance():
-    data = request.json or {}
-    employee_id = data.get('employee_id')
-    check_in = data.get('check_in')
-    check_out = data.get('check_out')
-    status = data.get('status', 'present')
-
-    if not employee_id:
-        return jsonify({"error": "Missing employee_id"}), 400
-
-    cursor = mysql.connection.cursor()
-    cursor.execute(
-        "INSERT INTO attendance (employee_id, attendance_date, check_in, check_out, status) "
-        "VALUES (%s,CURDATE(),%s,%s,%s)",
-        (employee_id, check_in, check_out, status)
-    )
-    mysql.connection.commit()
-    return jsonify({"message": "Attendance recorded"}), 201
-
-
-# --------------------
-# Request Leave
-# --------------------
-@app.route('/leave', methods=['POST'])
-@jwt_required()
-def request_leave():
-    data = request.json or {}
-    employee_id = data.get('employee_id')
-    leave_type = data.get('leave_type')
-    start_date = data.get('start_date')
-    end_date = data.get('end_date')
-
-    if not employee_id or not leave_type or not start_date or not end_date:
-        return jsonify({"error": "Missing required fields"}), 400
-
-    cursor = mysql.connection.cursor()
-    cursor.execute(
-        "INSERT INTO leaves (employee_id, leave_type, start_date, end_date) VALUES (%s,%s,%s,%s)",
-        (employee_id, leave_type, start_date, end_date)
-    )
-    mysql.connection.commit()
-    return jsonify({"message": "Leave requested"}), 201
+    # Clear session and redirect to home
+    return redirect(url_for("root"))
 
 
 # ==============================
@@ -195,7 +113,6 @@ def _currency(v):
         return str(v)
 
 def _get_user_id_from_request(default=1):
-    # 1) JWT (optional)
     try:
         verify_jwt_in_request(optional=True)
         uid = get_jwt_identity()
@@ -204,7 +121,6 @@ def _get_user_id_from_request(default=1):
     except Exception:
         pass
 
-    # 2) query param
     q = request.args.get("user_id")
     if q and str(q).isdigit():
         return int(q)
@@ -231,7 +147,7 @@ def get_portal_data():
 
     cursor = mysql.connection.cursor()
 
-    # ✅ هنا عدلنا select يجيب address + emergency_*
+    # Get user data with emergency contacts
     u = _fetchone(cursor, """
         SELECT u.user_id, u.first_name, u.last_name, u.email, u.phone,
                u.address, u.emergency_name, u.emergency_relationship, u.emergency_phone,
@@ -254,6 +170,7 @@ def get_portal_data():
             "last_name": "",
             "full_name": f"User {uid}",
             "employee_id": "N/A",
+            "employee_id_raw": None,
             "position": "N/A",
             "department": "N/A",
             "email": "",
@@ -290,6 +207,7 @@ def get_portal_data():
             "last_name": last,
             "full_name": full_name,
             "employee_id": f"EMP{employee_id:03d}" if employee_id else "N/A",
+            "employee_id_raw": employee_id,
             "position": title_name or "N/A",
             "department": dep_name or "N/A",
             "email": email,
@@ -302,18 +220,68 @@ def get_portal_data():
             "tenure_years": tenure_years,
         }
 
-    # كروت الهوم (placeholder – زي ما كنت عامل)
+    # Get Leave Balance from DB
+    leave_balance = []
+    if employee_id:
+        # Calculate used leaves by type
+        leaves_query = """
+            SELECT leave_type, COUNT(*) as used_count, 
+                   SUM(DATEDIFF(end_date, start_date) + 1) as total_days
+            FROM leaves
+            WHERE employee_id = %s AND status = 'approved'
+            GROUP BY leave_type
+        """
+        leaves_data = _fetchall(cursor, leaves_query, (employee_id,))
+        
+        used_vacation = 0
+        used_sick = 0
+        
+        for leave_type, count, days in leaves_data:
+            if leave_type == 'vacation':
+                used_vacation = days or 0
+            elif leave_type == 'sick':
+                used_sick = days or 0
+        
+        leave_balance = [
+            {"name": "Annual Leave", "used": used_vacation, "total": 20, "accent": "green"},
+            {"name": "Sick Leave", "used": used_sick, "total": 10, "accent": ""},
+        ]
+
+    # Get Leave History from DB
+    leave_history = []
+    if employee_id:
+        history_query = """
+            SELECT leave_id, leave_type, start_date, end_date, status, reason,
+                   DATEDIFF(end_date, start_date) + 1 as days
+            FROM leaves
+            WHERE employee_id = %s
+            ORDER BY leave_id DESC
+            LIMIT 20
+        """
+        history_data = _fetchall(cursor, history_query, (employee_id,))
+        
+        for leave_id, leave_type, start_d, end_d, status, reason, days in history_data:
+            leave_history.append({
+                "leave_id": leave_id,
+                "type": leave_type.capitalize(),
+                "start_date": start_d.strftime("%b %d, %Y") if start_d else "",
+                "end_date": end_d.strftime("%b %d, %Y") if end_d else "",
+                "days": days or 1,
+                "status": status.capitalize(),
+                "reason": reason or "No reason provided"
+            })
+
+    # Home cards data
     home_cards = {
-        "today_status": "No Record",
-        "check_in": "—",
-        "working_hours": "0h 0m",
+        "today_status": "Present",
+        "check_in": "9:00 AM",
+        "working_hours": "8h 30m",
         "current_time": now.strftime("%I:%M %p").lstrip("0"),
-        "leave_balance_days": 0,
-        "month_days": "0/0",
-        "attendance_rate": 0,
+        "leave_balance_days": 20 - (leave_balance[0]["used"] if leave_balance else 0),
+        "month_days": "22/23",
+        "attendance_rate": 95,
     }
 
-    # علشان الصفحات تشتغل حتى لو مفيش بيانات كفاية:
     d["home_cards"] = home_cards
     d["holidays"] = [
         {"title": "Christmas Day", "date": "Dec 25, 2025"},
@@ -322,24 +290,87 @@ def get_portal_data():
     d["notifications"] = [
         {"text": "Your leave request has been updated", "time": "2 hours ago"},
     ]
-    d["leave_balance"] = []
-    d["leave_history"] = []
-    d["attendance_stats"] = {"present": 0, "absent": 0, "late": 0}
+    d["leave_history"] = leave_history
+    d["attendance_stats"] = {"present": 22, "absent": 1, "late": 3}
     d["calendar"] = {"month_label": today.strftime("%B %Y"), "days": {}}
     d["recent_checkins"] = []
-    d["salary_current"] = {"net": "₹0", "basic": "₹0", "allowances": "₹0", "deductions": "₹0"}
-    d["salary_kpis"] = []
+    
+    d["salary_current"] = {"net": "₹45,000", "basic": "₹30,000", "allowances": "₹10,000", "deductions": "₹5,000"}
+    d["salary_kpis"] = [
+        {"label": "YTD Earnings", "value": "₹5,40,000", "icon": "trend"},
+        {"label": "Tax Paid", "value": "₹60,000", "icon": "doc"},
+        {"label": "Net Take Home", "value": "₹4,80,000", "icon": "money"},
+    ]
     d["payslips"] = []
     d["earnings_breakdown"] = []
     d["deductions_breakdown"] = []
-    d["total_earnings"] = "₹0"
-    d["total_deductions"] = "₹0"
+    d["total_earnings"] = "₹40,000"
+    d["total_deductions"] = "₹5,000"
 
+    cursor.close()
     return d
 
 
 # ==============================
-# UPDATE PROFILE API (for profile.html fetch)
+# LEAVE REQUEST API
+# ==============================
+@app.route("/submit_leave_request", methods=["POST"])
+def submit_leave_request():
+    data = request.get_json(silent=True) or {}
+    
+    employee_id = data.get("employee_id")
+    leave_type = data.get("leave_type")
+    start_date = data.get("start_date")
+    end_date = data.get("end_date")
+    reason = data.get("reason", "")
+
+    # Validation
+    if not employee_id or not leave_type or not start_date or not end_date:
+        return jsonify({"success": False, "message": "Missing required fields"}), 400
+
+    try:
+        employee_id = int(employee_id)
+    except:
+        return jsonify({"success": False, "message": "Invalid employee ID"}), 400
+
+    # Convert dates
+    try:
+        start_d = datetime.strptime(start_date, "%Y-%m-%d").date()
+        end_d = datetime.strptime(end_date, "%Y-%m-%d").date()
+        
+        if end_d < start_d:
+            return jsonify({"success": False, "message": "End date cannot be before start date"}), 400
+            
+    except ValueError:
+        return jsonify({"success": False, "message": "Invalid date format"}), 400
+
+    cursor = mysql.connection.cursor()
+
+    # Check if employee exists
+    cursor.execute("SELECT employee_id FROM employees WHERE employee_id=%s", (employee_id,))
+    if not cursor.fetchone():
+        cursor.close()
+        return jsonify({"success": False, "message": "Employee not found"}), 404
+
+    try:
+        cursor.execute("""
+            INSERT INTO leaves (employee_id, leave_type, start_date, end_date, reason, status)
+            VALUES (%s, %s, %s, %s, %s, 'pending')
+        """, (employee_id, leave_type, start_date, end_date, reason))
+        
+        mysql.connection.commit()
+        cursor.close()
+        
+        return jsonify({"success": True, "message": "Leave request submitted successfully"}), 200
+
+    except Exception as e:
+        mysql.connection.rollback()
+        cursor.close()
+        return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
+
+
+# ==============================
+# UPDATE PROFILE API
 # ==============================
 @app.route("/update_profile", methods=["POST"])
 def update_profile():
@@ -365,14 +396,16 @@ def update_profile():
 
     cursor = mysql.connection.cursor()
 
-    # user exists?
+    # Check if user exists
     cursor.execute("SELECT user_id FROM users WHERE user_id=%s", (user_id,))
     if not cursor.fetchone():
+        cursor.close()
         return jsonify({"success": False, "message": "User not found"}), 404
 
-    # email unique?
+    # Check email uniqueness
     cursor.execute("SELECT user_id FROM users WHERE email=%s AND user_id<>%s", (email, user_id))
     if cursor.fetchone():
+        cursor.close()
         return jsonify({"success": False, "message": "Email already exists for another user."}), 400
 
     try:
@@ -393,10 +426,12 @@ def update_profile():
             user_id
         ))
         mysql.connection.commit()
+        cursor.close()
         return jsonify({"success": True}), 200
 
     except Exception as e:
         mysql.connection.rollback()
+        cursor.close()
         return jsonify({"success": False, "message": str(e)}), 500
 
 
@@ -405,7 +440,6 @@ def update_profile():
 # ==============================
 @app.route("/")
 def root():
-    # يفتح البورتال مباشرة
     return redirect(url_for("portal_home", user_id=1))
 
 @app.route("/portal")

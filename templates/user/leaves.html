@@ -5,99 +5,102 @@
   <h1 class="page-title">Leave Management</h1>
   <p class="page-sub">Request time off and view your leave history</p>
 
-  <div class="split">
-    <div class="card pad">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-        <div class="badge-icon">🗓️</div>
-        <div style="font-weight:800;color:#8e6e5e;font-size:16px;">Request Leave</div>
+  <!-- Employee ID Warning -->
+  {% if not d.user.employee_id_raw or d.user.employee_id_raw == None %}
+  <div class="alert-error" style="margin-bottom:16px;">
+    ❌ Invalid employee ID. You need to be registered as an employee first. Please contact HR to set up your employee account.
+  </div>
+  {% endif %}
+
+  <!-- Success/Error Messages -->
+  <div id="leaveSuccessMsg" class="alert-success" style="display:none;margin-bottom:16px;">
+    ✅ <span id="leaveSuccessText">Leave request submitted successfully!</span>
+  </div>
+  <div id="leaveErrorMsg" class="alert-error" style="display:none;margin-bottom:16px;">
+    ❌ <span id="leaveErrorText">Something went wrong!</span>
+  </div>
+
+  <div class="card pad">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+      <div class="badge-icon">🗓️</div>
+      <div style="font-weight:800;color:#8e6e5e;font-size:16px;">Request Leave</div>
+    </div>
+
+    <form class="form-grid" id="leaveForm" style="max-width:800px;margin:0 auto;">
+      <input type="hidden" name="employee_id" id="employeeIdInput" value="{{ d.user.employee_id_raw or '' }}">
+      
+      <div style="grid-column:1/-1;">
+        <label style="font-size:12px;color:#8a7f76;font-weight:600;display:block;margin-bottom:6px;">
+          Leave Type <span style="color:#c54949;">*</span>
+        </label>
+        <select name="leave_type" id="leaveType" required>
+          <option value="">Select leave type</option>
+          <option value="vacation">Vacation Leave</option>
+          <option value="sick">Sick Leave</option>
+          <option value="unpaid">Unpaid Leave</option>
+        </select>
       </div>
 
-      <form class="form-grid">
-        <div style="grid-column:1/-1;">
-          <label style="font-size:12px;color:#8a7f76;font-weight:600;display:block;margin-bottom:6px;">Leave Type</label>
-          <select>
-            <option value="">Select leave type</option>
-            <option value="vacation">Vacation Leave</option>
-            <option value="sick">Sick Leave</option>
-            <option value="personal">Personal Leave</option>
-            <option value="unpaid">Unpaid Leave</option>
-          </select>
-        </div>
+      <div>
+        <label style="font-size:12px;color:#8a7f76;font-weight:600;display:block;margin-bottom:6px;">
+          Start Date <span style="color:#c54949;">*</span>
+        </label>
+        <input class="input" type="date" name="start_date" id="startDate" required />
+      </div>
 
-        <div>
-          <label style="font-size:12px;color:#8a7f76;font-weight:600;display:block;margin-bottom:6px;">Start Date</label>
-          <input class="input" type="date" placeholder="mm/dd/yyyy" />
-        </div>
+      <div>
+        <label style="font-size:12px;color:#8a7f76;font-weight:600;display:block;margin-bottom:6px;">
+          End Date <span style="color:#c54949;">*</span>
+        </label>
+        <input class="input" type="date" name="end_date" id="endDate" required />
+      </div>
 
-        <div>
-          <label style="font-size:12px;color:#8a7f76;font-weight:600;display:block;margin-bottom:6px;">End Date</label>
-          <input class="input" type="date" placeholder="mm/dd/yyyy" />
-        </div>
+      <div style="grid-column:1/-1;">
+        <label style="font-size:12px;color:#8a7f76;font-weight:600;display:block;margin-bottom:6px;">
+          Reason
+        </label>
+        <textarea name="reason" id="reason" placeholder="Please provide a reason for your leave request..."></textarea>
+      </div>
 
-        <div style="grid-column:1/-1;">
-          <label style="font-size:12px;color:#8a7f76;font-weight:600;display:block;margin-bottom:6px;">Reason</label>
-          <textarea placeholder="Please provide a reason for your leave request..."></textarea>
-        </div>
-
-        <div style="grid-column:1/-1;margin-top:6px;">
-          <button class="btn" type="button">✈️ Submit Leave Request</button>
-        </div>
-      </form>
-    </div>
-
-    <div class="card pad">
-      <div style="font-weight:800;color:#8e6e5e;margin-bottom:14px;font-size:16px;">Leave Balance</div>
-
-      {% if d.leave_balance and d.leave_balance|length > 0 %}
-        <div class="list" style="gap:14px;">
-          {% for b in d.leave_balance %}
-            {% set used = b.used|int %}
-            {% set total = b.total|int %}
-            {% set pct = (used * 100 / total) if total > 0 else 0 %}
-
-            <div>
-              <div style="display:flex;justify-content:space-between;font-size:13px;color:#6f4e3f;font-weight:700;margin-bottom:8px;">
-                <span>{{ b.name }}</span>
-                <span>{{ used }}/{{ total }} days</span>
-              </div>
-
-              <div class="progress {{ 'green' if b.accent=='green' else '' }}">
-                <span style="width: {{ (pct|round(0)) ~ '%' }};"></span>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
-      {% else %}
-        <div style="text-align:center;padding:20px;color:#8a7f76;">
-          <div style="font-size:35px;margin-bottom:8px;">☂️</div>
-          <div>No leave balance data.</div>
-        </div>
-      {% endif %}
-    </div>
+      <div style="grid-column:1/-1;margin-top:6px;">
+        <button class="btn" type="submit" id="submitLeaveBtn">✈️ Submit Leave Request</button>
+      </div>
+    </form>
   </div>
 
   <div class="card pad" style="margin-top:16px;">
-    <div style="font-weight:900;color:#8e6e5e;margin-bottom:14px;font-size:16px;">Leave History</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="badge-icon">📋</div>
+        <div style="font-weight:900;color:#8e6e5e;font-size:16px;">Leave History</div>
+      </div>
+      <div style="font-size:12px;color:#8a7f76;">
+        Total Requests: <strong style="color:#6f4e3f;">{{ d.leave_history|length }}</strong>
+      </div>
+    </div>
 
     {% if d.leave_history and d.leave_history|length > 0 %}
-      <div class="list">
+      <div class="list" id="leaveHistoryList">
         {% for h in d.leave_history %}
-          <div class="list-item">
-            <div style="display:flex;gap:12px;align-items:center;">
-              <div class="badge-icon">
+          <div class="list-item" style="flex-wrap:wrap;">
+            <div style="display:flex;gap:12px;align-items:center;flex:1;min-width:250px;">
+              <div class="badge-icon" style="font-size:20px;">
                 {% if h.status|lower == 'approved' %}✅
                 {% elif h.status|lower == 'rejected' %}❌
                 {% else %}⏳
                 {% endif %}
               </div>
               <div>
-                <div class="title">{{ h.type }}</div>
-                <div class="time">{{ h.date }}</div>
+                <div class="title">{{ h.type|title }} Leave</div>
+                <div class="time">{{ h.start_date }} to {{ h.end_date }}</div>
+                {% if h.reason %}
+                  <div class="time" style="margin-top:4px;">💬 {{ h.reason[:50] }}{% if h.reason|length > 50 %}...{% endif %}</div>
+                {% endif %}
               </div>
             </div>
 
-            <div style="text-align:right;">
-              <div class="pill">{{ h.days }} days</div>
+            <div style="text-align:right;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <div class="pill" style="font-weight:600;">{{ h.days }} day{{ 's' if h.days != 1 else '' }}</div>
 
               {% set st = h.status|lower %}
               {% if st == 'approved' %}
@@ -108,18 +111,140 @@
                 {% set pill_style = "background:#fff8e6;border-color:#f2e6a2;color:#b8860b;" %}
               {% endif %}
 
-              <div class="pill" style="{{ 'margin-top:8px;font-weight:600;' ~ pill_style }}">
-                {{ h.status }}
+              <div class="pill" style="{{ 'font-weight:700;' ~ pill_style }}">
+                {{ h.status|title }}
               </div>
             </div>
           </div>
         {% endfor %}
       </div>
     {% else %}
-      <div style="text-align:center;padding:30px;color:#8a7f76;">
-        <div style="font-size:40px;margin-bottom:10px;">📝</div>
-        <div>No leave requests yet.</div>
+      <div style="text-align:center;padding:40px;color:#8a7f76;" id="noLeavesMsg">
+        <div style="font-size:50px;margin-bottom:12px;">📝</div>
+        <div style="font-size:16px;font-weight:600;margin-bottom:6px;">No leave requests yet</div>
+        <div style="font-size:13px;">Submit your first leave request above</div>
       </div>
     {% endif %}
   </div>
+
+  <script>
+    const leaveForm = document.getElementById('leaveForm');
+    const submitBtn = document.getElementById('submitLeaveBtn');
+    const successMsg = document.getElementById('leaveSuccessMsg');
+    const errorMsg = document.getElementById('leaveErrorMsg');
+    const successText = document.getElementById('leaveSuccessText');
+    const errorText = document.getElementById('leaveErrorText');
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+    const employeeIdInput = document.getElementById('employeeIdInput');
+
+    // Check if employee ID exists on page load
+    window.addEventListener('DOMContentLoaded', function() {
+      const empId = employeeIdInput.value;
+      if (!empId || empId === 'None' || empId === '') {
+        showError('Invalid employee ID. You need to be registered as an employee first. Please contact HR.');
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.5';
+        submitBtn.style.cursor = 'not-allowed';
+      }
+    });
+
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    startDateInput.min = today;
+    endDateInput.min = today;
+
+    // Update end date minimum when start date changes
+    startDateInput.addEventListener('change', function() {
+      endDateInput.min = this.value;
+      if (endDateInput.value && endDateInput.value < this.value) {
+        endDateInput.value = this.value;
+      }
+    });
+
+    leaveForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Hide previous messages
+      hideMessages();
+
+      // Get form data
+      const formData = new FormData(leaveForm);
+      const data = {
+        employee_id: formData.get('employee_id'),
+        leave_type: formData.get('leave_type'),
+        start_date: formData.get('start_date'),
+        end_date: formData.get('end_date'),
+        reason: formData.get('reason') || ''
+      };
+
+      // Validate employee_id
+      if (!data.employee_id || data.employee_id === 'N/A' || data.employee_id === 'None' || data.employee_id === '') {
+        showError('Invalid employee ID. You need to be registered as an employee first. Please contact HR.');
+        submitBtn.innerHTML = '✈️ Submit Leave Request';
+        submitBtn.disabled = false;
+        return;
+      }
+
+      // Show loading
+      submitBtn.innerHTML = '⏳ Submitting...';
+      submitBtn.disabled = true;
+
+      // Send request
+      fetch('/submit_leave_request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (result.success) {
+          showSuccess('Leave request submitted successfully! Status: Pending');
+          
+          // Reset form
+          leaveForm.reset();
+          
+          // Reload page after 2 seconds to update leave history
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        } else {
+          showError(result.message || 'Failed to submit leave request');
+          submitBtn.innerHTML = '✈️ Submit Leave Request';
+          submitBtn.disabled = false;
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        showError('Connection error. Please try again.');
+        submitBtn.innerHTML = '✈️ Submit Leave Request';
+        submitBtn.disabled = false;
+      });
+    });
+
+    function showSuccess(message) {
+      successText.textContent = message;
+      successMsg.style.display = 'block';
+      errorMsg.style.display = 'none';
+      
+      // Scroll to top to see message
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showError(message) {
+      errorText.textContent = message;
+      errorMsg.style.display = 'block';
+      successMsg.style.display = 'none';
+      
+      // Scroll to top to see message
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function hideMessages() {
+      successMsg.style.display = 'none';
+      errorMsg.style.display = 'none';
+    }
+  </script>
 {% endblock %}
