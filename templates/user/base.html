@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employee Portal</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div>Employee Portal</div>
+        <div style="opacity:.7;">‹</div>
+      </div>
+
+      <nav class="nav">
+        <a href="/portal{% if request.args.get('user_id') %}?user_id={{ request.args.get('user_id') }}{% endif %}"
+           class="{% if active=='home' %}active{% endif %}">
+          <span class="icon">🏠</span> Home
+        </a>
+
+        <a href="/portal/attendance{% if request.args.get('user_id') %}?user_id={{ request.args.get('user_id') }}{% endif %}"
+           class="{% if active=='attendance' %}active{% endif %}">
+          <span class="icon">📅</span> My Attendance
+        </a>
+
+        <a href="/portal/leaves{% if request.args.get('user_id') %}?user_id={{ request.args.get('user_id') }}{% endif %}"
+           class="{% if active=='leaves' %}active{% endif %}">
+          <span class="icon">📝</span> My Leaves
+        </a>
+
+        <a href="/portal/salary{% if request.args.get('user_id') %}?user_id={{ request.args.get('user_id') }}{% endif %}"
+           class="{% if active=='salary' %}active{% endif %}">
+          <span class="icon">💲</span> My Salary
+        </a>
+
+        <a href="/portal/profile{% if request.args.get('user_id') %}?user_id={{ request.args.get('user_id') }}{% endif %}"
+           class="{% if active=='profile' %}active{% endif %}">
+          <span class="icon">👤</span> Profile
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="avatar">
+          {{ (d.user.first_name[:1] ~ d.user.last_name[:1]).upper() }}
+        </div>
+        <div>
+          <div style="font-weight:700;color:#6f4e3f;">{{ d.user.full_name }}</div>
+          <div style="font-size:12px;color:#8a7f76;">ID: {{ d.user.employee_id }}</div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</body>
+</html>

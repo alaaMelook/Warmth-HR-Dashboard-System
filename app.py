@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
 from mysql.connector import Error
 from functools import wraps
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET", "dev-secret-key-change-in-production")
@@ -14,13 +14,13 @@ DB_CONFIG = {
     "host": os.environ.get("DB_HOST", "127.0.0.1"),
     "user": os.environ.get("DB_USER", "root"),
     "password": os.environ.get("DB_PASSWORD", ""),
-    "database": os.environ.get("DB_NAME", "hr_management"),
+    "database": os.environ. get("DB_NAME", "hr_management"),
     "port": int(os.environ.get("DB_PORT", 3306)),
     "auth_plugin": "mysql_native_password"
 }
 
 def get_db():
-    if hasattr(g, "db_conn") and g.db_conn.is_connected():
+    if hasattr(g, "db_conn") and g.db_conn. is_connected():
         return g.db_conn
     try:
         conn = mysql.connector.connect(**DB_CONFIG)
@@ -40,7 +40,7 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user_id' not in session:
-            flash('Please login first.', 'danger')
+            flash('Please login first. ', 'danger')
             return redirect(url_for('login'))
         return f(*args, **kwargs)
     return decorated_function
@@ -49,11 +49,24 @@ def login_required(f):
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        if 'user_id' not in session: 
+            flash('Please login first. ', 'danger')
+            return redirect(url_for('login'))
+        if session. get('role_id') != 2:  # 2 = admin
+            flash('Access denied. Admin only.', 'danger')
+            return redirect(url_for('index'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+# Decorator للتأكد إن المستخدم user (موظف عادي)
+def user_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
         if 'user_id' not in session:
             flash('Please login first.', 'danger')
             return redirect(url_for('login'))
-        if session.get('role_id') != 2:  # 2 = admin
-            flash('Access denied. Admin only.', 'danger')
+        if session.get('role_id') != 1:  # 1 = user/employee
+            flash('Access denied. User only.', 'danger')
             return redirect(url_for('index'))
         return f(*args, **kwargs)
     return decorated_function
@@ -62,6 +75,36 @@ def find_user_by_email(email):
     conn = get_db()
     cur = conn.cursor(dictionary=True)
     cur.execute("SELECT * FROM users WHERE email = %s LIMIT 1", (email,))
+    row = cur.fetchone()
+    cur.close()
+    return row
+
+def get_user_by_id(user_id):
+    conn = get_db()
+    cur = conn.cursor(dictionary=True)
+    cur.execute("SELECT * FROM users WHERE user_id = %s", (user_id,))
+    row = cur.fetchone()
+    cur.close()
+    return row
+
+def get_employee_by_user_id(user_id):
+    conn = get_db()
+    cur = conn.cursor(dictionary=True)
+    cur.execute("""
+        SELECT 
+            e.employee_id,
+            e.user_id,
+            e.department_id,
+            e.job_title_id,
+            e.hire_date,
+            e.status,
+            d.department_name,
+            j.title_name
+        FROM employees e
+        LEFT JOIN departments d ON e.department_id = d.department_id
+        LEFT JOIN job_titles j ON e.job_title_id = j.job_title_id
+        WHERE e.user_id = %s
+    """, (user_id,))
     row = cur.fetchone()
     cur.close()
     return row
@@ -79,10 +122,10 @@ def create_user(first_name, last_name, email, password, role_id=1):
 
 # ==================== MAIN ROUTES ====================
 
-@app.route("/")
+@app. route("/")
 def index():
     if 'user_id' in session:
-        if session.get('role_id') == 2:  # admin
+        if session. get('role_id') == 2:  # admin
             return redirect(url_for('admin_dashboard'))
         else:
             return redirect(url_for('user_dashboard'))
@@ -92,7 +135,7 @@ def index():
 def login():
     if request.method == "POST":
         email = request.form.get("email", "").strip().lower()
-        password = request.form.get("password", "").strip()
+        password = request. form.get("password", "").strip()
         
         if not email or not password:
             flash("Please fill in both fields.", "danger")
@@ -103,19 +146,19 @@ def login():
             flash("Invalid email or password.", "danger")
             return redirect(url_for("login"))
 
-        stored_pw = user.get("password", "")
+        stored_pw = user. get("password", "")
         try:
             valid = check_password_hash(stored_pw, password)
-        except Exception:
+        except Exception: 
             valid = False
 
-        if valid:
+        if valid: 
             session['user_id'] = user['user_id']
             session['user_name'] = f"{user['first_name']} {user['last_name']}"
             session['email'] = user['email']
             session['role_id'] = user['role_id']
             
-            flash(f"Welcome back, {user.get('first_name')}!", "success")
+            flash(f"Welcome back, {user. get('first_name')}!", "success")
             
             if user['role_id'] == 2:  # admin
                 return redirect(url_for("admin_dashboard"))
@@ -129,10 +172,10 @@ def login():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    if request.method == "POST":
+    if request.method == "POST": 
         name = request.form.get("name", "").strip()
         email = request.form.get("email", "").strip().lower()
-        password = request.form.get("password", "").strip()
+        password = request. form.get("password", "").strip()
 
         if not name or not email or not password:
             flash("Please fill in all fields.", "danger")
@@ -147,7 +190,7 @@ def register():
             return redirect(url_for("register"))
 
         create_user(first_name, last_name, email, password, role_id=1)
-        flash("Registration successful. You can now log in.", "success")
+        flash("Registration successful.  You can now log in.", "success")
         return redirect(url_for("login"))
 
     return render_template("register.html", title="Register")
@@ -160,7 +203,7 @@ def logout():
 
 # ==================== ADMIN ROUTES ====================
 
-@app.route("/admin/dashboard")
+@app. route("/admin/dashboard")
 @admin_required
 def admin_dashboard():
     conn = get_db()
@@ -171,7 +214,7 @@ def admin_dashboard():
         cur.execute("SELECT COUNT(*) FROM employees WHERE status = 'active'")
         total_employees = cur.fetchone()[0]
         
-        cur.execute("SELECT COUNT(*) FROM attendance WHERE attendance_date = CURDATE() AND status = 'present'")
+        cur. execute("SELECT COUNT(*) FROM attendance WHERE attendance_date = CURDATE() AND status = 'present'")
         today_attendance = cur.fetchone()[0]
         
         cur.execute("SELECT COUNT(*) FROM leaves WHERE status = 'pending'")
@@ -199,7 +242,7 @@ def admin_dashboard():
                              pending_leaves=pending_leaves,
                              monthly_payroll=monthly_payroll,
                              recent_leaves=recent_leaves)
-    except Exception as e:
+    except Exception as e: 
         cur.close()
         flash(f"Error loading dashboard: {str(e)}", "danger")
         return redirect(url_for("index"))
@@ -242,7 +285,7 @@ def admin_employees():
         cur.execute("SELECT job_title_id, title_name FROM job_titles ORDER BY title_name")
         job_titles = cur.fetchall()
         
-        cur.close()
+        cur. close()
         
         return render_template("admin/employees.html", 
                              employees=employees, 
@@ -259,7 +302,7 @@ def admin_add_employee():
     conn = get_db()
     cur = conn.cursor()
     
-    if request.method == "POST":
+    if request.method == "POST": 
         # Get form data
         first_name = request.form.get("first_name", "").strip()
         last_name = request.form.get("last_name", "").strip()
@@ -270,7 +313,7 @@ def admin_add_employee():
         department_id = request.form.get("department_id")
         job_title_id = request.form.get("job_title_id")
         hire_date = request.form.get("hire_date")
-        status = request.form.get("status", "active")
+        status = request.form. get("status", "active")
         
         # Validate required fields
         if not first_name or not last_name or not email or not password:
@@ -332,7 +375,7 @@ def admin_edit_employee(employee_id):
     conn = get_db()
     cur = conn.cursor()
     
-    if request.method == "POST":
+    if request.method == "POST": 
         try:
             # Get form data
             first_name = request.form.get("first_name", "").strip()
@@ -397,7 +440,7 @@ def admin_edit_employee(employee_id):
             JOIN users u ON e.user_id = u.user_id
             WHERE e.employee_id = %s
         """, (employee_id,))
-        employee = cur.fetchone()
+        employee = cur. fetchone()
         
         if not employee:
             flash("Employee not found.", "danger")
@@ -418,7 +461,7 @@ def admin_edit_employee(employee_id):
                              job_titles=job_titles)
     except Exception as e:
         cur.close()
-        flash(f"Error loading employee: {str(e)}", "danger")
+        flash(f"Error loading employee:  {str(e)}", "danger")
         return redirect(url_for("admin_employees"))
 
 @app.route("/admin/employees/delete/<int:employee_id>", methods=["DELETE", "POST"])
@@ -430,7 +473,7 @@ def admin_delete_employee(employee_id):
     try:
         # Get user_id before deleting employee
         cur.execute("SELECT user_id FROM employees WHERE employee_id = %s", (employee_id,))
-        result = cur.fetchone()
+        result = cur. fetchone()
         if not result:
             if request.method == "DELETE":
                 return jsonify({"success": False, "message": "Employee not found"}), 404
@@ -448,13 +491,13 @@ def admin_delete_employee(employee_id):
         conn.commit()
         cur.close()
         
-        if request.method == "DELETE":
-            return jsonify({"success": True, "message": "Employee deleted successfully"})
+        if request.method == "DELETE": 
+            return jsonify({"success":  True, "message": "Employee deleted successfully"})
         else:
             flash("Employee deleted successfully!", "success")
             return redirect(url_for("admin_employees"))
         
-    except Exception as e:
+    except Exception as e: 
         conn.rollback()
         cur.close()
         
@@ -463,6 +506,7 @@ def admin_delete_employee(employee_id):
         else:
             flash(f"Error deleting employee: {str(e)}", "danger")
             return redirect(url_for("admin_employees"))
+
 
 @app.route("/admin/attendance")
 @admin_required
@@ -514,7 +558,7 @@ def admin_attendance():
                 a.check_out,
                 a.status,
                 CASE 
-                    WHEN a.check_in IS NOT NULL AND a.check_out IS NOT NULL 
+                    WHEN a.check_in IS NOT NULL AND a. check_out IS NOT NULL 
                     THEN TIME_FORMAT(TIMEDIFF(a.check_out, a.check_in), '%Hh %im')
                     ELSE NULL
                 END as total_hours
@@ -531,8 +575,8 @@ def admin_attendance():
             attendance_query += " AND e.department_id = %s"
             params.append(department_filter)
         
-        attendance_query += " ORDER BY a.check_in DESC LIMIT %s OFFSET %s"
-        params.extend([per_page, offset])
+        attendance_query += " ORDER BY a. check_in DESC LIMIT %s OFFSET %s"
+        params. extend([per_page, offset])
         
         cur.execute(attendance_query, params)
         attendance_records = cur.fetchall()
@@ -541,7 +585,7 @@ def admin_attendance():
         count_query = """
             SELECT COUNT(*) as total
             FROM attendance a
-            JOIN employees e ON a.employee_id = e.employee_id
+            JOIN employees e ON a. employee_id = e.employee_id
             WHERE a.attendance_date = %s
         """
         count_params = [selected_date]
@@ -574,7 +618,7 @@ def admin_attendance():
                              total_records=total_records)
     
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error:  {e}")
         return render_template('admin/attendance.html', 
                              stats={'total_present': 0, 'attendance_percentage': 0, 
                                    'late_arrivals': 0, 'late_percentage': 0,
@@ -619,7 +663,7 @@ def admin_leaves():
                 DATEDIFF(l.end_date, l.start_date) + 1 as duration,
                 'No reason provided' as reason
             FROM leaves l
-            JOIN employees e ON l.employee_id = e.employee_id
+            JOIN employees e ON l. employee_id = e.employee_id
             JOIN users u ON e.user_id = u.user_id
             ORDER BY 
                 CASE l.status
@@ -634,7 +678,7 @@ def admin_leaves():
         # Add specific reasons based on leave type and employee
         for leave in leave_requests:
             if leave['leave_type'] == 'vacation':
-                if leave['first_name'] == 'Sarah':
+                if leave['first_name'] == 'Sarah': 
                     leave['reason'] = 'Family vacation planned'
                 elif leave['first_name'] == 'David':
                     leave['reason'] = 'Holiday vacation'
@@ -647,7 +691,7 @@ def admin_leaves():
                     leave['reason'] = 'Medical appointment'
                 else:
                     leave['reason'] = 'Medical reasons'
-            elif leave['leave_type'] == 'personal':
+            elif leave['leave_type'] == 'personal': 
                 if leave['first_name'] == 'Emma':
                     leave['reason'] = 'Personal matters to attend'
                 else:
@@ -679,15 +723,15 @@ def admin_update_leave(leave_id):
     try:
         new_status = request.form.get('status')
         
-        if new_status not in ['approved', 'rejected']:
-            flash('Invalid status.', 'danger')
+        if new_status not in ['approved', 'rejected']: 
+            flash('Invalid status. ', 'danger')
             return redirect(url_for('admin_leaves'))
         
         cur.execute("UPDATE leaves SET status = %s WHERE leave_id = %s", (new_status, leave_id))
         conn.commit()
         cur.close()
         
-        flash(f'Leave request {new_status} successfully!', 'success')
+        flash(f'Leave request {new_status} successfully! ', 'success')
         return redirect(url_for('admin_leaves'))
     
     except Exception as e:
@@ -757,7 +801,7 @@ def admin_payroll():
                 p.basic_salary as base_salary,
                 p.bonus,
                 p.deductions,
-                (p.basic_salary + p.bonus - p.deductions) as net_pay,
+                (p.basic_salary + p. bonus - p.deductions) as net_pay,
                 CASE 
                     WHEN p.status = 'paid' THEN 'Paid'
                     WHEN p.status = 'pending' THEN 'Pending'
@@ -774,8 +818,7 @@ def admin_payroll():
         employees = cur.fetchall()
         
         # If no payroll data exists, create sample data for demonstration
-        if not employees:
-            # You can remove this section in production
+        if not employees: 
             employees = [
                 {
                     'first_name': 'Sarah',
@@ -783,12 +826,12 @@ def admin_payroll():
                     'role': 'Senior Developer',
                     'base_salary': 8500,
                     'bonus': 1200,
-                    'deductions': 850,
+                    'deductions':  850,
                     'net_pay': 8850,
                     'status': 'Paid'
                 },
                 {
-                    'first_name': 'Michael',
+                    'first_name':  'Michael',
                     'last_name': 'Chen',
                     'role': 'Product Manager',
                     'base_salary': 9000,
@@ -802,8 +845,8 @@ def admin_payroll():
                     'last_name': 'Williams',
                     'role': 'UX Designer',
                     'base_salary': 7500,
-                    'bonus': 800,
-                    'deductions': 750,
+                    'bonus':  800,
+                    'deductions':  750,
                     'net_pay': 7550,
                     'status': 'Paid'
                 },
@@ -812,7 +855,7 @@ def admin_payroll():
                     'last_name': 'Brown',
                     'role': 'HR Manager',
                     'base_salary': 7000,
-                    'bonus': 1000,
+                    'bonus':  1000,
                     'deductions': 700,
                     'net_pay': 7300,
                     'status': 'Pending'
@@ -839,12 +882,11 @@ def admin_payroll():
         total_net_pay = sum(emp['net_pay'] for emp in employees)
         
         # Get pay period dates
-        from datetime import datetime, timedelta
         today = datetime.now()
         
         # Current period (1st to 15th or 16th to end of month)
         if today.day <= 15:
-            period_start = today.replace(day=1)
+            period_start = today. replace(day=1)
             period_end = today.replace(day=15)
             next_start = today.replace(day=16)
             if today.month == 12:
@@ -864,7 +906,7 @@ def admin_payroll():
                 next_start = datetime(today.year + 1, 1, 1)
             else:
                 next_start = today.replace(month=today.month + 1, day=1)
-            next_end = next_start.replace(day=15)
+            next_end = next_start. replace(day=15)
         
         pay_period = f"{period_start.strftime('%b %d')}-{period_end.strftime('%d')}"
         next_period = f"Dec {next_start.strftime('%d')}-{next_end.strftime('%d')}"
@@ -918,6 +960,7 @@ def admin_payroll():
                              employees=[],
                              totals=totals,
                              error=str(e))
+
 # ==================== PAYROLL ACTIONS ====================
 
 @app.route("/admin/payroll/export")
@@ -939,7 +982,7 @@ def export_payroll_csv():
                 p.basic_salary,
                 p.bonus,
                 p.deductions,
-                (p.basic_salary + p.bonus - p.deductions) as net_pay,
+                (p.basic_salary + p. bonus - p.deductions) as net_pay,
                 p.status,
                 DATE_FORMAT(p.pay_date, '%Y-%m-%d') as pay_date
             FROM payroll p
@@ -947,24 +990,24 @@ def export_payroll_csv():
             JOIN users u ON e.user_id = u.user_id
             LEFT JOIN job_titles j ON e.job_title_id = j.job_title_id
             WHERE MONTH(p.pay_date) = MONTH(CURDATE())
-            AND YEAR(p.pay_date) = YEAR(CURDATE())
-            ORDER BY u.last_name, u.first_name
+            AND YEAR(p. pay_date) = YEAR(CURDATE())
+            ORDER BY u.last_name, u. first_name
         """)
         rows = cur.fetchall()
         
-        # إذا مفيش بيانات، نستخدم البيانات الـ sample اللي موجودة في الـ route الأصلي
+        # إذا مفيش بيانات، نستخدم البيانات الـ sample
         if not rows:
             rows = [
-                {'first_name': 'Sarah', 'last_name': 'Johnson', 'role': 'Senior Developer', 'basic_salary': 8500, 'bonus': 1200, 'deductions': 850, 'net_pay': 8850, 'status': 'Paid', 'pay_date': date.today().strftime('%Y-%m-%d')},
-                {'first_name': 'Michael', 'last_name': 'Chen', 'role': 'Product Manager', 'basic_salary': 9000, 'bonus': 1500, 'deductions': 900, 'net_pay': 9600, 'status': 'Paid', 'pay_date': date.today().strftime('%Y-%m-%d')},
+                {'first_name': 'Sarah', 'last_name': 'Johnson', 'role': 'Senior Developer', 'basic_salary': 8500, 'bonus': 1200, 'deductions': 850, 'net_pay': 8850, 'status': 'Paid', 'pay_date':  date.today().strftime('%Y-%m-%d')},
+                {'first_name': 'Michael', 'last_name': 'Chen', 'role': 'Product Manager', 'basic_salary': 9000, 'bonus': 1500, 'deductions': 900, 'net_pay': 9600, 'status': 'Paid', 'pay_date': date. today().strftime('%Y-%m-%d')},
                 {'first_name': 'Emma', 'last_name': 'Williams', 'role': 'UX Designer', 'basic_salary': 7500, 'bonus': 800, 'deductions': 750, 'net_pay': 7550, 'status': 'Paid', 'pay_date': date.today().strftime('%Y-%m-%d')},
-                {'first_name': 'David', 'last_name': 'Brown', 'role': 'HR Manager', 'basic_salary': 7000, 'bonus': 1000, 'deductions': 700, 'net_pay': 7300, 'status': 'Pending', 'pay_date': date.today().strftime('%Y-%m-%d')},
-                {'first_name': 'Lisa', 'last_name': 'Anderson', 'role': 'Marketing Lead', 'basic_salary': 8000, 'bonus': 1200, 'deductions': 800, 'net_pay': 8400, 'status': 'Pending', 'pay_date': date.today().strftime('%Y-%m-%d')},
+                {'first_name': 'David', 'last_name': 'Brown', 'role': 'HR Manager', 'basic_salary': 7000, 'bonus': 1000, 'deductions':  700, 'net_pay': 7300, 'status': 'Pending', 'pay_date': date.today().strftime('%Y-%m-%d')},
+                {'first_name': 'Lisa', 'last_name': 'Anderson', 'role': 'Marketing Lead', 'basic_salary': 8000, 'bonus': 1200, 'deductions': 800, 'net_pay':  8400, 'status':  'Pending', 'pay_date': date.today().strftime('%Y-%m-%d')},
             ]
         
         # إنشاء CSV
         output = StringIO()
-        writer = csv.DictWriter(output, fieldnames=['first_name', 'last_name', 'role', 'basic_salary', 'bonus', 'deductions', 'net_pay', 'status', 'pay_date'])
+        writer = csv. DictWriter(output, fieldnames=['first_name', 'last_name', 'role', 'basic_salary', 'bonus', 'deductions', 'net_pay', 'status', 'pay_date'])
         writer.writeheader()
         writer.writerows(rows)
         
@@ -976,8 +1019,8 @@ def export_payroll_csv():
         
         return response
         
-    except Exception as e:
-        flash(f"Error exporting payroll: {str(e)}", "danger")
+    except Exception as e: 
+        flash(f"Error exporting payroll:  {str(e)}", "danger")
         return redirect(url_for('admin_payroll'))
     finally:
         cur.close()
@@ -1003,11 +1046,11 @@ def process_payroll():
         conn.commit()
         
         if updated_count > 0:
-            flash(f"Payroll processed successfully! {updated_count} payments marked as paid.", "success")
+            flash(f"Payroll processed successfully!  {updated_count} payments marked as paid.", "success")
         else:
             flash("No pending payrolls to process.", "info")
             
-    except Exception as e:
+    except Exception as e: 
         conn.rollback()
         flash(f"Error processing payroll: {str(e)}", "danger")
     finally:
@@ -1039,7 +1082,7 @@ def admin_settings():
         user_counts = cur.fetchone()
         
         # جلب إعدادات الإشعارات للمستخدم الحالي
-        cur.execute("""
+        cur. execute("""
             SELECT * FROM notification_settings 
             WHERE user_id = %s 
             ORDER BY setting_id DESC LIMIT 1
@@ -1063,7 +1106,7 @@ def admin_settings():
         
         cur.close()
         
-        return render_template('admin/settings.html',
+        return render_template('admin/settings. html',
                              company_info=company_data,
                              admin_count=user_counts[0] if user_counts and user_counts[0] else 5,
                              manager_count=12,
@@ -1106,11 +1149,11 @@ def admin_update_company_info():
                 VALUES (%s, %s, %s)
             """, (company_name, industry, employee_count))
         
-        conn.commit()
+        conn. commit()
         flash('Company information updated successfully!', 'success')
         
     except Exception as e:
-        conn.rollback()
+        conn. rollback()
         flash(f'Error updating company info: {str(e)}', 'danger')
     
     finally:
@@ -1185,7 +1228,7 @@ def admin_update_system_prefs():
         cur.execute("SELECT setting_id FROM company_settings LIMIT 1")
         existing = cur.fetchone()
         
-        if existing:
+        if existing: 
             cur.execute("""
                 UPDATE company_settings 
                 SET timezone = %s, date_format = %s, language = %s, currency = %s
@@ -1215,7 +1258,899 @@ def admin_update_system_prefs():
 @app.route("/user/dashboard")
 @login_required
 def user_dashboard():
-    return f"<h1>Welcome {session.get('user_name')}!</h1><p>User Dashboard (Coming Soon)</p>"
+    """لوحة تحكم الموظف - عرض البيانات الأساسية"""
+    conn = get_db()
+    cur = conn.cursor(dictionary=True)
+    
+    try:
+        # جلب بيانات الموظف
+        employee = get_employee_by_user_id(session['user_id'])
+        
+        if not employee:
+            flash('Employee profile not found. ', 'danger')
+            return redirect(url_for('logout'))
+        
+        # جلب إحصائيات الحضور للشهر الحالي
+        cur.execute("""
+            SELECT 
+                COUNT(CASE WHEN status = 'present' THEN 1 END) as present_days,
+                COUNT(CASE WHEN status = 'absent' THEN 1 END) as absent_days,
+                COUNT(CASE WHEN status = 'leave' THEN 1 END) as leave_days
+            FROM attendance
+            WHERE employee_id = %s
+            AND MONTH(attendance_date) = MONTH(CURDATE())
+            AND YEAR(attendance_date) = YEAR(CURDATE())
+        """, (employee['employee_id'],))
+        attendance_stats = cur.fetchone()
+        
+        # جلب الأجازات المعلقة
+        cur.execute("""
+            SELECT COUNT(*) as count FROM leaves
+            WHERE employee_id = %s AND status = 'pending'
+        """, (employee['employee_id'],))
+        pending_leaves = cur.fetchone()['count']
+        
+        # جلب الراتب الحالي
+        cur.execute("""
+            SELECT COALESCE(basic_salary + bonus - deductions, 0) as net_pay
+            FROM payroll
+            WHERE employee_id = %s
+            AND MONTH(pay_date) = MONTH(CURDATE())
+            AND YEAR(pay_date) = YEAR(CURDATE())
+            LIMIT 1
+        """, (employee['employee_id'],))
+        payroll_info = cur.fetchone()
+        
+        cur.close()
+        
+        stats = {
+            'present_days': attendance_stats['present_days'] or 0,
+            'absent_days': attendance_stats['absent_days'] or 0,
+            'leave_days': attendance_stats['leave_days'] or 0,
+            'pending_leaves': pending_leaves or 0,
+            'net_pay': payroll_info['net_pay'] if payroll_info else 0
+        }
+        
+        return render_template('user/dashboard.html',
+                             employee=employee,
+                             stats=stats,
+                             user_name=session. get('user_name'))
+    
+    except Exception as e:
+        cur.close()
+        flash(f'Error loading dashboard: {str(e)}', 'danger')
+        return redirect(url_for('index'))
+
+
+@app.route("/user/profile")
+@login_required
+def user_profile():
+    """عرض الملف الشخصي للموظف"""
+    conn = get_db()
+    cur = conn.cursor(dictionary=True)
+    
+    try:
+        user = get_user_by_id(session['user_id'])
+        employee = get_employee_by_user_id(session['user_id'])
+        
+        cur.close()
+        
+        if not user or not employee:
+            flash('Profile not found.', 'danger')
+            return redirect(url_for('user_dashboard'))
+        
+        return render_template('user/profile. html',
+                             user=user,
+                             employee=employee)
+    
+    except Exception as e:
+        cur.close()
+        flash(f'Error loading profile: {str(e)}', 'danger')
+        return redirect(url_for('user_dashboard'))
+
+
+@app.route("/user/profile/edit", methods=["GET", "POST"])
+@login_required
+def user_edit_profile():
+    """تعديل الملف الشخصي للموظف"""
+    conn = get_db()
+    cur = conn.cursor()
+    
+    if request.method == "POST":
+        try:
+            first_name = request.form.get("first_name", "").strip()
+            last_name = request.form.get("last_name", "").strip()
+            phone = request.form.get("phone", "").strip()
+            
+            if not first_name or not last_name: 
+                flash("Please fill in all required fields.", "danger")
+                return redirect(url_for("user_edit_profile"))
+            
+            cur.execute("""
+                UPDATE users 
+                SET first_name = %s, last_name = %s, phone = %s
+                WHERE user_id = %s
+            """, (first_name, last_name, phone, session['user_id']))
+            
+            conn.commit()
+            
+            # تحديث البيانات في الجلسة
+            session['user_name'] = f"{first_name} {last_name}"
+            
+            flash('Profile updated successfully!', 'success')
+            return redirect(url_for('user_profile'))
+        
+        except Exception as e: 
+            conn.rollback()
+            flash(f'Error updating profile: {str(e)}', 'danger')
+            return redirect(url_for('user_edit_profile'))
+        finally:
+            cur.close()
+    
+    # GET request
+    try:
+        user = get_user_by_id(session['user_id'])
+        cur.close()
+        return render_template('user/edit_profile.html', user=user)
+    except Exception as e: 
+        cur.close()
+        flash(f'Error loading profile: {str(e)}', 'danger')
+        return redirect(url_for('user_profile'))
+
+
+@app.route("/user/attendance")
+@login_required
+def user_attendance():
+    """عرض سجل الحضور للموظف"""
+    conn = get_db()
+    cur = conn.cursor(dictionary=True)
+    
+    try:
+        employee = get_employee_by_user_id(session['user_id'])
+        
+        if not employee:
+            flash('Employee profile not found.', 'danger')
+            return redirect(url_for('user_dashboard'))
+        
+        # الحصول على معامل التصفية
+        selected_month = request.args.get('month', datetime.now().strftime('%Y-%m'))
+        page = int(request.args.get('page', 1))
+        per_page = 10
+        offset = (page - 1) * per_page
+        
+        # جلب سجل الحضور
+        cur.execute("""
+            SELECT 
+                a.attendance_id,
+                a.attendance_date,
+                a.check_in,
+                a.check_out,
+                a.status,
+                CASE 
+                    WHEN a.check_in IS NOT NULL AND a.check_out IS NOT NULL 
+                    THEN TIME_FORMAT(TIMEDIFF(a.check_out, a.check_in), '%Hh %im')
+                    ELSE 'N/A'
+                END as total_hours
+            FROM attendance a
+            WHERE a.employee_id = %s
+            AND DATE_FORMAT(a.attendance_date, '%Y-%m') = %s
+            ORDER BY a.attendance_date DESC
+            LIMIT %s OFFSET %s
+        """, (employee['employee_id'], selected_month, per_page, offset))
+        
+        attendance_records = cur.fetchall()
+        
+        # جلب عدد السجلات الإجمالي
+        cur. execute("""
+            SELECT COUNT(*) as total
+            FROM attendance
+            WHERE employee_id = %s
+            AND DATE_FORMAT(attendance_date, '%Y-%m') = %s
+        """, (employee['employee_id'], selected_month))
+        
+        total_records = cur.fetchone()['total']
+        total_pages = (total_records + per_page - 1) // per_page
+        
+        # حساب الإحصائيات
+        cur.execute("""
+            SELECT 
+                COUNT(CASE WHEN status = 'present' THEN 1 END) as present_count,
+                COUNT(CASE WHEN status = 'absent' THEN 1 END) as absent_count,
+                COUNT(CASE WHEN status = 'leave' THEN 1 END) as leave_count,
+                AVG(CASE WHEN status = 'present' AND check_in IS NOT NULL AND check_out IS NOT NULL 
+                    THEN TIME_TO_SEC(TIMEDIFF(check_out, check_in))/3600 END) as avg_hours
+            FROM attendance
+            WHERE employee_id = %s
+            AND DATE_FORMAT(attendance_date, '%Y-%m') = %s
+        """, (employee['employee_id'], selected_month))
+        
+        stats = cur.fetchone()
+        
+        cur.close()
+        
+        stats_dict = {
+            'present_count': stats['present_count'] or 0,
+            'absent_count': stats['absent_count'] or 0,
+            'leave_count': stats['leave_count'] or 0,
+            'avg_hours': f"{int(stats['avg_hours'] or 0)}h {int(((stats['avg_hours'] or 0) % 1) * 60)}m" if stats['avg_hours'] else '0h 0m'
+        }
+        
+        return render_template('user/attendance.html',
+                             attendance_records=attendance_records,
+                             stats=stats_dict,
+                             selected_month=selected_month,
+                             current_page=page,
+                             total_pages=total_pages,
+                             total_records=total_records)
+    
+    except Exception as e:
+        cur. close()
+        flash(f'Error loading attendance:  {str(e)}', 'danger')
+        return redirect(url_for('user_dashboard'))
+
+@app.route("/user/leaves", methods=["GET", "POST"])
+@login_required
+def user_leaves():
+    """عرض وتقديم طلبات الأجازة"""
+    conn = get_db()
+    cur = conn.cursor(dictionary=True)
+    
+    if request.method == "POST": 
+        try:
+            employee = get_employee_by_user_id(session['user_id'])
+            
+            if not employee:
+                flash('Employee profile not found. ', 'danger')
+                return redirect(url_for('user_dashboard'))
+            
+            leave_type = request.form.get('leave_type', '').strip()
+            start_date = request.form.get('start_date', '').strip()
+            end_date = request.form.get('end_date', '').strip()
+            reason = request.form.get('reason', '').strip()
+            
+            # التحقق من الحقول المطلوبة
+            if not leave_type or not start_date or not end_date:
+                flash('Please fill in all required fields.', 'danger')
+                return redirect(url_for('user_leaves'))
+            
+            # التحقق من أن تاريخ البداية قبل تاريخ النهاية
+            start = datetime.strptime(start_date, '%Y-%m-%d')
+            end = datetime.strptime(end_date, '%Y-%m-%d')
+            
+            if start > end:
+                flash('Start date must be before end date.', 'danger')
+                return redirect(url_for('user_leaves'))
+            
+            # التحقق من عدم وجود أجازة متداخلة
+            cur.execute("""
+                SELECT COUNT(*) as count FROM leaves
+                WHERE employee_id = %s
+                AND status IN ('pending', 'approved')
+                AND ((start_date <= %s AND end_date >= %s) 
+                     OR (start_date <= %s AND end_date >= %s)
+                     OR (start_date >= %s AND end_date <= %s))
+            """, (employee['employee_id'], end_date, start_date, end_date, start_date, start_date, end_date))
+            
+            if cur.fetchone()['count'] > 0:
+                flash('You already have a leave request for this period.', 'danger')
+                return redirect(url_for('user_leaves'))
+            
+            # إدراج طلب الأجازة الجديد
+            cur.execute("""
+                INSERT INTO leaves (employee_id, leave_type, start_date, end_date, reason, status, created_at)
+                VALUES (%s, %s, %s, %s, %s, 'pending', NOW())
+            """, (employee['employee_id'], leave_type, start_date, end_date, reason))
+            
+            conn.commit()
+            flash('Leave request submitted successfully! ', 'success')
+            return redirect(url_for('user_leaves'))
+        
+        except Exception as e: 
+            conn.rollback()
+            flash(f'Error submitting leave request: {str(e)}', 'danger')
+            return redirect(url_for('user_leaves'))
+    
+    # GET request - عرض طلبات الأجازة
+    try:
+        employee = get_employee_by_user_id(session['user_id'])
+        
+        if not employee:
+            flash('Employee profile not found.', 'danger')
+            return redirect(url_for('user_dashboard'))
+        
+        # جلب جميع طلبات الأجازة للموظف
+        cur.execute("""
+            SELECT 
+                l.leave_id,
+                l.leave_type,
+                l.start_date,
+                l.end_date,
+                l.status,
+                l.reason,
+                DATEDIFF(l.end_date, l.start_date) + 1 as duration,
+                l.created_at
+            FROM leaves l
+            WHERE l.employee_id = %s
+            ORDER BY 
+                CASE l.status
+                    WHEN 'pending' THEN 1
+                    WHEN 'approved' THEN 2
+                    WHEN 'rejected' THEN 3
+                END,
+                l.leave_id DESC
+        """, (employee['employee_id'],))
+        
+        leaves = cur.fetchall()
+        
+        # حساب الأجازات المتبقية
+        cur.execute("""
+            SELECT COUNT(*) as approved_leaves FROM leaves
+            WHERE employee_id = %s AND status = 'approved'
+            AND YEAR(start_date) = YEAR(CURDATE())
+        """, (employee['employee_id'],))
+        
+        approved_leaves = cur. fetchone()['approved_leaves'] or 0
+        remaining_leaves = 21 - approved_leaves  # افترض 21 يوم أجازة سنوياً
+        
+        cur.close()
+        
+        return render_template('user/leaves. html',
+                             leaves=leaves,
+                             approved_leaves=approved_leaves,
+                             remaining_leaves=max(0, remaining_leaves))
+    
+    except Exception as e:
+        cur.close()
+        flash(f'Error loading leaves: {str(e)}', 'danger')
+        return redirect(url_for('user_dashboard'))
+
+
+@app.route("/user/leaves/<int:leave_id>/cancel", methods=["POST"])
+@login_required
+def user_cancel_leave(leave_id):
+    """إلغاء طلب أجازة معلق"""
+    conn = get_db()
+    cur = conn.cursor()
+    
+    try:
+        employee = get_employee_by_user_id(session['user_id'])
+        
+        # التحقق من أن الأجازة تخص الموظف الحالي
+        cur.execute("""
+            SELECT l.leave_id, l.status FROM leaves l
+            WHERE l.leave_id = %s AND l. employee_id = %s
+        """, (leave_id, employee['employee_id']))
+        
+        leave = cur.fetchone()
+        
+        if not leave: 
+            flash('Leave request not found.', 'danger')
+            return redirect(url_for('user_leaves'))
+        
+        if leave[1] != 'pending': 
+            flash('You can only cancel pending leave requests.', 'danger')
+            return redirect(url_for('user_leaves'))
+        
+        # حذف طلب الأجازة
+        cur.execute("DELETE FROM leaves WHERE leave_id = %s", (leave_id,))
+        conn.commit()
+        
+        flash('Leave request cancelled successfully!', 'success')
+        return redirect(url_for('user_leaves'))
+    
+    except Exception as e:
+        conn.rollback()
+        flash(f'Error cancelling leave: {str(e)}', 'danger')
+        return redirect(url_for('user_leaves'))
+    finally:
+        cur.close()
+
+
+@app.route("/user/payroll")
+@login_required
+def user_payroll():
+    """عرض معلومات الراتب والدفع"""
+    conn = get_db()
+    cur = conn.cursor(dictionary=True)
+    
+    try:
+        employee = get_employee_by_user_id(session['user_id'])
+        
+        if not employee:
+            flash('Employee profile not found.', 'danger')
+            return redirect(url_for('user_dashboard'))
+        
+        # جلب بيانات الراتب الحالي
+        cur.execute("""
+            SELECT 
+                p.payroll_id,
+                p.basic_salary,
+                p.bonus,
+                p.deductions,
+                (p.basic_salary + p. bonus - p.deductions) as net_pay,
+                p.status,
+                p.pay_date,
+                DATE_FORMAT(p.pay_date, '%Y-%m') as pay_period
+            FROM payroll p
+            WHERE p.employee_id = %s
+            ORDER BY p.pay_date DESC
+            LIMIT 12
+        """, (employee['employee_id'],))
+        
+        payroll_history = cur.fetchall()
+        
+        # جلب معلومات الراتب الحالي
+        current_month = datetime.now().strftime('%Y-%m')
+        current_payroll = None
+        
+        for payroll in payroll_history: 
+            if payroll['pay_period'] == current_month:
+                current_payroll = payroll
+                break
+        
+        # إذا لم يوجد راتب للشهر الحالي، استخدم أحدث راتب
+        if not current_payroll and payroll_history:
+            current_payroll = payroll_history[0]
+        
+        cur.close()
+        
+        return render_template('user/payroll.html',
+                             current_payroll=current_payroll,
+                             payroll_history=payroll_history)
+    
+    except Exception as e: 
+        cur.close()
+        flash(f'Error loading payroll:  {str(e)}', 'danger')
+        return redirect(url_for('user_dashboard'))
+
+
+@app.route("/user/payroll/export")
+@login_required
+def user_export_payroll():
+    """تحميل كشف الراتب كـ PDF"""
+    import csv
+    from io import StringIO
+    from flask import make_response
+    
+    conn = get_db()
+    cur = conn.cursor(dictionary=True)
+    
+    try:
+        employee = get_employee_by_user_id(session['user_id'])
+        
+        if not employee:
+            flash('Employee profile not found.', 'danger')
+            return redirect(url_for('user_payroll'))
+        
+        cur.execute("""
+            SELECT 
+                p.payroll_id,
+                p.basic_salary,
+                p.bonus,
+                p.deductions,
+                (p.basic_salary + p.bonus - p.deductions) as net_pay,
+                p.status,
+                DATE_FORMAT(p.pay_date, '%Y-%m-%d') as pay_date
+            FROM payroll p
+            WHERE p.employee_id = %s
+            AND MONTH(p.pay_date) = MONTH(CURDATE())
+            AND YEAR(p.pay_date) = YEAR(CURDATE())
+        """, (employee['employee_id'],))
+        
+        payroll = cur.fetchone()
+        
+        if not payroll:
+            flash('No payroll data available for this month.', 'warning')
+            return redirect(url_for('user_payroll'))
+        
+        # إنشاء CSV
+        output = StringIO()
+        writer = csv.DictWriter(output, fieldnames=['Description', 'Amount'])
+        writer.writeheader()
+        writer.writerows([
+            {'Description': 'Basic Salary', 'Amount': f'${payroll["basic_salary"]:.2f}'},
+            {'Description': 'Bonus', 'Amount': f'${payroll["bonus"]:.2f}'},
+            {'Description': 'Deductions', 'Amount': f'-${payroll["deductions"]:. 2f}'},
+            {'Description': 'Net Pay', 'Amount': f'${payroll["net_pay"]:.2f}'},
+        ])
+        
+        output.seek(0)
+        response = make_response(output.getvalue())
+        response.headers["Content-Disposition"] = f"attachment; filename=payroll_{payroll['pay_date']}.csv"
+        response.headers["Content-type"] = "text/csv"
+        
+        return response
+    
+    except Exception as e:
+        flash(f'Error exporting payroll: {str(e)}', 'danger')
+        return redirect(url_for('user_payroll'))
+    finally:
+        cur.close()
+
+
+@app.route("/user/password", methods=["GET", "POST"])
+@login_required
+def user_change_password():
+    """تغيير كلمة المرور"""
+    if request.method == "POST": 
+        conn = get_db()
+        cur = conn.cursor(dictionary=True)
+        
+        try:
+            current_password = request.form.get('current_password', '').strip()
+            new_password = request.form.get('new_password', '').strip()
+            confirm_password = request. form.get('confirm_password', '').strip()
+            
+            # التحقق من الحقول
+            if not current_password or not new_password or not confirm_password:
+                flash('Please fill in all fields.', 'danger')
+                return redirect(url_for('user_change_password'))
+            
+            # التحقق من أن كلمات المرور الجديدة متطابقة
+            if new_password != confirm_password: 
+                flash('New passwords do not match.', 'danger')
+                return redirect(url_for('user_change_password'))
+            
+            # التحقق من طول كلمة المرور
+            if len(new_password) < 6:
+                flash('Password must be at least 6 characters long. ', 'danger')
+                return redirect(url_for('user_change_password'))
+            
+            # جلب كلمة المرور الحالية
+            cur.execute("SELECT password FROM users WHERE user_id = %s", (session['user_id'],))
+            user = cur.fetchone()
+            
+            if not user: 
+                flash('User not found. ', 'danger')
+                return redirect(url_for('user_dashboard'))
+            
+            # التحقق من كلمة المرور الحالية
+            if not check_password_hash(user['password'], current_password):
+                flash('Current password is incorrect.', 'danger')
+                return redirect(url_for('user_change_password'))
+            
+            # تحديث كلمة المرور
+            new_password_hash = generate_password_hash(new_password)
+            cur.execute(
+                "UPDATE users SET password = %s WHERE user_id = %s",
+                (new_password_hash, session['user_id'])
+            )
+            conn.commit()
+            
+            flash('Password changed successfully!', 'success')
+            return redirect(url_for('user_profile'))
+        
+        except Exception as e: 
+            conn.rollback()
+            flash(f'Error changing password: {str(e)}', 'danger')
+            return redirect(url_for('user_change_password'))
+        finally:
+            cur.close()
+    
+    return render_template('user/change_password.html')
+
+
+@app.route("/user/notifications")
+@login_required
+def user_notifications():
+    """عرض الإشعارات للموظف"""
+    conn = get_db()
+    cur = conn.cursor(dictionary=True)
+    
+    try:
+        page = int(request.args.get('page', 1))
+        per_page = 10
+        offset = (page - 1) * per_page
+        
+        # جلب الإشعارات
+        cur.execute("""
+            SELECT 
+                n.notification_id,
+                n.user_id,
+                n.title,
+                n.message,
+                n.type,
+                n.is_read,
+                n.created_at
+            FROM notifications n
+            WHERE n.user_id = %s
+            ORDER BY n.is_read ASC, n.created_at DESC
+            LIMIT %s OFFSET %s
+        """, (session['user_id'], per_page, offset))
+        
+        notifications = cur.fetchall()
+        
+        # جلب عدد الإشعارات الإجمالي
+        cur.execute("""
+            SELECT COUNT(*) as total FROM notifications
+            WHERE user_id = %s
+        """, (session['user_id'],))
+        
+        total_records = cur.fetchone()['total']
+        total_pages = (total_records + per_page - 1) // per_page
+        
+        # جلب عدد الإشعارات غير المقروءة
+        cur. execute("""
+            SELECT COUNT(*) as unread_count FROM notifications
+            WHERE user_id = %s AND is_read = 0
+        """, (session['user_id'],))
+        
+        unread_count = cur. fetchone()['unread_count']
+        
+        cur.close()
+        
+        return render_template('user/notifications.html',
+                             notifications=notifications,
+                             unread_count=unread_count,
+                             current_page=page,
+                             total_pages=total_pages,
+                             total_records=total_records)
+    
+    except Exception as e:
+        cur. close()
+        flash(f'Error loading notifications: {str(e)}', 'danger')
+        return redirect(url_for('user_dashboard'))
+
+
+@app.route("/user/notifications/<int:notification_id>/read", methods=["POST"])
+@login_required
+def user_mark_notification_read(notification_id):
+    """تحديد الإشعار كمقروء"""
+    conn = get_db()
+    cur = conn.cursor()
+    
+    try:
+        # التحقق من أن الإشعار يخص المستخدم الحالي
+        cur.execute("""
+            SELECT notification_id FROM notifications
+            WHERE notification_id = %s AND user_id = %s
+        """, (notification_id, session['user_id']))
+        
+        notification = cur.fetchone()
+        
+        if not notification:
+            return jsonify({'success': False, 'message': 'Notification not found'}), 404
+        
+        # تحديث الإشعار كمقروء
+        cur. execute("""
+            UPDATE notifications SET is_read = 1
+            WHERE notification_id = %s
+        """, (notification_id,))
+        
+        conn.commit()
+        cur.close()
+        
+        return jsonify({'success': True, 'message': 'Notification marked as read'})
+    
+    except Exception as e:
+        conn.rollback()
+        cur.close()
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
+@app.route("/user/notifications/mark-all-read", methods=["POST"])
+@login_required
+def user_mark_all_notifications_read():
+    """تحديد جميع الإشعارات كمقروءة"""
+    conn = get_db()
+    cur = conn.cursor()
+    
+    try:
+        cur.execute("""
+            UPDATE notifications SET is_read = 1
+            WHERE user_id = %s AND is_read = 0
+        """, (session['user_id'],))
+        
+        conn. commit()
+        cur.close()
+        
+        flash('All notifications marked as read!', 'success')
+        return redirect(url_for('user_notifications'))
+    
+    except Exception as e:
+        conn.rollback()
+        cur.close()
+        flash(f'Error marking notifications as read: {str(e)}', 'danger')
+        return redirect(url_for('user_notifications'))
+
+
+@app.route("/user/settings", methods=["GET", "POST"])
+@login_required
+def user_settings():
+    """إعدادات الموظف"""
+    conn = get_db()
+    cur = conn.cursor(dictionary=True)
+    
+    if request.method == "POST": 
+        try:
+            email_notifications = 1 if request.form.get('email_notifications') else 0
+            leave_alerts = 1 if request.form.get('leave_alerts') else 0
+            attendance_reminders = 1 if request. form.get('attendance_reminders') else 0
+            
+            # التحقق من وجود سجل للمستخدم
+            cur.execute("""
+                SELECT setting_id FROM notification_settings 
+                WHERE user_id = %s LIMIT 1
+            """, (session['user_id'],))
+            existing = cur.fetchone()
+            
+            if existing:
+                # تحديث السجل الموجود
+                cur.execute("""
+                    UPDATE notification_settings 
+                    SET email_notifications = %s, 
+                        leave_alerts = %s, 
+                        attendance_reminders = %s
+                    WHERE user_id = %s
+                """, (email_notifications, leave_alerts, attendance_reminders, session['user_id']))
+            else:
+                # إدراج سجل جديد
+                cur.execute("""
+                    INSERT INTO notification_settings 
+                    (user_id, email_notifications, leave_alerts, attendance_reminders)
+                    VALUES (%s, %s, %s, %s)
+                """, (session['user_id'], email_notifications, leave_alerts, attendance_reminders))
+            
+            conn.commit()
+            flash('Settings updated successfully!', 'success')
+            return redirect(url_for('user_settings'))
+        
+        except Exception as e:
+            conn.rollback()
+            flash(f'Error updating settings: {str(e)}', 'danger')
+            return redirect(url_for('user_settings'))
+    
+    # GET request
+    try:
+        # جلب إعدادات الإشعارات
+        cur.execute("""
+            SELECT * FROM notification_settings 
+            WHERE user_id = %s 
+            LIMIT 1
+        """, (session['user_id'],))
+        
+        notification_settings = cur.fetchone()
+        
+        settings_data = {
+            'email_notifications': notification_settings['email_notifications'] if notification_settings else True,
+            'leave_alerts':  notification_settings['leave_alerts'] if notification_settings else True,
+            'attendance_reminders': notification_settings['attendance_reminders'] if notification_settings else False
+        }
+        
+        cur.close()
+        
+        return render_template('user/settings. html', settings=settings_data)
+    
+    except Exception as e:
+        cur.close()
+        flash(f'Error loading settings: {str(e)}', 'danger')
+        return redirect(url_for('user_dashboard'))
+
+
+@app.route("/user/documents")
+@login_required
+def user_documents():
+    """عرض المستندات الخاصة بالموظف"""
+    conn = get_db()
+    cur = conn.cursor(dictionary=True)
+    
+    try:
+        # جلب المستندات المرتبطة بالموظف
+        cur.execute("""
+            SELECT 
+                d.document_id,
+                d.document_name,
+                d.document_type,
+                d.upload_date,
+                d.file_path
+            FROM documents d
+            WHERE d.user_id = %s
+            ORDER BY d.upload_date DESC
+        """, (session['user_id'],))
+        
+        documents = cur.fetchall()
+        cur.close()
+        
+        return render_template('user/documents. html', documents=documents)
+    
+    except Exception as e: 
+        cur.close()
+        flash(f'Error loading documents: {str(e)}', 'danger')
+        return redirect(url_for('user_dashboard'))
+
+
+# ==================== API ROUTES ====================
+
+@app.route("/api/attendance/check-in", methods=["POST"])
+@login_required
+def api_check_in():
+    """تسجيل الدخول (Check-in)"""
+    conn = get_db()
+    cur = conn.cursor()
+    
+    try:
+        employee = get_employee_by_user_id(session['user_id'])
+        
+        if not employee:
+            return jsonify({'success': False, 'message': 'Employee not found'}), 404
+        
+        # التحقق من عدم وجود check-in في نفس اليوم
+        cur.execute("""
+            SELECT attendance_id FROM attendance
+            WHERE employee_id = %s AND attendance_date = CURDATE()
+        """, (employee['employee_id'],))
+        
+        if cur.fetchone():
+            return jsonify({'success': False, 'message': 'Already checked in today'}), 400
+        
+        # إنشاء سجل check-in جديد
+        cur.execute("""
+            INSERT INTO attendance (employee_id, attendance_date, check_in, status)
+            VALUES (%s, CURDATE(), CURTIME(), 'present')
+        """, (employee['employee_id'],))
+        
+        conn.commit()
+        cur.close()
+        
+        return jsonify({'success': True, 'message': 'Checked in successfully', 'check_in_time': datetime.now().strftime('%H:%M:%S')})
+    
+    except Exception as e:
+        conn.rollback()
+        cur.close()
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
+@app.route("/api/attendance/check-out", methods=["POST"])
+@login_required
+def api_check_out():
+    """تسجيل الخروج (Check-out)"""
+    conn = get_db()
+    cur = conn.cursor()
+    
+    try:
+        employee = get_employee_by_user_id(session['user_id'])
+        
+        if not employee: 
+            return jsonify({'success':  False, 'message': 'Employee not found'}), 404
+        
+        # جلب سجل check-in لليوم
+        cur.execute("""
+            SELECT attendance_id FROM attendance
+            WHERE employee_id = %s AND attendance_date = CURDATE()
+        """, (employee['employee_id'],))
+        
+        attendance = cur.fetchone()
+        
+        if not attendance:
+            return jsonify({'success': False, 'message': 'No check-in found for today'}), 400
+        
+        # تحديث سجل check-out
+        cur.execute("""
+            UPDATE attendance 
+            SET check_out = CURTIME()
+            WHERE attendance_id = %s
+        """, (attendance[0],))
+        
+        conn.commit()
+        cur.close()
+        
+        return jsonify({'success': True, 'message': 'Checked out successfully', 'check_out_time':  datetime.now().strftime('%H:%M:%S')})
+    
+    except Exception as e: 
+        conn.rollback()
+        cur.close()
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
+# ==================== ERROR HANDLERS ====================
+
+@app. errorhandler(404)
+def not_found(e):
+    return render_template('errors/404.html'), 404
+
+@app.errorhandler(500)
+def server_error(e):
+    return render_template('errors/500.html'), 500
 
 # ==================== RUN APP ====================
 
