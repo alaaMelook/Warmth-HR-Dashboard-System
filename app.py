@@ -82,7 +82,7 @@ def login():
 @app.route('/logout')
 def logout():
     # Clear session and redirect to home
-    return redirect(url_for("root"))
+    return redirect(url_for("login.html"))
 
 
 # ==============================
@@ -290,7 +290,6 @@ def get_portal_data():
     d["notifications"] = [
         {"text": "Your leave request has been updated", "time": "2 hours ago"},
     ]
-    d["leave_balance"] = leave_balance
     d["leave_history"] = leave_history
     d["attendance_stats"] = {"present": 22, "absent": 1, "late": 3}
     d["calendar"] = {"month_label": today.strftime("%B %Y"), "days": {}}
