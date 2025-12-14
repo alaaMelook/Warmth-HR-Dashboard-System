@@ -82,7 +82,7 @@ def login():
 @app.route('/logout')
 def logout():
     # Clear session and redirect to home
-    return redirect(url_for("root"))
+    return redirect(url_for("login.html"))
 
 
 # ==============================
