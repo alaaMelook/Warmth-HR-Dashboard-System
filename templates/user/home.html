@@ -2,54 +2,84 @@
 {% set active = "home" %}
 
 {% block content %}
+
   <div class="header-hero">
-    <h1>Welcome back, {{ d.user.first_name }}!</h1>
+    <h1>
+      Welcome back,
+      {{ session.get('user_name', 'User').split(' ')[0] }}!
+    </h1>
     <p>Here's your overview for today</p>
   </div>
 
   <div class="grid-4">
+
+    <!-- Today's Status -->
     <div class="card pad kpi">
       <div class="kpi-top"><div class="badge-icon">✅</div></div>
       <label>Today's Status</label>
-      <div class="value">{{ d.home_cards.today_status }}</div>
-      <div class="sub">Check-in: {{ d.home_cards.check_in }}</div>
+      <div class="value">
+        {{ stats.get('today_status', 'N/A') if stats else 'N/A' }}
+      </div>
+      <div class="sub">
+        Check-in: {{ stats.get('check_in', '--:--') if stats else '--:--' }}
+      </div>
     </div>
 
+    <!-- Working Hours -->
     <div class="card pad kpi">
       <div class="kpi-top"><div class="badge-icon">🕒</div></div>
       <label>Working Hours</label>
-      <div class="value">{{ d.home_cards.working_hours }}</div>
-      <div class="sub">Current time: {{ d.home_cards.current_time }}</div>
+      <div class="value">
+        {{ stats.get('working_hours', '0') if stats else '0' }}
+      </div>
+      <div class="sub">
+        Current time: {{ stats.get('current_time', '') if stats else '' }}
+      </div>
     </div>
 
+    <!-- Leave Balance -->
     <div class="card pad kpi">
       <div class="kpi-top"><div class="badge-icon">☂️</div></div>
       <label>Leave Balance</label>
-      <div class="value">{{ d.home_cards.leave_balance_days }} days</div>
 
-      {% set leave_width = (d.home_cards.leave_balance_days | int) * 8 %}
+      {% set leave_days = stats.get('leave_balance_days', 0) if stats else 0 %}
+      <div class="value">{{ leave_days }} days</div>
+
+      {% set leave_width = leave_days * 8 %}
       <div class="progress" style="margin-top:6px;">
-        <span style="width: {{ leave_width if leave_width > 0 else 10 }}%;"></span>
+        <span style="width: {{ leave_width if leave_width > 10 else 10 }}%;"></span>
       </div>
     </div>
 
+    <!-- This Month -->
     <div class="card pad kpi">
       <div class="kpi-top"><div class="badge-icon">📅</div></div>
       <label>This Month</label>
-      <div class="value">{{ d.home_cards.month_days }} days</div>
-      <div class="sub">Attendance rate: {{ d.home_cards.attendance_rate }}%</div>
+      <div class="value">
+        {{ stats.get('month_days', 0) if stats else 0 }} days
+      </div>
+      <div class="sub">
+        Attendance rate:
+        {{ stats.get('attendance_rate', 0) if stats else 0 }}%
+      </div>
     </div>
+
   </div>
 
   <div class="row-2">
+
+    <!-- Holidays -->
     <div class="card pad">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
         <div class="badge-icon">🗓️</div>
-        <div style="font-weight:700;color:#8e6e5e;font-size:16px;">Upcoming Holidays</div>
+        <div style="font-weight:700;color:#8e6e5e;font-size:16px;">
+          Upcoming Holidays
+        </div>
       </div>
+
       <div class="list">
-        {% if d.holidays and d.holidays|length > 0 %}
-          {% for h in d.holidays %}
+        {% if holidays %}
+          {% for h in holidays %}
             <div class="list-item">
               <div>
                 <div class="title">{{ h.title }}</div>
@@ -63,14 +93,18 @@
       </div>
     </div>
 
+    <!-- Notifications -->
     <div class="card pad">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
         <div class="badge-icon">🔔</div>
-        <div style="font-weight:700;color:#8e6e5e;font-size:16px;">Latest Notifications</div>
+        <div style="font-weight:700;color:#8e6e5e;font-size:16px;">
+          Latest Notifications
+        </div>
       </div>
+
       <div class="list">
-        {% if d.notifications and d.notifications|length > 0 %}
-          {% for n in d.notifications %}
+        {% if notifications %}
+          {% for n in notifications %}
             <div class="list-item" style="border-left:4px solid #b77c6f;">
               <div>
                 <div class="title">{{ n.text }}</div>
@@ -83,5 +117,7 @@
         {% endif %}
       </div>
     </div>
+
   </div>
+
 {% endblock %}
