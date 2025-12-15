@@ -5,6 +5,25 @@
   <h1 class="page-title">Attendance History</h1>
   <p class="page-sub">Track your attendance and working hours</p>
 
+  <!-- Check In/Out Card -->
+  <div class="card pad" style="margin-bottom:20px;background:linear-gradient(135deg,var(--brown1),var(--brown2));color:#fff;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+      <div>
+        <h2 style="font-size:20px;margin:0 0 8px;color:#fff;">Today's Attendance</h2>
+        <p style="margin:0;opacity:0.9;font-size:14px;" id="currentTime">Loading...</p>
+        <p style="margin:6px 0 0;opacity:0.85;font-size:13px;" id="todayStatus">{{ d.today_status }}</p>
+      </div>
+      <div id="attendanceButtons" style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button id="checkInBtn" class="btn" style="background:#fff;color:var(--brown1);padding:12px 24px;border-radius:12px;font-weight:700;cursor:pointer;border:none;box-shadow:0 4px 12px rgba(0,0,0,0.2);{% if d.today_checked_in %}display:none;{% endif %}">
+          🟢 Check In
+        </button>
+        <button id="checkOutBtn" class="btn" style="background:#fff;color:var(--brown1);padding:12px 24px;border-radius:12px;font-weight:700;cursor:pointer;border:none;box-shadow:0 4px 12px rgba(0,0,0,0.2);{% if not d.today_checked_in or d.today_checked_out %}display:none;{% endif %}">
+          🔴 Check Out
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="grid-4" style="grid-template-columns: repeat(3, minmax(0, 1fr));">
     <div class="card pad kpi">
       <div class="kpi-top"><div class="badge-icon">✅</div></div>
@@ -25,54 +44,216 @@
     </div>
   </div>
 
-  <div class="card calendar">
-    <div class="calendar-head">
-      <div style="font-weight:700;color:#8e6e5e;font-size:18px;">{{ d.calendar.month_label }}</div>
-      <div style="opacity:.6;cursor:pointer;user-select:none;font-size:20px;">‹  ›</div>
+  <!-- Today's Attendance Details Table -->
+  {% if d.today_checked_in %}
+  <div class="card" style="margin-top:20px;">
+    <div class="card-header">
+      <h2 class="page-title" style="margin:0;">Today's Attendance Details</h2>
     </div>
-
-    <div class="calendar-grid" style="margin-bottom:10px;font-size:12px;color:#8a7f76;font-weight:600;">
-      <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Check In Time</th>
+            <th>Check Out Time</th>
+            <th>Total Hours</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight:600;">{{ d.today_date }}</td>
+            <td>
+              <span class="pill success">{{ d.today_check_in }}</span>
+            </td>
+            <td>
+              {% if d.today_check_out %}
+                <span class="pill success">{{ d.today_check_out }}</span>
+              {% else %}
+                <span class="pill warning">Still Working</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if d.today_total_hours %}
+                <span style="font-weight:700;color:#6f4e3f;">{{ d.today_total_hours }}</span>
+              {% else %}
+                <span style="color:#9b8f86;">-</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if d.today_is_late %}
+                <span class="pill warning">⏰ Late</span>
+              {% else %}
+                <span class="pill success">✓ On Time</span>
+              {% endif %}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+  </div>
+  {% endif %}
 
-    <div class="calendar-grid">
-      {% for day in range(1, 32) %}
-        {% set st = d.calendar.days.get(day, 'none') %}
-        <div class="cal-cell {{ st }}">{{ day }}</div>
-      {% endfor %}
+  <!-- Attendance History Table -->
+  <div class="card" style="margin-top:20px;">
+    <div class="card-header">
+      <h2 class="page-title" style="margin:0;">Attendance History</h2>
     </div>
-
-    <div class="legend">
-      <span><i class="dot present"></i> Present</span>
-      <span><i class="dot absent"></i> Absent</span>
-      <span><i class="dot late"></i> Late</span>
-      <span><i class="dot none"></i> No Record</span>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Check In</th>
+            <th>Check Out</th>
+            <th>Total Hours</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if d.attendance_records %}
+            {% for record in d.attendance_records %}
+            <tr>
+              <td style="font-weight:600;">
+                {{ record.attendance_date.strftime('%b %d, %Y') if record.attendance_date else 'N/A' }}
+              </td>
+              <td>
+                {% if record.check_in %}
+                  <span class="pill success">
+                    {{ (record.check_in|string)[0:5] }}
+                  </span>
+                {% else %}
+                  <span style="color:#9b8f86;">-</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if record.check_out %}
+                  <span class="pill success">
+                    {{ (record.check_out|string)[0:5] }}
+                  </span>
+                {% else %}
+                  <span style="color:#9b8f86;">-</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if record.total_hours and record.total_hours != 'N/A' %}
+                  <span style="font-weight:700;color:#6f4e3f;">{{ record.total_hours }}</span>
+                {% else %}
+                  <span style="color:#9b8f86;">-</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if record.status == 'present' %}
+                  {% if record.check_in and record.check_in|string > '09:00:00' %}
+                    <span class="pill warning">⏰ Late</span>
+                  {% else %}
+                    <span class="pill success">✓ Present</span>
+                  {% endif %}
+                {% elif record.status == 'absent' %}
+                  <span class="pill danger">✗ Absent</span>
+                {% elif record.status == 'leave' %}
+                  <span class="pill" style="background:#e9f8ef;border-color:#bfe8cf;color:#2f8c52;">📄 Leave</span>
+                {% else %}
+                  <span class="pill">{{ record.status }}</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="5" style="text-align:center;padding:40px;color:#9b8f86;">
+                No attendance records found for this month.
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <div class="card pad" style="margin-top:16px;">
-    <div style="font-weight:800;color:#8e6e5e;margin-bottom:14px;font-size:16px;">Recent Check-ins</div>
+  <script>
+    // Update current time
+    function updateTime() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById('currentTime').textContent = dateStr + ' - ' + timeStr;
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
 
-    {% if d.recent_checkins and d.recent_checkins|length > 0 %}
-      <div class="list">
-        {% for r in d.recent_checkins %}
-          <div class="list-item">
-            <div>
-              <div class="title">{{ r.date }}</div>
-              <div class="time">{{ r.in }} - {{ r.out }}</div>
-            </div>
-            <div style="text-align:right;">
-              <div style="font-weight:800;color:#6f4e3f;">{{ r.total }}</div>
-              <div class="time">Total Hours</div>
-            </div>
-          </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <div style="text-align:center;padding:30px;color:#8a7f76;">
-        <div style="font-size:40px;margin-bottom:10px;">📅</div>
-        <div>No check-ins recorded yet.</div>
-      </div>
-    {% endif %}
-  </div>
+    // Check In Button
+    const checkInBtn = document.getElementById('checkInBtn');
+    if(checkInBtn) {
+      checkInBtn.addEventListener('click', async function() {
+        if(!confirm('Are you sure you want to check in?')) return;
+        
+        this.disabled = true;
+        this.textContent = '⏳ Processing...';
+        
+        try {
+          const response = await fetch('/api/attendance/check-in', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          });
+          
+          const data = await response.json();
+          
+          if(data.success) {
+            alert('✅ ' + data.message + '\nTime: ' + data.check_in_time);
+            document.getElementById('todayStatus').textContent = '✓ Checked in at ' + data.check_in_time;
+            this.style.display = 'none';
+            document.getElementById('checkOutBtn').style.display = 'block';
+            location.reload();
+          } else {
+            alert('❌ ' + data.message);
+            this.disabled = false;
+            this.textContent = '🟢 Check In';
+          }
+        } catch(error) {
+          console.error('Error:', error);
+          alert('❌ An error occurred. Please try again.');
+          this.disabled = false;
+          this.textContent = '🟢 Check In';
+        }
+      });
+    }
+
+    // Check Out Button
+    const checkOutBtn = document.getElementById('checkOutBtn');
+    if(checkOutBtn) {
+      checkOutBtn.addEventListener('click', async function() {
+        if(!confirm('Are you sure you want to check out?')) return;
+        
+        this.disabled = true;
+        this.textContent = '⏳ Processing...';
+        
+        try {
+          const response = await fetch('/api/attendance/check-out', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          });
+          
+          const data = await response.json();
+          
+          if(data.success) {
+            alert('✅ ' + data.message + '\nTime: ' + data.check_out_time);
+            document.getElementById('todayStatus').textContent = '✓ Checked out at ' + data.check_out_time;
+            this.style.display = 'none';
+            location.reload();
+          } else {
+            alert('❌ ' + data.message);
+            this.disabled = false;
+            this.textContent = '🔴 Check Out';
+          }
+        } catch(error) {
+          console.error('Error:', error);
+          alert('❌ An error occurred. Please try again.');
+          this.disabled = false;
+          this.textContent = '🔴 Check Out';
+        }
+      });
+    }
+  </script>
 {% endblock %}

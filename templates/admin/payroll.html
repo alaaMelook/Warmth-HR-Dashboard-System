@@ -63,11 +63,11 @@
             <div class="grid-4">
                 <div class="card pad kpi">
                     <div class="kpi-top">
-                        <label>Total Payroll</label>
+                        <label>Total Payroll (All Records)</label>
                         <div class="badge-icon">$</div>
                     </div>
                     <div class="value">${{ "{:,.0f}".format(stats.total_payroll) }}</div>
-                    <div class="sub success">↗ +{{ stats.change_percentage }}% from last month</div>
+                    <div class="sub success">Current Month: ${{ "{:,.0f}".format(stats.current_month_payroll) }}</div>
                 </div>
 
                 <div class="card pad kpi">
@@ -100,17 +100,11 @@
 
             <!-- Action Buttons Row -->
             <div class="payroll-actions">
-                <h2>Employee Payroll</h2>
+                <h2>Employee Payroll Management</h2>
                 <div class="payroll-buttons">
                     <a href="{{ url_for('export_payroll_csv') }}" class="btn-export">
                         <span>⬇</span> Export Report
                     </a>
-
-                    <form action="{{ url_for('process_payroll') }}" method="POST" style="display: inline; margin: 0;">
-                        <button type="submit" class="btn-process" onclick="return confirm('Are you sure you want to process all pending payrolls?\nThis action cannot be undone.');">
-                            <span>💳</span> Process Payroll
-                        </button>
-                    </form>
                 </div>
             </div>
 
@@ -123,11 +117,13 @@
                             <tr>
                                 <th>Employee</th>
                                 <th>Role</th>
+                                <th>Pay Date</th>
                                 <th>Base Salary</th>
                                 <th>Bonus</th>
                                 <th>Deductions</th>
                                 <th>Net Pay</th>
                                 <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -140,14 +136,20 @@
                                     </div>
                                 </td>
                                 <td>{{ employee.role or 'N/A' }}</td>
+                                <td style="font-weight: 500; color: #8a7f76;">{{ employee.pay_date }}</td>
                                 <td style="font-weight: 500;">${{ "{:,.0f}".format(employee.base_salary) }}</td>
                                 <td style="color: #27ae60; font-weight: 500;">${{ "{:,.0f}".format(employee.bonus) }}</td>
                                 <td style="color: #e74c3c; font-weight: 500;">${{ "{:,.0f}".format(employee.deductions) }}</td>
                                 <td style="font-weight: 600;">${{ "{:,.0f}".format(employee.net_pay) }}</td>
                                 <td>
-                                    <span class="pill {{ 'success' if employee.status.lower() == 'paid' else 'warning' }}">
+                                    <span class="pill {{ 'success' if employee.status.lower() == 'paid' else 'warning' }}" style="display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">
                                         {{ employee.status }}
                                     </span>
+                                </td>
+                                <td>
+                                    <button class="btn-edit" onclick="openEditModal({{ employee.employee_id }}, '{{ employee.first_name }} {{ employee.last_name }}', {{ employee.base_salary|default(0) }}, {{ employee.bonus|default(0) }}, {{ employee.deductions|default(0) }}, '{{ employee.status }}')" title="Edit Salary">
+                                        ✏️
+                                    </button>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -157,7 +159,7 @@
 
                 <div class="payroll-summary">
                     <div class="payroll-count">
-                        Showing {{ employees|length }} employees
+                        Showing {{ employees|length }} payroll record{{ 's' if employees|length != 1 else '' }} (All History)
                     </div>
                     <div class="payroll-totals">
                         <div class="payroll-total-item">
@@ -182,7 +184,193 @@
         </main>
     </div>
 
+    <!-- Edit Salary Modal -->
+    <div id="editSalaryModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('editSalaryModal')">&times;</span>
+            <h2>Edit Employee Salary</h2>
+            <form id="editSalaryForm" method="POST" action="{{ url_for('update_employee_salary') }}">
+                <input type="hidden" id="edit_employee_id" name="employee_id">
+                <div class="form-group">
+                    <label>Employee Name</label>
+                    <input type="text" id="edit_employee_name" readonly style="background: #f0f0f0;">
+                </div>
+                <div class="form-group">
+                    <label>Base Salary ($)</label>
+                    <input type="number" id="edit_base_salary" name="base_salary" required min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Bonus ($)</label>
+                    <input type="number" id="edit_bonus" name="bonus" required min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Deductions ($)</label>
+                    <input type="number" id="edit_deductions" name="deductions" required min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Payment Status</label>
+                    <select id="edit_status" name="status" required>
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="paid">Paid</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal('editSalaryModal')">Cancel</button>
+                    <button type="submit" class="btn-save">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Bonus Modal -->
+    <div id="bonusModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('bonusModal')">&times;</span>
+            <h2>Add Bonus</h2>
+            <form id="bonusForm" method="POST" action="{{ url_for('add_bonus') }}">
+                <input type="hidden" id="bonus_employee_id" name="employee_id">
+                <div class="form-group">
+                    <label>Employee Name</label>
+                    <input type="text" id="bonus_employee_name" readonly style="background: #f0f0f0;">
+                </div>
+                <div class="form-group">
+                    <label>Bonus Amount ($)</label>
+                    <input type="number" id="bonus_amount" name="amount" required min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Reason</label>
+                    <input type="text" id="bonus_reason" name="reason" placeholder="e.g., Performance bonus, Holiday bonus">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal('bonusModal')">Cancel</button>
+                    <button type="submit" class="btn-save">Add Bonus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Deduction Modal -->
+    <div id="deductionModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('deductionModal')">&times;</span>
+            <h2>Add Deduction</h2>
+            <form id="deductionForm" method="POST" action="{{ url_for('add_deduction') }}">
+                <input type="hidden" id="deduction_employee_id" name="employee_id">
+                <div class="form-group">
+                    <label>Employee Name</label>
+                    <input type="text" id="deduction_employee_name" readonly style="background: #f0f0f0;">
+                </div>
+                <div class="form-group">
+                    <label>Deduction Amount ($)</label>
+                    <input type="number" id="deduction_amount" name="amount" required min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Reason</label>
+                    <input type="text" id="deduction_reason" name="reason" placeholder="e.g., Late arrival, Absence">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal('deductionModal')">Cancel</button>
+                    <button type="submit" class="btn-save">Add Deduction</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Transaction Modal (General) -->
+    <div id="addTransactionModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('addTransactionModal')">&times;</span>
+            <h2>Add Bonus or Deduction</h2>
+            <form id="addTransactionForm" method="POST" action="{{ url_for('add_payroll_transaction') }}">
+                <div class="form-group">
+                    <label>Select Employee</label>
+                    <select name="employee_id" required>
+                        <option value="">-- Select Employee --</option>
+                        {% for emp in all_employees %}
+                        <option value="{{ emp.employee_id }}">{{ emp.first_name }} {{ emp.last_name }} - {{ emp.role }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Pay Date (Month)</label>
+                    <input type="month" name="pay_month" required value="{{ now.strftime('%Y-%m') }}">
+                </div>
+                <div class="form-group">
+                    <label>Base Salary ($)</label>
+                    <input type="number" name="base_salary" required min="0" step="0.01" value="5000">
+                </div>
+                <div class="form-group">
+                    <label>Transaction Type</label>
+                    <select name="transaction_type" required>
+                        <option value="">-- Select Type --</option>
+                        <option value="bonus">Bonus</option>
+                        <option value="deduction">Deduction</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Amount ($)</label>
+                    <input type="number" name="amount" required min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Reason</label>
+                    <input type="text" name="reason" placeholder="Reason for this transaction">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal('addTransactionModal')">Cancel</button>
+                    <button type="submit" class="btn-save">Add Transaction</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
+        // Modal Management Functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function openEditModal(employeeId, employeeName, baseSalary, bonus, deductions, status) {
+            document.getElementById('edit_employee_id').value = employeeId;
+            document.getElementById('edit_employee_name').value = employeeName;
+            document.getElementById('edit_base_salary').value = baseSalary;
+            document.getElementById('edit_bonus').value = bonus;
+            document.getElementById('edit_deductions').value = deductions;
+            document.getElementById('edit_status').value = status || 'pending';
+            openModal('editSalaryModal');
+        }
+
+        function openBonusModal(employeeId, employeeName) {
+            document.getElementById('bonus_employee_id').value = employeeId;
+            document.getElementById('bonus_employee_name').value = employeeName;
+            document.getElementById('bonus_amount').value = '';
+            document.getElementById('bonus_reason').value = '';
+            openModal('bonusModal');
+        }
+
+        function openDeductionModal(employeeId, employeeName) {
+            document.getElementById('deduction_employee_id').value = employeeId;
+            document.getElementById('deduction_employee_name').value = employeeName;
+            document.getElementById('deduction_amount').value = '';
+            document.getElementById('deduction_reason').value = '';
+            openModal('deductionModal');
+        }
+
+        function openAddTransactionModal() {
+            openModal('addTransactionModal');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
         // Logout functionality
         document.querySelector('.sidebar-footer').addEventListener('click', function(e) {
             if(e.target.closest('.sidebar-footer') && confirm('Do you want to logout?')) {

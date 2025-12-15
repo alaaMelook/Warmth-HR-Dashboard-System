@@ -5,7 +5,7 @@
   <h1 class="page-title">Leave Management</h1>
   <p class="page-sub">Request time off and view your leave history</p>
 
-  <div class="card pad leave-request-card">
+  <div class="card leave-request-card" style="padding:24px;">
     <div class="section-header">
       <div class="badge-icon">🗓️</div>
       <h2 class="section-title">Request Leave</h2>
@@ -44,7 +44,7 @@
     </form>
   </div>
 
-  <div class="card pad leave-history-card">
+  <div class="card leave-history-card" style="padding:24px;margin-top:20px;">
     <h2 class="leave-history-header">Leave History</h2>
 
     {% if d.leave_history and d.leave_history|length > 0 %}

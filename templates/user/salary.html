@@ -2,35 +2,37 @@
 {% set active = "salary" %}
 
 {% block content %}
-  <h1 class="page-title">Salary & Payslips</h1>
-  <p class="page-sub">View and download your monthly payslips</p>
+  <h1 class="page-title">Salary & Payroll</h1>
+  <p class="page-sub">View your monthly payslips and salary details</p>
 
-  <div class="header-hero" style="margin-top:10px;">
-    <div style="display:flex;align-items:center;gap:14px;">
-      <div class="badge-icon" style="background:rgba(255,255,255,.22);color:#fff;font-size:20px;">💵</div>
+  <!-- Current Month Salary Card -->
+  <div class="card pad" style="background:linear-gradient(135deg,var(--brown1),var(--brown2));color:#fff;margin-bottom:20px;">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+      <div class="badge-icon" style="background:rgba(255,255,255,.22);color:#fff;font-size:24px;">💵</div>
       <div>
-        <div style="font-size:12px;opacity:.9;">Current Month Salary</div>
-        <div style="font-size:28px;font-weight:900;">{{ d.salary_current.net }}</div>
+        <div style="font-size:14px;opacity:.9;">Current Month Net Salary</div>
+        <div style="font-size:32px;font-weight:900;margin-top:4px;">{{ d.salary_current.net }}</div>
       </div>
     </div>
 
-    <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,.25);padding-top:14px;display:flex;gap:24px;flex-wrap:wrap;">
+    <div style="border-top:1px solid rgba(255,255,255,.25);padding-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;">
       <div>
         <div style="opacity:.8;font-size:12px;">Basic Salary</div>
-        <div style="font-weight:900;margin-top:4px;">{{ d.salary_current.basic }}</div>
+        <div style="font-weight:700;margin-top:4px;font-size:18px;">{{ d.salary_current.basic }}</div>
       </div>
       <div>
-        <div style="opacity:.8;font-size:12px;">Allowances</div>
-        <div style="font-weight:900;margin-top:4px;color:#d4ffd4;">+{{ d.salary_current.allowances }}</div>
+        <div style="opacity:.8;font-size:12px;">Bonuses</div>
+        <div style="font-weight:700;margin-top:4px;color:#d4ffd4;font-size:18px;">+{{ d.salary_current.allowances }}</div>
       </div>
       <div>
         <div style="opacity:.8;font-size:12px;">Deductions</div>
-        <div style="font-weight:900;margin-top:4px;color:#ffd4d4;">-{{ d.salary_current.deductions }}</div>
+        <div style="font-weight:700;margin-top:4px;color:#ffd4d4;font-size:18px;">-{{ d.salary_current.deductions }}</div>
       </div>
     </div>
   </div>
 
-  <div class="grid-4" style="grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top:16px;">
+  <!-- Statistics Cards -->
+  <div class="grid-4" style="grid-template-columns: repeat(3, minmax(0, 1fr));">
     {% for k in d.salary_kpis %}
       <div class="card pad kpi">
         <div class="kpi-top">
@@ -44,89 +46,83 @@
     {% endfor %}
   </div>
 
-  <div class="card pad" style="margin-top:16px;">
-    <div style="font-weight:900;color:#8e6e5e;margin-bottom:14px;font-size:16px;">Payslip History</div>
+  <!-- Payslip History -->
+  <div class="card" style="margin-top:20px;">
+    <div class="card-header">
+      <h2 class="page-title" style="margin:0;">Payslip History</h2>
+    </div>
 
     {% if d.payslips and d.payslips|length > 0 %}
-      <div class="card" style="box-shadow:none;border:1px solid var(--line);">
-        {% for p in d.payslips %}
-          <div class="table-row">
-            <div style="display:flex;gap:12px;align-items:center;">
-              <div class="badge-icon">📄</div>
-              <div>
-                <div class="title">{{ p.month }}</div>
-                <div class="time">Net Salary: {{ p.net }}</div>
-              </div>
-            </div>
-
-            <div class="actions">
-              <button class="btn-sm">👁️ View</button>
-              <button class="btn-sm primary">⬇️ Download</button>
-            </div>
-
-            <div style="width:100%;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:6px;">
-              <div>
-                <div class="time">Basic</div>
-                <div style="font-weight:800;margin-top:2px;">{{ p.basic }}</div>
-              </div>
-              <div>
-                <div class="time">Allowances</div>
-                <div style="font-weight:800;color:#2f8c52;margin-top:2px;">+{{ p.allow }}</div>
-              </div>
-              <div>
-                <div class="time">Deductions</div>
-                <div style="font-weight:800;color:#c54949;margin-top:2px;">-{{ p.ded }}</div>
-              </div>
-              <div>
-                <div class="time">Net Pay</div>
-                <div style="font-weight:900;margin-top:2px;">{{ p.net }}</div>
-              </div>
-            </div>
-          </div>
-        {% endfor %}
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Basic Salary</th>
+              <th>Bonuses</th>
+              <th>Deductions</th>
+              <th>Net Pay</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in d.payslips %}
+            <tr>
+              <td style="font-weight:600;">{{ p.month }}</td>
+              <td>{{ p.basic }}</td>
+              <td style="color:#27ae60;font-weight:500;">{{ p.allow }}</td>
+              <td style="color:#e74c3c;font-weight:500;">{{ p.ded }}</td>
+              <td style="font-weight:700;">{{ p.net }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     {% else %}
-      <div style="text-align:center;padding:30px;color:#8a7f76;">
-        <div style="font-size:40px;margin-bottom:10px;">📄</div>
-        <div>No payroll records yet.</div>
+      <div style="text-align:center;padding:60px 20px;color:#9b8f86;">
+        <div style="font-size:48px;margin-bottom:16px;">📄</div>
+        <p style="font-size:18px;font-weight:600;margin-bottom:8px;">No payroll records found</p>
+        <p style="font-size:14px;">Your salary information will appear here once processed</p>
       </div>
     {% endif %}
   </div>
 
-  <div class="row-2" style="margin-top:16px;">
+  <!-- Breakdown Cards -->
+  <div class="grid-4" style="grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top:20px;">
+    <!-- Earnings Breakdown -->
     <div class="card pad">
-      <div style="font-weight:900;color:#8e6e5e;margin-bottom:14px;font-size:16px;">Earnings Breakdown</div>
+      <div style="font-weight:900;color:#8e6e5e;margin-bottom:14px;font-size:16px;">💰 Earnings Breakdown</div>
 
       {% if d.earnings_breakdown and d.earnings_breakdown|length > 0 %}
         {% for e in d.earnings_breakdown %}
-          <div class="list-item" style="background:#f7f7f7;margin-bottom:8px;">
+          <div class="list-item" style="background:#f7f7f7;margin-bottom:8px;padding:12px;">
             <div class="time">{{ e.name }}</div>
             <div style="font-weight:900;color:#6f4e3f;">{{ e.value }}</div>
           </div>
         {% endfor %}
       {% endif %}
 
-      <div class="list-item" style="margin-top:10px;background:#e9f8ef;border-color:#bfe8cf;">
+      <div class="list-item" style="margin-top:10px;background:#e9f8ef;border:1px solid #bfe8cf;padding:12px;">
         <div style="font-weight:900;color:#2f8c52;">Total Earnings</div>
         <div style="font-weight:900;color:#2f8c52;">{{ d.total_earnings }}</div>
       </div>
     </div>
 
+    <!-- Deductions Breakdown -->
     <div class="card pad">
-      <div style="font-weight:900;color:#8e6e5e;margin-bottom:14px;font-size:16px;">Deductions Breakdown</div>
+      <div style="font-weight:900;color:#8e6e5e;margin-bottom:14px;font-size:16px;">📉 Deductions Breakdown</div>
 
       {% if d.deductions_breakdown and d.deductions_breakdown|length > 0 %}
         {% for e in d.deductions_breakdown %}
-          <div class="list-item" style="background:#f7f7f7;margin-bottom:8px;">
+          <div class="list-item" style="background:#f7f7f7;margin-bottom:8px;padding:12px;">
             <div class="time">{{ e.name }}</div>
-            <div style="font-weight:900;color:#c54949;">-{{ e.value }}</div>
+            <div style="font-weight:900;color:#c54949;">{{ e.value }}</div>
           </div>
         {% endfor %}
       {% endif %}
 
-      <div class="list-item" style="margin-top:10px;border-color:#f3c0c0;background:#fff3f3;">
+      <div class="list-item" style="margin-top:10px;border:1px solid #f3c0c0;background:#fff3f3;padding:12px;">
         <div style="font-weight:900;color:#c54949;">Total Deductions</div>
-        <div style="font-weight:900;color:#c54949;">-{{ d.total_deductions }}</div>
+        <div style="font-weight:900;color:#c54949;">{{ d.total_deductions }}</div>
       </div>
     </div>
   </div>

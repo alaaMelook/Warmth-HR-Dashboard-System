@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Announcements - Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <span>👥 HR System</span>
+            </div>
+
+            <nav class="nav">
+                <a href="{{ url_for('admin_dashboard') }}">
+                    <span class="icon">📊</span>
+                    Dashboard
+                </a>
+                <a href="{{ url_for('admin_employees') }}">
+                    <span class="icon">👥</span>
+                    Employees
+                </a>
+                <a href="{{ url_for('admin_attendance') }}">
+                    <span class="icon">📅</span>
+                    Attendance
+                </a>
+                <a href="{{ url_for('admin_leaves') }}">
+                    <span class="icon">📄</span>
+                    Leaves
+                </a>
+                <a href="{{ url_for('admin_payroll') }}">
+                    <span class="icon">💰</span>
+                    Payroll
+                </a>
+                <a href="{{ url_for('admin_announcements') }}" class="active">
+                    <span class="icon">📢</span>
+                    Announcements
+                </a>
+                <a href="{{ url_for('logout') }}">
+                    <span class="icon">🚪</span>
+                    Logout
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="avatar">AD</div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-weight:600; font-size:14px; color:#6e625a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                        {{ session.user_name }}
+                    </div>
+                    <div style="font-size:11px; color:#9b8f86;">Administrator</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="header-hero">
+                <h1>Announcements & Holidays</h1>
+                <p>Manage system-wide announcements and holiday schedules</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}" style="padding:12px 16px; margin-bottom:16px; border-radius:8px; background:{% if category=='success' %}#dff8ea{% elif category=='danger' %}#fde2e2{% else %}#fff6cc{% endif %}; border:1px solid {% if category=='success' %}#c9efd9{% elif category=='danger' %}#f7c9c9{% else %}#f2e6a2{% endif %}; color:{% if category=='success' %}#2f8c52{% elif category=='danger' %}#c54949{% else %}#8b7b2c{% endif %};">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Holidays Section -->
+            <div class="card" style="margin-bottom:24px;">
+                <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+                    <h2 class="page-title" style="margin:0;">🗓️ Holidays</h2>
+                    <button onclick="openHolidayModal()" class="btn-add" style="padding:10px 20px; background:var(--brown1); color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:600;">
+                        + Add Holiday
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if holidays %}
+                                {% for holiday in holidays %}
+                                <tr>
+                                    <td>{{ holiday.holiday_id }}</td>
+                                    <td style="font-weight:600;">{{ holiday.title }}</td>
+                                    <td>
+                                        <span class="pill success">
+                                            {{ holiday.holiday_date.strftime('%b %d, %Y') if holiday.holiday_date else 'N/A' }}
+                                        </span>
+                                    </td>
+                                    <td>{{ holiday.description or '-' }}</td>
+                                    <td style="color:#9b8f86; font-size:13px;">
+                                        {{ holiday.created_at.strftime('%b %d, %Y') if holiday.created_at else 'N/A' }}
+                                    </td>
+                                    <td>
+                                        <form method="POST" action="{{ url_for('delete_holiday', holiday_id=holiday.holiday_id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this holiday?');">
+                                            <button type="submit" class="btn-delete" style="padding:6px 12px; background:#c54949; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:13px;">
+                                                🗑️ Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="6" style="text-align:center; padding:40px; color:#9b8f86;">
+                                        No holidays found. Add your first holiday!
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Notifications Section -->
+            <div class="card">
+                <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+                    <h2 class="page-title" style="margin:0;">🔔 Notifications</h2>
+                    <button onclick="openNotificationModal()" class="btn-add" style="padding:10px 20px; background:var(--brown1); color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:600;">
+                        + Add Notification
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Message</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if notifications %}
+                                {% for notif in notifications %}
+                                <tr>
+                                    <td>{{ notif.notification_id }}</td>
+                                    <td style="font-weight:600;">{{ notif.title }}</td>
+                                    <td style="max-width:300px;">{{ notif.message[:80] }}{{ '...' if notif.message|length > 80 else '' }}</td>
+                                    <td>
+                                        {% if notif.notification_type == 'urgent' %}
+                                            <span class="pill danger">🚨 Urgent</span>
+                                        {% elif notif.notification_type == 'warning' %}
+                                            <span class="pill warning">⚠️ Warning</span>
+                                        {% elif notif.notification_type == 'success' %}
+                                            <span class="pill success">✓ Success</span>
+                                        {% else %}
+                                            <span class="pill">ℹ️ Info</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if notif.is_active %}
+                                            <span class="pill success">Active</span>
+                                        {% else %}
+                                            <span class="pill" style="background:#e5e5e5; border-color:#d0d0d0; color:#666;">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                    <td style="color:#9b8f86; font-size:13px;">
+                                        {{ notif.created_at.strftime('%b %d, %Y') if notif.created_at else 'N/A' }}
+                                    </td>
+                                    <td>
+                                        <div style="display:flex; gap:8px;">
+                                            <form method="POST" action="{{ url_for('toggle_notification', notification_id=notif.notification_id) }}" style="display:inline;">
+                                                <button type="submit" class="btn-edit" style="padding:6px 12px; background:#f59e42; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:13px;">
+                                                    {% if notif.is_active %}🔕 Deactivate{% else %}🔔 Activate{% endif %}
+                                                </button>
+                                            </form>
+                                            <form method="POST" action="{{ url_for('delete_notification', notification_id=notif.notification_id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this notification?');">
+                                                <button type="submit" class="btn-delete" style="padding:6px 12px; background:#c54949; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:13px;">
+                                                    🗑️ Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="7" style="text-align:center; padding:40px; color:#9b8f86;">
+                                        No notifications found. Add your first notification!
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Holiday Modal -->
+    <div id="holidayModal" class="modal">
+        <div class="modal-content" style="max-width:500px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2 style="margin:0; color:var(--brown1);">Add Holiday</h2>
+                <button onclick="closeHolidayModal()" style="background:none; border:none; font-size:24px; cursor:pointer; color:#9b8f86;">&times;</button>
+            </div>
+            <form method="POST" action="{{ url_for('add_holiday') }}">
+                <div class="form-group">
+                    <label>Holiday Title *</label>
+                    <input type="text" name="title" required placeholder="e.g., New Year's Day" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
+                </div>
+                <div class="form-group">
+                    <label>Date *</label>
+                    <input type="date" name="holiday_date" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" rows="3" placeholder="Optional description" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; resize:vertical;"></textarea>
+                </div>
+                <div class="form-actions" style="display:flex; gap:12px; justify-content:flex-end; margin-top:20px;">
+                    <button type="button" onclick="closeHolidayModal()" class="btn-cancel">Cancel</button>
+                    <button type="submit" class="btn-save">Add Holiday</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Modal -->
+    <div id="notificationModal" class="modal">
+        <div class="modal-content" style="max-width:600px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2 style="margin:0; color:var(--brown1);">Add Notification</h2>
+                <button onclick="closeNotificationModal()" style="background:none; border:none; font-size:24px; cursor:pointer; color:#9b8f86;">&times;</button>
+            </div>
+            <form method="POST" action="{{ url_for('add_notification') }}">
+                <div class="form-group">
+                    <label>Notification Title *</label>
+                    <input type="text" name="title" required placeholder="e.g., System Maintenance" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
+                </div>
+                <div class="form-group">
+                    <label>Message *</label>
+                    <textarea name="message" rows="4" required placeholder="Enter the notification message..." style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; resize:vertical;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Type *</label>
+                    <select name="notification_type" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
+                        <option value="info">ℹ️ Info</option>
+                        <option value="success">✓ Success</option>
+                        <option value="warning">⚠️ Warning</option>
+                        <option value="urgent">🚨 Urgent</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                        <input type="checkbox" name="is_active" value="1" checked style="width:18px; height:18px;">
+                        <span>Active (visible to all users)</span>
+                    </label>
+                </div>
+                <div class="form-actions" style="display:flex; gap:12px; justify-content:flex-end; margin-top:20px;">
+                    <button type="button" onclick="closeNotificationModal()" class="btn-cancel">Cancel</button>
+                    <button type="submit" class="btn-save">Add Notification</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openHolidayModal() {
+            document.getElementById('holidayModal').style.display = 'flex';
+        }
+
+        function closeHolidayModal() {
+            document.getElementById('holidayModal').style.display = 'none';
+        }
+
+        function openNotificationModal() {
+            document.getElementById('notificationModal').style.display = 'flex';
+        }
+
+        function closeNotificationModal() {
+            document.getElementById('notificationModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const holidayModal = document.getElementById('holidayModal');
+            const notificationModal = document.getElementById('notificationModal');
+            if (event.target == holidayModal) {
+                closeHolidayModal();
+            }
+            if (event.target == notificationModal) {
+                closeNotificationModal();
+            }
+        }
+    </script>
+</body>
+</html>

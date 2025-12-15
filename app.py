@@ -525,12 +525,12 @@ def admin_attendance():
         stats = q1("""
             SELECT
                 COUNT(CASE WHEN status='present' THEN 1 END) AS total_present,
-                COUNT(CASE WHEN check_in > '09:00:00' AND status='present' THEN 1 END) AS late_arrivals,
+                COUNT(CASE WHEN TIME(check_in) > '09:00:00' AND status='present' THEN 1 END) AS late_arrivals,
                 COUNT(CASE WHEN status='leave' THEN 1 END) AS on_leave,
                 AVG(CASE WHEN status='present' AND check_in IS NOT NULL AND check_out IS NOT NULL
                     THEN TIME_TO_SEC(TIMEDIFF(check_out, check_in))/3600 END) AS avg_hours
             FROM attendance
-            WHERE attendance_date=%s
+            WHERE DATE(attendance_date)=%s
         """, (selected_date,)) or {}
 
         total_employees = (q1("SELECT COUNT(*) AS total_employees FROM employees WHERE status='active'") or {}).get("total_employees", 0) or 0
@@ -561,7 +561,7 @@ def admin_attendance():
             JOIN employees e ON a.employee_id = e.employee_id
             JOIN users u ON e.user_id = u.user_id
             LEFT JOIN departments d ON e.department_id = d.department_id
-            WHERE a.attendance_date = %s
+            WHERE DATE(a.attendance_date) = %s
         """
         params = [selected_date]
         if department_filter != "all":
@@ -572,7 +572,7 @@ def admin_attendance():
             SELECT COUNT(*) AS total
             FROM attendance a
             JOIN employees e ON a.employee_id = e.employee_id
-            WHERE a.attendance_date=%s
+            WHERE DATE(a.attendance_date)=%s
         """
         count_params = [selected_date]
         if department_filter != "all":
@@ -742,11 +742,17 @@ def admin_update_leave(leave_id):
 @admin_required
 def admin_payroll():
     """
-    NOTE: payroll table has NO status column in your DB dump.
-    So we treat payroll as list/history only.
+    Admin payroll management page with full control over salaries, bonuses, and deductions
     """
     try:
+        # Total payroll for all records
         total_payroll = (q1("""
+            SELECT COALESCE(SUM(basic_salary + bonus - deductions), 0) AS total
+            FROM payroll
+        """) or {}).get("total", 0)
+
+        # Current month payroll for comparison
+        current_month_total = (q1("""
             SELECT COALESCE(SUM(basic_salary + bonus - deductions), 0) AS total
             FROM payroll
             WHERE MONTH(pay_date)=MONTH(CURDATE()) AND YEAR(pay_date)=YEAR(CURDATE())
@@ -759,23 +765,44 @@ def admin_payroll():
               AND YEAR(pay_date)=YEAR(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
         """) or {}).get("total", 0)
 
-        change_percentage = round(((total_payroll - last_month_total) / last_month_total) * 100, 1) if last_month_total else 0
+        change_percentage = round(((current_month_total - last_month_total) / last_month_total) * 100, 1) if last_month_total else 0
 
+        # Get all employees with their latest payroll data (or show with no payroll)
         employees = qall("""
             SELECT
+                e.employee_id,
                 u.first_name,
                 u.last_name,
                 j.title_name AS role,
-                p.basic_salary AS base_salary,
-                p.bonus,
-                p.deductions,
-                (p.basic_salary + p.bonus - p.deductions) AS net_pay,
-                DATE_FORMAT(p.pay_date, '%Y-%m-%d') AS pay_date
-            FROM payroll p
-            JOIN employees e ON p.employee_id = e.employee_id
+                COALESCE(p.basic_salary, 0) AS base_salary,
+                COALESCE(p.bonus, 0) AS bonus,
+                COALESCE(p.deductions, 0) AS deductions,
+                COALESCE((p.basic_salary + p.bonus - p.deductions), 0) AS net_pay,
+                COALESCE(DATE_FORMAT(p.pay_date, '%Y-%m-%d'), 'Not Set') AS pay_date,
+                COALESCE(p.status, 'pending') AS status
+            FROM employees e
             JOIN users u ON e.user_id = u.user_id
             LEFT JOIN job_titles j ON e.job_title_id = j.job_title_id
-            WHERE MONTH(p.pay_date)=MONTH(CURDATE()) AND YEAR(p.pay_date)=YEAR(CURDATE())
+            LEFT JOIN (
+                SELECT employee_id, basic_salary, bonus, deductions, pay_date, status,
+                       ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY pay_date DESC) as rn
+                FROM payroll
+            ) p ON e.employee_id = p.employee_id AND p.rn = 1
+            WHERE e.status = 'active'
+            ORDER BY u.last_name, u.first_name
+        """)
+        
+        # Get all active employees for the add transaction modal
+        all_employees = qall("""
+            SELECT
+                e.employee_id,
+                u.first_name,
+                u.last_name,
+                j.title_name AS role
+            FROM employees e
+            JOIN users u ON e.user_id = u.user_id
+            LEFT JOIN job_titles j ON e.job_title_id = j.job_title_id
+            WHERE e.status = 'active'
             ORDER BY u.last_name, u.first_name
         """)
 
@@ -798,9 +825,12 @@ def admin_payroll():
 
         stats = {
             "total_payroll": total_payroll,
+            "current_month_payroll": current_month_total,
             "change_percentage": abs(change_percentage),
             "pay_period": f"{period_start.strftime('%b %d')}-{period_end.strftime('%d')}",
             "next_period": f"{next_start.strftime('%b %d')}-{next_end.strftime('%d')}",
+            "processed": len([e for e in employees if e.get('status') == 'paid']),
+            "pending": len([e for e in employees if e.get('status') == 'pending']),
         }
 
         totals = {
@@ -810,13 +840,19 @@ def admin_payroll():
             "total_net_pay": total_net_pay,
         }
 
-        return render_template("admin/payroll.html", stats=stats, employees=employees, totals=totals)
+        return render_template("admin/payroll.html", 
+            stats=stats, 
+            employees=employees, 
+            all_employees=all_employees,
+            totals=totals,
+            now=datetime.now())
 
     except Exception as e:
         return render_template(
             "admin/payroll.html",
-            stats={"total_payroll": 0, "change_percentage": 0, "pay_period": "N/A", "next_period": "N/A"},
+            stats={"total_payroll": 0, "change_percentage": 0, "pay_period": "N/A", "next_period": "N/A", "processed": 0, "pending": 0},
             employees=[],
+            all_employees=[],
             totals={"total_base_salary": 0, "total_bonuses": 0, "total_deductions": 0, "total_net_pay": 0},
             error=str(e),
         )
@@ -834,25 +870,25 @@ def export_payroll_csv():
                 p.bonus,
                 p.deductions,
                 (p.basic_salary + p.bonus - p.deductions) AS net_pay,
-                DATE_FORMAT(p.pay_date, '%Y-%m-%d') AS pay_date
+                DATE_FORMAT(p.pay_date, '%Y-%m-%d') AS pay_date,
+                p.status
             FROM payroll p
             JOIN employees e ON p.employee_id = e.employee_id
             JOIN users u ON e.user_id = u.user_id
             LEFT JOIN job_titles j ON e.job_title_id = j.job_title_id
-            WHERE MONTH(p.pay_date)=MONTH(CURDATE()) AND YEAR(p.pay_date)=YEAR(CURDATE())
-            ORDER BY u.last_name, u.first_name
+            ORDER BY p.pay_date DESC, u.last_name, u.first_name
         """)
 
         output = StringIO()
         writer = csv.DictWriter(output, fieldnames=[
-            "first_name", "last_name", "role", "basic_salary", "bonus", "deductions", "net_pay", "pay_date"
+            "first_name", "last_name", "role", "basic_salary", "bonus", "deductions", "net_pay", "pay_date", "status"
         ])
         writer.writeheader()
         writer.writerows(rows)
 
         output.seek(0)
         resp = make_response(output.getvalue())
-        resp.headers["Content-Disposition"] = f"attachment; filename=payroll_{date.today().strftime('%Y-%m')}.csv"
+        resp.headers["Content-Disposition"] = f"attachment; filename=payroll_all_records_{date.today().strftime('%Y-%m-%d')}.csv"
         resp.headers["Content-type"] = "text/csv"
         return resp
 
@@ -911,6 +947,309 @@ def process_payroll():
     except Exception as e:
         flash(f"Error processing payroll: {str(e)}", "danger")
         return redirect(url_for("admin_payroll"))
+
+@app.route("/admin/payroll/update-salary", methods=["POST"])
+@admin_required
+def update_employee_salary():
+    """Update employee salary, bonus, deductions, and status for current month"""
+    try:
+        employee_id = request.form.get("employee_id")
+        base_salary = float(request.form.get("base_salary", 0))
+        bonus = float(request.form.get("bonus", 0))
+        deductions = float(request.form.get("deductions", 0))
+        status = request.form.get("status", "pending")
+        
+        # Check if payroll exists for current month
+        existing = q1("""
+            SELECT payroll_id 
+            FROM payroll 
+            WHERE employee_id = %s 
+              AND MONTH(pay_date) = MONTH(CURDATE())
+              AND YEAR(pay_date) = YEAR(CURDATE())
+        """, (employee_id,))
+        
+        if existing:
+            # Update existing payroll
+            exec_sql("""
+                UPDATE payroll 
+                SET basic_salary = %s, bonus = %s, deductions = %s, status = %s
+                WHERE payroll_id = %s
+            """, (base_salary, bonus, deductions, status, existing['payroll_id']))
+            flash("Salary and status updated successfully!", "success")
+        else:
+            # Create new payroll entry
+            current_month = datetime.now().strftime("%Y-%m-01")
+            exec_sql("""
+                INSERT INTO payroll (employee_id, basic_salary, bonus, deductions, pay_date, status)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, (employee_id, base_salary, bonus, deductions, current_month, status))
+            flash("Salary entry created successfully!", "success")
+        
+        return redirect(url_for("admin_payroll"))
+        
+    except Exception as e:
+        flash(f"Error updating salary: {str(e)}", "danger")
+        return redirect(url_for("admin_payroll"))
+
+@app.route("/admin/payroll/add-bonus", methods=["POST"])
+@admin_required
+def add_bonus():
+    """Add bonus to employee's current month payroll"""
+    try:
+        employee_id = request.form.get("employee_id")
+        amount = float(request.form.get("amount", 0))
+        reason = request.form.get("reason", "")
+        
+        # Check if payroll exists for current month
+        existing = q1("""
+            SELECT payroll_id, bonus 
+            FROM payroll 
+            WHERE employee_id = %s 
+              AND MONTH(pay_date) = MONTH(CURDATE())
+              AND YEAR(pay_date) = YEAR(CURDATE())
+        """, (employee_id,))
+        
+        if existing:
+            # Add to existing bonus
+            new_bonus = existing['bonus'] + amount
+            exec_sql("""
+                UPDATE payroll 
+                SET bonus = %s
+                WHERE payroll_id = %s
+            """, (new_bonus, existing['payroll_id']))
+            flash(f"Bonus of ${amount:.2f} added successfully! Reason: {reason}", "success")
+        else:
+            # Create new payroll entry with bonus
+            current_month = datetime.now().strftime("%Y-%m-01")
+            exec_sql("""
+                INSERT INTO payroll (employee_id, basic_salary, bonus, deductions, pay_date, status)
+                VALUES (%s, 5000, %s, 0, %s, 'pending')
+            """, (employee_id, amount, current_month))
+            flash(f"Bonus of ${amount:.2f} added successfully!", "success")
+        
+        return redirect(url_for("admin_payroll"))
+        
+    except Exception as e:
+        flash(f"Error adding bonus: {str(e)}", "danger")
+        return redirect(url_for("admin_payroll"))
+
+@app.route("/admin/payroll/add-deduction", methods=["POST"])
+@admin_required
+def add_deduction():
+    """Add deduction to employee's current month payroll"""
+    try:
+        employee_id = request.form.get("employee_id")
+        amount = float(request.form.get("amount", 0))
+        reason = request.form.get("reason", "")
+        
+        # Check if payroll exists for current month
+        existing = q1("""
+            SELECT payroll_id, deductions 
+            FROM payroll 
+            WHERE employee_id = %s 
+              AND MONTH(pay_date) = MONTH(CURDATE())
+              AND YEAR(pay_date) = YEAR(CURDATE())
+        """, (employee_id,))
+        
+        if existing:
+            # Add to existing deductions
+            new_deductions = existing['deductions'] + amount
+            exec_sql("""
+                UPDATE payroll 
+                SET deductions = %s
+                WHERE payroll_id = %s
+            """, (new_deductions, existing['payroll_id']))
+            flash(f"Deduction of ${amount:.2f} added successfully! Reason: {reason}", "success")
+        else:
+            # Create new payroll entry with deduction
+            current_month = datetime.now().strftime("%Y-%m-01")
+            exec_sql("""
+                INSERT INTO payroll (employee_id, basic_salary, bonus, deductions, pay_date, status)
+                VALUES (%s, 5000, 0, %s, %s, 'pending')
+            """, (employee_id, amount, current_month))
+            flash(f"Deduction of ${amount:.2f} added successfully!", "success")
+        
+        return redirect(url_for("admin_payroll"))
+        
+    except Exception as e:
+        flash(f"Error adding deduction: {str(e)}", "danger")
+        return redirect(url_for("admin_payroll"))
+
+@app.route("/admin/payroll/add-transaction", methods=["POST"])
+@admin_required
+def add_payroll_transaction():
+    """General route to add bonus or deduction - creates new payroll record"""
+    try:
+        employee_id = request.form.get("employee_id")
+        transaction_type = request.form.get("transaction_type")
+        amount = float(request.form.get("amount", 0))
+        base_salary = float(request.form.get("base_salary", 5000))
+        pay_month = request.form.get("pay_month")  # Format: YYYY-MM
+        reason = request.form.get("reason", "")
+        
+        # Convert pay_month to pay_date (first day of month)
+        pay_date = f"{pay_month}-01"
+        
+        # Check if payroll already exists for this employee and month
+        existing = q1("""
+            SELECT payroll_id, basic_salary, bonus, deductions 
+            FROM payroll 
+            WHERE employee_id = %s 
+              AND DATE_FORMAT(pay_date, '%%Y-%%m') = %s
+        """, (employee_id, pay_month))
+        
+        if existing:
+            # Update existing record
+            if transaction_type == "bonus":
+                new_bonus = existing['bonus'] + amount
+                exec_sql("UPDATE payroll SET bonus = %s WHERE payroll_id = %s", 
+                        (new_bonus, existing['payroll_id']))
+                flash(f"Bonus of ${amount:.2f} added to existing record! Reason: {reason}", "success")
+            elif transaction_type == "deduction":
+                new_deductions = existing['deductions'] + amount
+                exec_sql("UPDATE payroll SET deductions = %s WHERE payroll_id = %s", 
+                        (new_deductions, existing['payroll_id']))
+                flash(f"Deduction of ${amount:.2f} added to existing record! Reason: {reason}", "success")
+        else:
+            # Create new record
+            if transaction_type == "bonus":
+                exec_sql("""
+                    INSERT INTO payroll (employee_id, basic_salary, bonus, deductions, pay_date, status)
+                    VALUES (%s, %s, %s, 0, %s, 'pending')
+                """, (employee_id, base_salary, amount, pay_date))
+                flash(f"New payroll record created with bonus of ${amount:.2f}! Reason: {reason}", "success")
+            elif transaction_type == "deduction":
+                exec_sql("""
+                    INSERT INTO payroll (employee_id, basic_salary, bonus, deductions, pay_date, status)
+                    VALUES (%s, %s, 0, %s, %s, 'pending')
+                """, (employee_id, base_salary, amount, pay_date))
+                flash(f"New payroll record created with deduction of ${amount:.2f}! Reason: {reason}", "success")
+        
+        return redirect(url_for("admin_payroll"))
+        
+    except Exception as e:
+        flash(f"Error processing transaction: {str(e)}", "danger")
+        return redirect(url_for("admin_payroll"))
+
+# ==================== ANNOUNCEMENTS ROUTES ====================
+
+@app.route("/admin/announcements")
+@admin_required
+def admin_announcements():
+    """Admin page to manage holidays and notifications"""
+    try:
+        holidays = qall("""
+            SELECT h.*, u.first_name, u.last_name
+            FROM holidays h
+            LEFT JOIN users u ON h.created_by = u.user_id
+            ORDER BY h.holiday_date DESC
+        """)
+        
+        notifications = qall("""
+            SELECT n.*, u.first_name, u.last_name
+            FROM notifications n
+            LEFT JOIN users u ON n.created_by = u.user_id
+            ORDER BY n.created_at DESC
+        """)
+        
+        return render_template(
+            "admin/announcements.html",
+            holidays=holidays,
+            notifications=notifications
+        )
+    except Exception as e:
+        flash(f"Error loading announcements: {str(e)}", "danger")
+        return redirect(url_for("admin_dashboard"))
+
+@app.route("/admin/holidays/add", methods=["POST"])
+@admin_required
+def add_holiday():
+    """Add a new holiday"""
+    try:
+        title = request.form.get("title", "").strip()
+        holiday_date = request.form.get("holiday_date", "").strip()
+        description = request.form.get("description", "").strip() or None
+        
+        if not title or not holiday_date:
+            flash("Title and date are required!", "danger")
+            return redirect(url_for("admin_announcements"))
+        
+        exec_sql("""
+            INSERT INTO holidays (title, holiday_date, description, created_by)
+            VALUES (%s, %s, %s, %s)
+        """, (title, holiday_date, description, session["user_id"]))
+        
+        flash(f"Holiday '{title}' added successfully!", "success")
+    except Exception as e:
+        flash(f"Error adding holiday: {str(e)}", "danger")
+    
+    return redirect(url_for("admin_announcements"))
+
+@app.route("/admin/holidays/delete/<int:holiday_id>", methods=["POST"])
+@admin_required
+def delete_holiday(holiday_id):
+    """Delete a holiday"""
+    try:
+        exec_sql("DELETE FROM holidays WHERE holiday_id = %s", (holiday_id,))
+        flash("Holiday deleted successfully!", "success")
+    except Exception as e:
+        flash(f"Error deleting holiday: {str(e)}", "danger")
+    
+    return redirect(url_for("admin_announcements"))
+
+@app.route("/admin/notifications/add", methods=["POST"])
+@admin_required
+def add_notification():
+    """Add a new notification"""
+    try:
+        title = request.form.get("title", "").strip()
+        message = request.form.get("message", "").strip()
+        notification_type = request.form.get("notification_type", "info")
+        is_active = 1 if request.form.get("is_active") else 0
+        
+        if not title or not message:
+            flash("Title and message are required!", "danger")
+            return redirect(url_for("admin_announcements"))
+        
+        exec_sql("""
+            INSERT INTO notifications (title, message, notification_type, is_active, created_by)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (title, message, notification_type, is_active, session["user_id"]))
+        
+        flash(f"Notification '{title}' added successfully!", "success")
+    except Exception as e:
+        flash(f"Error adding notification: {str(e)}", "danger")
+    
+    return redirect(url_for("admin_announcements"))
+
+@app.route("/admin/notifications/toggle/<int:notification_id>", methods=["POST"])
+@admin_required
+def toggle_notification(notification_id):
+    """Toggle notification active status"""
+    try:
+        notif = q1("SELECT is_active FROM notifications WHERE notification_id = %s", (notification_id,))
+        if notif:
+            new_status = 0 if notif["is_active"] else 1
+            exec_sql("UPDATE notifications SET is_active = %s WHERE notification_id = %s", (new_status, notification_id))
+            flash("Notification status updated!", "success")
+        else:
+            flash("Notification not found!", "danger")
+    except Exception as e:
+        flash(f"Error updating notification: {str(e)}", "danger")
+    
+    return redirect(url_for("admin_announcements"))
+
+@app.route("/admin/notifications/delete/<int:notification_id>", methods=["POST"])
+@admin_required
+def delete_notification(notification_id):
+    """Delete a notification"""
+    try:
+        exec_sql("DELETE FROM notifications WHERE notification_id = %s", (notification_id,))
+        flash("Notification deleted successfully!", "success")
+    except Exception as e:
+        flash(f"Error deleting notification: {str(e)}", "danger")
+    
+    return redirect(url_for("admin_announcements"))
 
 # ==================== USER ROUTES ====================
 
@@ -977,11 +1316,48 @@ def user_dashboard():
             'net_pay': payroll_info.get('net_pay', 0) if payroll_info else 0
         }
 
+        # ================== Get Holidays (upcoming) ==================
+        holidays = qall("""
+            SELECT title, holiday_date as date
+            FROM holidays
+            WHERE holiday_date >= CURDATE()
+            ORDER BY holiday_date ASC
+            LIMIT 5
+        """)
+        
+        # Format holidays for display
+        formatted_holidays = []
+        for h in holidays:
+            formatted_holidays.append({
+                'title': h['title'],
+                'date': h['date'].strftime('%b %d, %Y') if h['date'] else 'N/A'
+            })
+
+        # ================== Get Active Notifications ==================
+        notifications = qall("""
+            SELECT title, message, created_at
+            FROM notifications
+            WHERE is_active = 1
+            ORDER BY created_at DESC
+            LIMIT 5
+        """)
+        
+        # Format notifications for display
+        formatted_notifications = []
+        for n in notifications:
+            formatted_notifications.append({
+                'title': n['title'],
+                'text': n['message'],
+                'time': n['created_at'].strftime('%b %d, %Y at %I:%M %p') if n['created_at'] else 'Recently'
+            })
+
         return render_template(
-            "user/home.html",   # تأكد إن الملف ده موجود
+            "user/home.html",
             employee=employee,
             stats=stats,
-            user_name=session.get("user_name")
+            user_name=session.get("user_name"),
+            holidays=formatted_holidays,
+            notifications=formatted_notifications
         )
 
     except Exception as e:
@@ -1121,9 +1497,12 @@ def user_attendance():
         year, month = map(int, selected_month.split('-'))
         month_label = datetime(year, month, 1).strftime('%B %Y')
         
-        # جلب بيانات الحضور للشهر الحالي للتقويم
+        # جلب بيانات الحضور للشهر الحالي للتقويم مع تحديد Late
         calendar_data = qall("""
-            SELECT DAY(attendance_date) as day, status
+            SELECT 
+                DAY(attendance_date) as day, 
+                status,
+                check_in
             FROM attendance
             WHERE employee_id=%s 
               AND DATE_FORMAT(attendance_date, '%%Y-%%m')=%s
@@ -1131,7 +1510,24 @@ def user_attendance():
         
         calendar_days = {}
         for rec in calendar_data:
-            calendar_days[rec['day']] = rec['status']
+            day_num = rec['day']
+            status = rec['status']
+            check_in = rec['check_in']
+            
+            # تحديد الحالة النهائية للتقويم
+            if status == 'present':
+                # تحويل check_in لـ string للمقارنة
+                check_in_str = str(check_in) if check_in else ''
+                if check_in_str and check_in_str > '09:00:00':
+                    calendar_days[day_num] = 'late'
+                else:
+                    calendar_days[day_num] = 'present'
+            elif status == 'absent':
+                calendar_days[day_num] = 'absent'
+            elif status == 'leave':
+                calendar_days[day_num] = 'none'  # أو ممكن نعمل class جديد للـ leave
+            else:
+                calendar_days[day_num] = 'none'
         
         # تنسيق recent check-ins
         recent_checkins = []
@@ -1153,6 +1549,54 @@ def user_attendance():
               AND status='present'
         """, (employee["employee_id"], selected_month)) or {}).get('count', 0) or 0
         
+        # التحقق من حالة الحضور اليوم
+        today_attendance = q1("""
+            SELECT 
+                attendance_date,
+                check_in, 
+                check_out, 
+                status,
+                CASE
+                    WHEN check_in IS NOT NULL AND check_out IS NOT NULL
+                    THEN TIME_FORMAT(TIMEDIFF(check_out, check_in), '%Hh %im')
+                    ELSE NULL
+                END AS total_hours
+            FROM attendance
+            WHERE employee_id=%s AND attendance_date = CURDATE()
+        """, (employee["employee_id"],))
+        
+        today_status = 'Not checked in yet'
+        today_checked_in = False
+        today_checked_out = False
+        today_date = datetime.now().strftime('%A, %B %d, %Y')
+        today_check_in = None
+        today_check_out = None
+        today_total_hours = None
+        today_is_late = False
+        
+        if today_attendance:
+            check_in_time = today_attendance['check_in']
+            check_out_time = today_attendance['check_out']
+            
+            if check_in_time:
+                today_checked_in = True
+                time_str = check_in_time.strftime('%I:%M %p') if hasattr(check_in_time, 'strftime') else str(check_in_time)[:5]
+                today_check_in = time_str
+                
+                # التحقق من التأخير
+                check_in_str = str(check_in_time) if check_in_time else ''
+                if check_in_str and check_in_str > '09:00:00':
+                    today_is_late = True
+                
+                if check_out_time:
+                    today_checked_out = True
+                    out_str = check_out_time.strftime('%I:%M %p') if hasattr(check_out_time, 'strftime') else str(check_out_time)[:5]
+                    today_check_out = out_str
+                    today_total_hours = today_attendance.get('total_hours')
+                    today_status = f'✓ Checked in at {time_str}, Checked out at {out_str}'
+                else:
+                    today_status = f'✓ Checked in at {time_str}'
+        
         data = {
             'attendance_stats': {
                 'present': stats_dict['present_count'],
@@ -1163,7 +1607,16 @@ def user_attendance():
                 'month_label': month_label,
                 'days': calendar_days
             },
-            'recent_checkins': recent_checkins
+            'recent_checkins': recent_checkins,
+            'attendance_records': attendance_records,
+            'today_status': today_status,
+            'today_checked_in': today_checked_in,
+            'today_checked_out': today_checked_out,
+            'today_date': today_date,
+            'today_check_in': today_check_in,
+            'today_check_out': today_check_out,
+            'today_total_hours': today_total_hours,
+            'today_is_late': today_is_late
         }
         
         return render_template("user/attendance.html", d=data)
