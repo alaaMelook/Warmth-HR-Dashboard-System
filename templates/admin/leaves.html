@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Requests - HR System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <span>👥 HR System</span>
+            </div>
+
+            <nav class="nav">
+                <a href="{{ url_for('admin_dashboard') }}">
+                    <span class="icon">📊</span>
+                    Dashboard
+                </a>
+                <a href="{{ url_for('admin_employees') }}">
+                    <span class="icon">👥</span>
+                    Employees
+                </a>
+                <a href="{{ url_for('admin_attendance') }}">
+                    <span class="icon">📅</span>
+                    Attendance
+                </a>
+                <a href="{{ url_for('admin_leaves') }}" class="active">
+                    <span class="icon">📄</span>
+                    Leaves
+                </a>
+                <a href="{{ url_for('admin_payroll') }}">
+                    <span class="icon">💰</span>
+                    Payroll
+                </a>
+                <a href="{{ url_for('admin_settings') }}">
+                    <span class="icon">⚙️</span>
+                    Settings
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="avatar">AD</div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-weight:600; font-size:14px; color:#6e625a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                        {{ session.get('user_name', 'Admin') }}
+                    </div>
+                    <div style="font-size:11px; color:#9b8f86;">Administrator</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="header-hero">
+                <h1>Leave Requests</h1>
+                <p>Review and manage employee leave requests.</p>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="grid-4">
+                <div class="card pad kpi">
+                    <div class="kpi-top">
+                        <label>Pending</label>
+                        <div class="badge-icon">⏳</div>
+                    </div>
+                    <div class="value">{{ pending_count }}</div>
+                    <div class="sub warning">Awaiting action</div>
+                </div>
+
+                <div class="card pad kpi">
+                    <div class="kpi-top">
+                        <label>Approved</label>
+                        <div class="badge-icon">✓</div>
+                    </div>
+                    <div class="value">{{ approved_count }}</div>
+                    <div class="sub success">This month</div>
+                </div>
+
+                <div class="card pad kpi">
+                    <div class="kpi-top">
+                        <label>Rejected</label>
+                        <div class="badge-icon">✗</div>
+                    </div>
+                    <div class="value">{{ rejected_count }}</div>
+                    <div class="sub danger">This month</div>
+                </div>
+
+                <div class="card pad kpi">
+                    <div class="kpi-top">
+                        <label>Total Requests</label>
+                        <div class="badge-icon">📄</div>
+                    </div>
+                    <div class="value">{{ leave_requests|length }}</div>
+                    <div class="sub">All time</div>
+                </div>
+            </div>
+
+            <!-- All Leave Requests -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="page-title">All Leave Requests</h2>
+                </div>
+                <div class="list">
+                    {% if leave_requests %}
+                        {% for leave in leave_requests %}
+                        <div class="list-item">
+                            <div style="display:flex; align-items:center; gap:12px; flex:1;">
+                                <div class="avatar">{{ leave['first_name'][0] }}{{ leave['last_name'][0] }}</div>
+                                <div style="flex:1; min-width:0;">
+                                    <div class="title">{{ leave['first_name'] }} {{ leave['last_name'] }}</div>
+                                    <div class="time">
+                                        {{ leave['leave_type']|title }} • {{ leave['start_date'].strftime('%b %d') }} - {{ leave['end_date'].strftime('%b %d, %Y') }}
+                                        ({{ leave['duration'] }} days)
+                                    </div>
+                                    <div class="time">Reason: {{ leave['reason'] or 'No reason provided' }}</div>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                {% if leave['status'] == 'pending' %}
+                                    <span class="pill warning">Pending</span>
+                                {% elif leave['status'] == 'approved' %}
+                                    <span class="pill success">Approved</span>
+                                {% else %}
+                                    <span class="pill danger">Rejected</span>
+                                {% endif %}
+
+                                {% if leave['status'] == 'pending' %}
+                                <form action="{{ url_for('admin_update_leave', leave_id=leave['leave_id']) }}" method="POST" style="display:inline;">
+                                    <input type="hidden" name="status" value="approved">
+                                    <button type="submit" class="btn-small success" style="padding:6px 12px; font-size:12px;">
+                                        Approve
+                                    </button>
+                                </form>
+                                <form action="{{ url_for('admin_update_leave', leave_id=leave['leave_id']) }}" method="POST" style="display:inline;">
+                                    <input type="hidden" name="status" value="rejected">
+                                    <button type="submit" class="btn-small danger" style="padding:6px 12px; font-size:12px;">
+                                        Reject
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="list-item empty">
+                            <div class="title" style="color:#9b8f86; text-align:center; width:100%; padding:40px 0;">
+                                No leave requests found
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Logout functionality
+        document.querySelector('.sidebar-footer').addEventListener('click', function(e) {
+            if(e.target.closest('.sidebar-footer') && confirm('Do you want to logout?')) {
+                window.location.href = "{{ url_for('logout') }}";
+            }
+        });
+    </script>
+</body>
+</html>
