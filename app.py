@@ -204,25 +204,46 @@ def login():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        name = request.form.get("name", "").strip()
+        first_name = request.form.get("first_name", "").strip()
+        last_name = request.form.get("last_name", "").strip()
         email = request.form.get("email", "").strip().lower()
+        phone = request.form.get("phone", "").strip() or None
+        address = request.form.get("address", "").strip() or None
+        emergency_name = request.form.get("emergency_name", "").strip() or None
+        emergency_relationship = request.form.get("emergency_relationship", "").strip() or None
+        emergency_phone = request.form.get("emergency_phone", "").strip() or None
         password = request.form.get("password", "").strip()
 
-        if not name or not email or not password:
-            flash("Please fill in all fields.", "danger")
+        if not first_name or not last_name or not email or not password:
+            flash("Please fill in all required fields.", "danger")
             return redirect(url_for("register"))
-
-        parts = name.split(None, 1)
-        first_name = parts[0]
-        last_name = parts[1] if len(parts) > 1 else ""
 
         if find_user_by_email(email):
             flash("An account with that email already exists.", "danger")
             return redirect(url_for("register"))
 
-        create_user(first_name, last_name, email, password, role_id=1)
-        flash("Registration successful. You can now log in.", "success")
-        return redirect(url_for("login"))
+        try:
+            pw_hash = generate_password_hash(password)
+            user_id, _ = exec_sql("""
+                INSERT INTO users 
+                (first_name, last_name, email, phone, address,
+                 emergency_name, emergency_relationship, emergency_phone,
+                 password, role_id)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,1)
+            """, (first_name, last_name, email, phone, address,
+                  emergency_name, emergency_relationship, emergency_phone, pw_hash))
+            
+            # Create employee record automatically for the new user
+            exec_sql("""
+                INSERT INTO employees (user_id, hire_date, status)
+                VALUES (%s, CURDATE(), 'active')
+            """, (user_id,))
+            
+            flash("Registration successful. You can now log in.", "success")
+            return redirect(url_for("login"))
+        except Exception as e:
+            flash(f"Error during registration: {str(e)}", "danger")
+            return redirect(url_for("register"))
 
     return render_template("register.html", title="Register")
 
@@ -464,7 +485,21 @@ def admin_delete_employee(employee_id):
             return redirect(url_for("admin_employees"))
 
         user_id = emp_row["user_id"]
+        
+        # Delete related records first (foreign key constraints)
+        # 1. Delete attendance records
+        exec_sql("DELETE FROM attendance WHERE employee_id=%s", (employee_id,))
+        
+        # 2. Delete leave requests
+        exec_sql("DELETE FROM leaves WHERE employee_id=%s", (employee_id,))
+        
+        # 3. Delete payroll records
+        exec_sql("DELETE FROM payroll WHERE employee_id=%s", (employee_id,))
+        
+        # 4. Delete employee record
         exec_sql("DELETE FROM employees WHERE employee_id=%s", (employee_id,))
+        
+        # 5. Delete user account
         exec_sql("DELETE FROM users WHERE user_id=%s", (user_id,))
 
         if request.method == "DELETE":
@@ -586,6 +621,59 @@ def admin_attendance():
             total_records=0,
             error=str(e),
         )
+
+@app.route("/admin/attendance/export")
+@admin_required
+def export_attendance_csv():
+    try:
+        selected_date = request.args.get("date", date.today().strftime("%Y-%m-%d"))
+        department_filter = request.args.get("department", "all")
+        
+        base_sql = """
+            SELECT
+                u.first_name,
+                u.last_name,
+                d.department_name,
+                a.attendance_date,
+                a.check_in,
+                a.check_out,
+                a.status,
+                CASE
+                    WHEN a.check_in IS NOT NULL AND a.check_out IS NOT NULL
+                    THEN TIME_FORMAT(TIMEDIFF(a.check_out, a.check_in), '%Hh %im')
+                    ELSE NULL
+                END AS total_hours
+            FROM attendance a
+            JOIN employees e ON a.employee_id = e.employee_id
+            JOIN users u ON e.user_id = u.user_id
+            LEFT JOIN departments d ON e.department_id = d.department_id
+            WHERE a.attendance_date = %s
+        """
+        params = [selected_date]
+        if department_filter != "all":
+            base_sql += " AND e.department_id = %s"
+            params.append(department_filter)
+        
+        base_sql += " ORDER BY a.check_in DESC"
+        rows = qall(base_sql, tuple(params))
+
+        output = StringIO()
+        writer = csv.DictWriter(output, fieldnames=[
+            "first_name", "last_name", "department_name", "attendance_date", 
+            "check_in", "check_out", "status", "total_hours"
+        ])
+        writer.writeheader()
+        writer.writerows(rows)
+
+        output.seek(0)
+        resp = make_response(output.getvalue())
+        resp.headers["Content-Disposition"] = f"attachment; filename=attendance_{selected_date}.csv"
+        resp.headers["Content-type"] = "text/csv"
+        return resp
+
+    except Exception as e:
+        flash(f"Error exporting attendance: {str(e)}", "danger")
+        return redirect(url_for("admin_attendance"))
 
 @app.route("/admin/leaves")
 @admin_required
@@ -770,6 +858,58 @@ def export_payroll_csv():
 
     except Exception as e:
         flash(f"Error exporting payroll: {str(e)}", "danger")
+        return redirect(url_for("admin_payroll"))
+
+@app.route("/admin/payroll/process", methods=["POST"])
+@admin_required
+def process_payroll():
+    """
+    Process payroll for current month - creates payroll entries for all active employees
+    """
+    try:
+        # Get all active employees
+        employees = qall("""
+            SELECT e.employee_id
+            FROM employees e
+            WHERE e.status = 'active'
+        """)
+        
+        if not employees:
+            flash("No active employees found.", "warning")
+            return redirect(url_for("admin_payroll"))
+        
+        processed_count = 0
+        current_month = datetime.now().strftime("%Y-%m-01")
+        
+        for emp in employees:
+            # Check if payroll already exists for this month
+            existing = q1("""
+                SELECT payroll_id 
+                FROM payroll 
+                WHERE employee_id = %s 
+                  AND MONTH(pay_date) = MONTH(CURDATE())
+                  AND YEAR(pay_date) = YEAR(CURDATE())
+            """, (emp['employee_id'],))
+            
+            if existing:
+                continue  # Skip if already processed
+            
+            # Insert basic payroll entry - you may want to customize salary calculation
+            exec_sql("""
+                INSERT INTO payroll (employee_id, basic_salary, bonus, deductions, pay_date)
+                VALUES (%s, 5000, 500, 300, %s)
+            """, (emp['employee_id'], current_month))
+            processed_count += 1
+        
+        if processed_count > 0:
+            flash(f"Payroll processed successfully for {processed_count} employees!", "success")
+        else:
+            flash("Payroll already processed for this month.", "info")
+        
+        return redirect(url_for("admin_payroll"))
+        
+    except Exception as e:
+        flash(f"Error processing payroll: {str(e)}", "danger")
         return redirect(url_for("admin_payroll"))
 
 # ==================== USER ROUTES ====================

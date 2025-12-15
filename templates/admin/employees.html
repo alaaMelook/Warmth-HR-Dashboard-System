@@ -191,12 +191,9 @@
                         </button>
                         <div class="dropdown-menu" id="dropdownMenu">
                             <div class="dropdown-item active" data-value="all">All Departments</div>
-                            <div class="dropdown-item" data-value="engineering">Engineering</div>
-                            <div class="dropdown-item" data-value="product">Product</div>
-                            <div class="dropdown-item" data-value="design">Design</div>
-                            <div class="dropdown-item" data-value="human-resources">Human Resources</div>
-                            <div class="dropdown-item" data-value="marketing">Marketing</div>
-                            <div class="dropdown-item" data-value="sales">Sales</div>
+                            {% for dept in departments %}
+                                <div class="dropdown-item" data-value="{{ dept.department_name|lower|replace(' ', '-') }}">{{ dept.department_name }}</div>
+                            {% endfor %}
                         </div>
                     </div>
                     <a href="{{ url_for('admin_add_employee') }}" class="btn-sm primary">+ Add Employee</a>
@@ -218,38 +215,38 @@
                         <tbody>
                             {% if employees %}
                                 {% for emp in employees %}
-                                <tr data-employee-id="{{ emp[0] }}" data-department="{{ emp[6]|lower|replace(' ', '-') if emp[6] else '' }}">
+                                <tr data-employee-id="{{ emp.employee_id }}" data-department="{{ emp.department_name|lower|replace(' ', '-') if emp.department_name else '' }}">
                                     <td>
                                         <div class="employee-cell">
                                             <div class="avatar" style="width:38px; height:38px;">
-                                                {{ emp[2][0]|upper }}{{ emp[3][0]|upper }}
+                                                {{ emp.first_name[0]|upper }}{{ emp.last_name[0]|upper }}
                                             </div>
                                             <div>
-                                                <div class="employee-name">{{ emp[2] }} {{ emp[3] }}</div>
-                                                <div class="employee-email">{{ emp[4] }}</div>
+                                                <div class="employee-name">{{ emp.first_name }} {{ emp.last_name }}</div>
+                                                <div class="employee-email">{{ emp.email }}</div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td>{{ emp[8] if emp[8] else 'Not Assigned' }}</td>
+                                    <td>{{ emp.title_name if emp.title_name else 'Not Assigned' }}</td>
                                     <td>
-                                        <span class="pill">{{ emp[6] if emp[6] else 'Not Assigned' }}</span>
+                                        <span class="pill">{{ emp.department_name if emp.department_name else 'Not Assigned' }}</span>
                                     </td>
-                                    <td>{{ emp[5] if emp[5] else 'N/A' }}</td>
+                                    <td>{{ emp.phone if emp.phone else 'N/A' }}</td>
                                     <td>
-                                        {% if emp[10] == 'active' %}
+                                        {% if emp.status == 'active' %}
                                             <span class="pill" style="background:#dff8ea; border-color:#c9efd9; color:#2f8c52;">
-                                                {{ emp[10]|capitalize }}
+                                                {{ emp.status|capitalize }}
                                             </span>
                                         {% else %}
                                             <span class="pill" style="background:#fde2e2; border-color:#f7c9c9; color:#c54949;">
-                                                {{ emp[10]|capitalize if emp[10] else 'Inactive' }}
+                                                {{ emp.status|capitalize if emp.status else 'Inactive' }}
                                             </span>
                                         {% endif %}
                                     </td>
                                     <td>
                                         <div class="actions">
-                                            <a href="{{ url_for('admin_edit_employee', employee_id=emp[0]) }}" class="btn-sm">✏️ Edit</a>
-                                            <button class="btn-sm" onclick="deleteEmployee('{{ emp[0] }}', '{{ emp[2] }} {{ emp[3] }}')" style="background:#fde2e2; border-color:#f7c9c9; color:#c54949;">🗑️ Delete</button>
+                                            <a href="{{ url_for('admin_edit_employee', employee_id=emp.employee_id) }}" class="btn-sm">✏️ Edit</a>
+                                            <button class="btn-sm" onclick="deleteEmployee('{{ emp.employee_id }}', '{{ emp.first_name }} {{ emp.last_name }}')" style="background:#fde2e2; border-color:#f7c9c9; color:#c54949;">🗑️ Delete</button>
                                         </div>
                                     </td>
                                 </tr>

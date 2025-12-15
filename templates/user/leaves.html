@@ -5,15 +5,15 @@
   <h1 class="page-title">Leave Management</h1>
   <p class="page-sub">Request time off and view your leave history</p>
 
-  <div class="card pad" style="max-width:800px;margin:0 auto;">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+  <div class="card pad leave-request-card">
+    <div class="section-header">
       <div class="badge-icon">🗓️</div>
-      <div style="font-weight:800;color:#8e6e5e;font-size:16px;">Request Leave</div>
+      <h2 class="section-title">Request Leave</h2>
     </div>
 
     <form class="form-grid" method="POST" action="{{ url_for('user_leaves') }}">
-      <div style="grid-column:1/-1;">
-        <label style="font-size:12px;color:#8a7f76;font-weight:600;display:block;margin-bottom:6px;">Leave Type <span style="color:#c54949;">*</span></label>
+      <div class="full-width">
+        <label class="form-label">Leave Type <span class="required">*</span></label>
         <select name="leave_type" required>
           <option value="">Select leave type</option>
           <option value="vacation">Vacation Leave</option>
@@ -24,69 +24,65 @@
       </div>
 
       <div>
-        <label style="font-size:12px;color:#8a7f76;font-weight:600;display:block;margin-bottom:6px;">Start Date <span style="color:#c54949;">*</span></label>
+        <label class="form-label">Start Date <span class="required">*</span></label>
         <input class="input" name="start_date" type="date" required />
       </div>
 
       <div>
-        <label style="font-size:12px;color:#8a7f76;font-weight:600;display:block;margin-bottom:6px;">End Date <span style="color:#c54949;">*</span></label>
+        <label class="form-label">End Date <span class="required">*</span></label>
         <input class="input" name="end_date" type="date" required />
       </div>
 
-      <div style="grid-column:1/-1;">
-        <label style="font-size:12px;color:#8a7f76;font-weight:600;display:block;margin-bottom:6px;">Reason (Optional)</label>
+      <div class="full-width">
+        <label class="form-label">Reason (Optional)</label>
         <textarea name="reason" placeholder="Please provide a reason for your leave request..." style="min-height:80px;"></textarea>
       </div>
 
-      <div style="grid-column:1/-1;margin-top:6px;">
+      <div class="full-width" style="margin-top:6px;">
         <button class="btn" type="submit">✈️ Submit Leave Request</button>
       </div>
     </form>
   </div>
 
-  <div class="card pad" style="margin-top:16px;">
-    <div style="font-weight:900;color:#8e6e5e;margin-bottom:14px;font-size:16px;">Leave History</div>
+  <div class="card pad leave-history-card">
+    <h2 class="leave-history-header">Leave History</h2>
 
     {% if d.leave_history and d.leave_history|length > 0 %}
       <div class="list">
         {% for h in d.leave_history %}
           <div class="list-item">
-            <div style="display:flex;gap:12px;align-items:center;">
+            <div class="leave-info">
               <div class="badge-icon">
                 {% if h.status|lower == 'approved' %}✅
                 {% elif h.status|lower == 'rejected' %}❌
                 {% else %}⏳
                 {% endif %}
               </div>
-              <div>
+              <div class="leave-details">
                 <div class="title">{{ h.type }}</div>
                 <div class="time">{{ h.date }}</div>
               </div>
             </div>
 
-            <div style="text-align:right;">
-              <div class="pill">{{ h.days }} days</div>
+            <div class="leave-status-section">
+              <div class="pill days">{{ h.days }} days</div>
 
               {% set st = h.status|lower %}
               {% if st == 'approved' %}
-                {% set pill_style = "background:#e9f8ef;border-color:#bfe8cf;color:#2f8c52;" %}
+                <div class="pill status-approved">{{ h.status }}</div>
               {% elif st == 'rejected' %}
-                {% set pill_style = "background:#fff0f0;border-color:#f2bcbc;color:#c54949;" %}
+                <div class="pill status-rejected">{{ h.status }}</div>
               {% else %}
-                {% set pill_style = "background:#fff8e6;border-color:#f2e6a2;color:#b8860b;" %}
+                <div class="pill status-pending">{{ h.status }}</div>
               {% endif %}
-
-              <div class="pill" style="{{ 'margin-top:8px;font-weight:600;' ~ pill_style }}">
-                {{ h.status }}
-              </div>
             </div>
           </div>
         {% endfor %}
       </div>
     {% else %}
-      <div style="text-align:center;padding:30px;color:#8a7f76;">
-        <div style="font-size:40px;margin-bottom:10px;">📝</div>
-        <div>No leave requests yet.</div>
+      <div class="leave-empty-state">
+        <div class="leave-empty-icon">📝</div>
+        <div class="leave-empty-text">No leave requests yet.</div>
       </div>
     {% endif %}
   </div>

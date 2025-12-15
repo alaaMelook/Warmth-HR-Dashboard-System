@@ -506,3 +506,446 @@ select, textarea{
   transform:translateY(-2px);
   box-shadow: var(--shadow);
 }
+
+/* ===== Table Styles ===== */
+.table-responsive{
+  overflow-x:auto;
+  width:100%;
+}
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+}
+
+.table thead{
+  background:#faf3ec;
+  border-bottom:2px solid #e7dfd8;
+}
+
+.table th{
+  padding:14px 16px;
+  text-align:left;
+  font-size:12px;
+  color:#8a7f76;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  white-space:nowrap;
+}
+
+.table td{
+  padding:14px 16px;
+  border-bottom:1px solid #f0e8e0;
+  color:#6e625a;
+  vertical-align:middle;
+}
+
+.table tbody tr{
+  transition:background 0.2s ease;
+}
+
+.table tbody tr:hover{
+  background:#faf9f7;
+}
+
+.table tbody tr:last-child td{
+  border-bottom:none;
+}
+
+/* Table badges */
+.pill.success{
+  background:#dff8ea;
+  border-color:#c9efd9;
+  color:#2f8c52;
+}
+
+.pill.warning{
+  background:#fff6cc;
+  border-color:#f2e6a2;
+  color:#9b7e00;
+}
+
+.pill.danger{
+  background:#fde2e2;
+  border-color:#f7c9c9;
+  color:#c54949;
+}
+
+/* Card header */
+.card-header{
+  padding:20px 24px;
+  border-bottom:1px solid #f0e8e0;
+}
+
+.card-header h2{
+  margin:0;
+  font-size:18px;
+  color:#6f4e3f;
+  font-weight:700;
+}
+
+/* Button variants */
+.btn-secondary{
+  padding:10px 16px;
+  border-radius:12px;
+  border:1px solid #e7d6c9;
+  background:#fff;
+  color:#8e6e5e;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  font-family:inherit;
+  font-size:14px;
+}
+
+.btn-secondary:hover{
+  background:#faf3ec;
+  border-color:#d9c7ba;
+}
+
+.btn-small{
+  padding:8px 14px;
+  border-radius:10px;
+  border:1px solid #e7d6c9;
+  background:#f7efe8;
+  color:#8e6e5e;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  font-family:inherit;
+  font-size:13px;
+  text-decoration:none;
+  display:inline-block;
+}
+
+.btn-small:hover{
+  background:#efe5da;
+  transform:translateY(-1px);
+}
+
+.btn-small.primary{
+  border:none;
+  background:linear-gradient(90deg,var(--brown1),var(--brown2));
+  color:#fff;
+}
+
+.btn-small.primary:hover{
+  background:linear-gradient(90deg,#7a6350,#9e675b);
+  box-shadow:0 4px 12px rgba(143,118,95,0.3);
+}
+
+.btn-small.success{
+  border:none;
+  background:#3dbb6a;
+  color:#fff;
+}
+
+.btn-small.success:hover{
+  background:#2f8c52;
+  box-shadow:0 4px 12px rgba(61,187,106,0.3);
+}
+
+.btn-small.danger{
+  border:none;
+  background:#e06a6a;
+  color:#fff;
+}
+
+.btn-small.danger:hover{
+  background:#c54949;
+  box-shadow:0 4px 12px rgba(224,106,106,0.3);
+}
+
+/* ===== List enhancements ===== */
+.list{
+  padding:16px;
+  gap:12px;
+}
+
+.list-item{
+  background:#fff;
+  border:1px solid #f0e8e0;
+  padding:16px 18px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  transition:all 0.2s ease;
+  flex-wrap:wrap;
+}
+
+.list-item:hover{
+  background:#faf9f7;
+  border-color:#e7dfd8;
+  box-shadow:0 4px 12px rgba(0,0,0,0.06);
+  transform:translateY(-2px);
+}
+
+.list-item .title{
+  font-weight:600;
+  color:#6f4e3f;
+  font-size:15px;
+  margin-bottom:4px;
+}
+
+.list-item .time{
+  font-size:13px;
+  color:#9b8f86;
+  margin-top:3px;
+  line-height:1.5;
+}
+
+.list-item.empty{
+  justify-content:center;
+  padding:50px 20px;
+  background:#faf9f7;
+  border-style:dashed;
+}
+
+/* Card with list */
+.card > .list{
+  padding:0;
+}
+
+.card > .list .list-item:first-child{
+  border-radius:0;
+  border-left:none;
+  border-right:none;
+  border-top:none;
+}
+
+.card > .list .list-item:last-child{
+  border-bottom:none;
+}
+
+.card > .list .list-item{
+  border-radius:0;
+  border-left:none;
+  border-right:none;
+}
+
+/* ===== Payroll specific styles ===== */
+.payroll-actions{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.payroll-actions h2{
+  margin:0;
+  font-size:18px;
+  font-weight:600;
+  color:#6e625a;
+}
+
+.payroll-buttons{
+  display:flex;
+  gap:12px;
+}
+
+.btn-export{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 18px;
+  background:#fff;
+  color:#6e625a;
+  border:1px solid #d4cbc3;
+  border-radius:10px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.2s;
+  text-decoration:none;
+  font-family:inherit;
+}
+
+.btn-export:hover{
+  background:#faf3ec;
+  border-color:#c9bdb3;
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+.btn-process{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 18px;
+  background:linear-gradient(90deg,var(--brown1),var(--brown2));
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.2s;
+  font-family:inherit;
+}
+
+.btn-process:hover{
+  background:linear-gradient(90deg,#7a6350,#9e675b);
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(143,118,95,0.3);
+}
+
+.payroll-summary{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  padding:20px 24px;
+  border-top:2px solid #e7dfd8;
+  background:#faf9f7;
+}
+
+.payroll-count{
+  font-size:14px;
+  color:#9b8f86;
+  font-weight:500;
+}
+
+.payroll-totals{
+  display:flex;
+  gap:40px;
+}
+
+.payroll-total-item{
+  text-align:right;
+}
+
+.payroll-total-label{
+  color:#9b8f86;
+  font-size:12px;
+  margin-bottom:4px;
+  font-weight:500;
+  text-transform:uppercase;
+  letter-spacing:0.3px;
+}
+
+.payroll-total-value{
+  font-weight:700;
+  font-size:16px;
+  color:#2c3e50;
+}
+
+.payroll-total-value.positive{
+  color:#3dbb6a;
+}
+
+.payroll-total-value.negative{
+  color:#e06a6a;
+}
+
+/* ===== Leave Request Form Styles ===== */
+.leave-request-card{
+  max-width:800px;
+  margin:0 auto 20px;
+}
+
+.section-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:16px;
+}
+
+.section-title{
+  font-weight:800;
+  color:#8e6e5e;
+  font-size:16px;
+  margin:0;
+}
+
+.form-label{
+  font-size:12px;
+  color:#8a7f76;
+  font-weight:600;
+  display:block;
+  margin-bottom:6px;
+}
+
+.form-label .required{
+  color:#c54949;
+}
+
+.full-width{
+  grid-column:1/-1;
+}
+
+.leave-history-card{
+  margin-top:16px;
+}
+
+.leave-history-header{
+  font-weight:900;
+  color:#8e6e5e;
+  margin-bottom:14px;
+  font-size:16px;
+}
+
+.leave-empty-state{
+  text-align:center;
+  padding:40px 30px;
+  color:#8a7f76;
+}
+
+.leave-empty-icon{
+  font-size:40px;
+  margin-bottom:10px;
+}
+
+.leave-empty-text{
+  font-size:14px;
+}
+
+.leave-info{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+
+.leave-details{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.leave-status-section{
+  text-align:right;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  align-items:flex-end;
+}
+
+.pill.days{
+  background:#f7efe8;
+  border-color:#e7d6c9;
+  color:#6f4e3f;
+  font-weight:600;
+}
+
+.pill.status-approved{
+  background:#e9f8ef;
+  border-color:#bfe8cf;
+  color:#2f8c52;
+  font-weight:600;
+}
+
+.pill.status-rejected{
+  background:#fff0f0;
+  border-color:#f2bcbc;
+  color:#c54949;
+  font-weight:600;
+}
+
+.pill.status-pending{
+  background:#fff8e6;
+  border-color:#f2e6a2;
+  color:#b8860b;
+  font-weight:600;
+}

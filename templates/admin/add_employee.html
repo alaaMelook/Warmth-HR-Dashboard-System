@@ -203,6 +203,31 @@
 
         select.form-control {
             cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23957C62' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 40px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        select.form-control option {
+            padding: 12px 16px;
+            background: #FFFFFF;
+            color: #1F2937;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        select.form-control option:hover {
+            background: #F3F4F6;
+        }
+
+        select.form-control option:checked {
+            background: #957C62;
+            color: white;
         }
 
         .btn-group {
@@ -375,7 +400,7 @@
                         <select name="department_id" class="form-control">
                             <option value="">Select Department</option>
                             {% for dept in departments %}
-                                <option value="{{ dept[0] }}">{{ dept[1] }}</option>
+                                <option value="{{ dept.department_id }}">{{ dept.department_name }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -385,7 +410,7 @@
                         <select name="job_title_id" class="form-control">
                             <option value="">Select Job Title</option>
                             {% for job in job_titles %}
-                                <option value="{{ job[0] }}">{{ job[1] }}</option>
+                                <option value="{{ job.job_title_id }}">{{ job.title_name }}</option>
                             {% endfor %}
                         </select>
                     </div>

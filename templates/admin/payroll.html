@@ -99,16 +99,16 @@
             </div>
 
             <!-- Action Buttons Row -->
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="margin: 0; font-size: 18px; font-weight: 600; color: #6e625a;">Employee Payroll</h2>
-                <div style="display: flex; gap: 12px;">
-                    <a href="{{ url_for('export_payroll_csv') }}" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: white; color: #6e625a; border: 1px solid #d4cbc3; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s;">
-                        <span style="font-size: 16px;">⬇</span> Export Report
+            <div class="payroll-actions">
+                <h2>Employee Payroll</h2>
+                <div class="payroll-buttons">
+                    <a href="{{ url_for('export_payroll_csv') }}" class="btn-export">
+                        <span>⬇</span> Export Report
                     </a>
 
                     <form action="{{ url_for('process_payroll') }}" method="POST" style="display: inline; margin: 0;">
-                        <button type="submit" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: #957C62; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s;" onclick="return confirm('Are you sure you want to process all pending payrolls?\nThis action cannot be undone.');">
-                            <span style="font-size: 16px;">💳</span> Process Payroll
+                        <button type="submit" class="btn-process" onclick="return confirm('Are you sure you want to process all pending payrolls?\nThis action cannot be undone.');">
+                            <span>💳</span> Process Payroll
                         </button>
                     </form>
                 </div>
@@ -155,26 +155,26 @@
                     </table>
                 </div>
 
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; padding: 20px; border-top: 1px solid #e7dfd8; background: #faf9f7;">
-                    <div style="font-size: 14px; color: #9b8f86;">
+                <div class="payroll-summary">
+                    <div class="payroll-count">
                         Showing {{ employees|length }} employees
                     </div>
-                    <div style="display: flex; gap: 40px; font-size: 13px;">
-                        <div style="text-align: right;">
-                            <div style="color: #9b8f86; font-size: 12px; margin-bottom: 4px;">Total Base Salary</div>
-                            <div style="font-weight: 600; font-size: 14px; color: #2c3e50;">${{ "{:,.0f}".format(totals.total_base_salary) }}</div>
+                    <div class="payroll-totals">
+                        <div class="payroll-total-item">
+                            <div class="payroll-total-label">Total Base Salary</div>
+                            <div class="payroll-total-value">${{ "{:,.0f}".format(totals.total_base_salary) }}</div>
                         </div>
-                        <div style="text-align: right;">
-                            <div style="color: #9b8f86; font-size: 12px; margin-bottom: 4px;">Total Bonuses</div>
-                            <div style="font-weight: 600; font-size: 14px; color: #27ae60;">${{ "{:,.0f}".format(totals.total_bonuses) }}</div>
+                        <div class="payroll-total-item">
+                            <div class="payroll-total-label">Total Bonuses</div>
+                            <div class="payroll-total-value positive">${{ "{:,.0f}".format(totals.total_bonuses) }}</div>
                         </div>
-                        <div style="text-align: right;">
-                            <div style="color: #9b8f86; font-size: 12px; margin-bottom: 4px;">Total Deductions</div>
-                            <div style="font-weight: 600; font-size: 14px; color: #e74c3c;">${{ "{:,.0f}".format(totals.total_deductions) }}</div>
+                        <div class="payroll-total-item">
+                            <div class="payroll-total-label">Total Deductions</div>
+                            <div class="payroll-total-value negative">${{ "{:,.0f}".format(totals.total_deductions) }}</div>
                         </div>
-                        <div style="text-align: right;">
-                            <div style="color: #9b8f86; font-size: 12px; margin-bottom: 4px;">Total Net Pay</div>
-                            <div style="font-weight: 600; font-size: 14px; color: #2c3e50;">${{ "{:,.0f}".format(totals.total_net_pay) }}</div>
+                        <div class="payroll-total-item">
+                            <div class="payroll-total-label">Total Net Pay</div>
+                            <div class="payroll-total-value">${{ "{:,.0f}".format(totals.total_net_pay) }}</div>
                         </div>
                     </div>
                 </div>

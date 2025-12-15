@@ -1,22 +1,50 @@
 {% extends "base.html" %}
 {% block content %}
-<h2 style="margin-bottom:12px;">Login</h2>
+<div class="auth-container">
+  <div class="auth-card">
+    <!-- Header -->
+    <div class="auth-header">
+      <div class="auth-logo">👥</div>
+      <h1 class="auth-title">Welcome Back</h1>
+      <p class="auth-subtitle">Sign in to your HR dashboard</p>
+    </div>
 
-<form method="POST" action="{{ url_for('login') }}">
-  <div class="form-group">
-    <label for="email" class="form-label">Email address</label>
-    <input type="email" id="email" name="email" class="form-control custom" placeholder="you@example.com" required>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="alert-messages">
+          {% for category, msg in messages %}
+            {% if category == 'success' %}
+              <div class="alert-success" style="margin-bottom:12px;">{{ msg }}</div>
+            {% elif category == 'danger' %}
+              <div class="alert-error" style="margin-bottom:12px;">{{ msg }}</div>
+            {% else %}
+              <div class="alert-error" style="margin-bottom:12px;">{{ msg }}</div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Login Form -->
+    <form method="POST" action="{{ url_for('login') }}">
+      <div class="form-group">
+        <label for="email" class="form-label">Email Address</label>
+        <input type="email" id="email" name="email" class="input" placeholder="admin@hr.com" required autofocus>
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" id="password" name="password" class="input" placeholder="Enter your password" required>
+      </div>
+
+      <button type="submit" class="btn">Sign In</button>
+    </form>
+
+    <!-- Register Link -->
+    <div class="register-link">
+      Don't have an account? <a href="{{ url_for('register') }}">Create a new account</a>
+    </div>
   </div>
-
-  <div class="form-group">
-    <label for="password" class="form-label">Password</label>
-    <input type="password" id="password" name="password" class="form-control custom" placeholder="Enter your password" required>
-  </div>
-
-  <button type="submit" class="btn btn-primary custom">Login</button>
-</form>
-
-<div class="register-link">
-  Don't have an account? <a href="{{ url_for('register') }}">Create a new account</a>
 </div>
 {% endblock %}

@@ -110,18 +110,18 @@
                             <div class="list-item">
                                 <div style="display:flex; align-items:center; gap:12px; flex:1;">
                                     <div class="avatar" style="width:42px; height:42px;">
-                                        {{ leave[0][0] }}{{ leave[1][0] }}
+                                        {{ leave.first_name[0] }}{{ leave.last_name[0] }}
                                     </div>
                                     <div style="flex:1; min-width:0;">
-                                        <div class="title">{{ leave[0] }} {{ leave[1] }}</div>
-                                        <div class="time">{{ leave[2] }} leave • {{ leave[3] }} to {{ leave[4] }}</div>
+                                        <div class="title">{{ leave.first_name }} {{ leave.last_name }}</div>
+                                        <div class="time">{{ leave.leave_type }} leave • {{ leave.start_date }} to {{ leave.end_date }}</div>
                                     </div>
                                 </div>
-                                {% if leave[5] == 'approved' %}
+                                {% if leave.status == 'approved' %}
                                     <span class="pill" style="background:#dff8ea; border-color:#c9efd9; color:#2f8c52;">
                                         Approved
                                     </span>
-                                {% elif leave[5] == 'pending' %}
+                                {% elif leave.status == 'pending' %}
                                     <span class="pill" style="background:#fff6cc; border-color:#f2e6a2; color:#8b7b2c;">
                                         Pending
                                     </span>
