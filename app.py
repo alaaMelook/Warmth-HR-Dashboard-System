@@ -100,7 +100,7 @@ def admin_required(f):
             return redirect(url_for("login"))
         if session.get("role_id") != 2:
             flash("Access denied. Admin only.", "danger")
-            return redirect(url_for("index"))
+            return redirect(url_for("user_dashboard"))
         return f(*args, **kwargs)
     return decorated
 
@@ -112,7 +112,7 @@ def user_required(f):
             return redirect(url_for("login"))
         if session.get("role_id") != 1:
             flash("Access denied. User only.", "danger")
-            return redirect(url_for("index"))
+            return redirect(url_for("admin_dashboard"))
         return f(*args, **kwargs)
     return decorated
 
@@ -270,13 +270,23 @@ def admin_dashboard():
             recent_leaves=recent_leaves,
         )
     except Exception as e:
-        flash(f"Error loading dashboard: {str(e)}", "danger")
-        return redirect(url_for("index"))
+        app.logger.exception("Error loading admin dashboard")
+        return render_template(
+            "admin/dashboard.html",
+            total_employees=0,
+            today_attendance=0,
+            pending_leaves=0,
+            monthly_payroll=0,
+            recent_leaves=[],
+            error=str(e)
+        )
 
 @app.route("/admin/employees")
 @admin_required
 def admin_employees():
+    print("=== ADMIN EMPLOYEES ROUTE HIT ===")
     try:
+        print("Fetching employees...")
         employees = qall("""
             SELECT
                 e.employee_id,
@@ -301,10 +311,15 @@ def admin_employees():
             LEFT JOIN job_titles j ON e.job_title_id = j.job_title_id
             ORDER BY e.employee_id DESC
         """)
+        print(f"Employees fetched: {len(employees)}")
         departments = qall("SELECT department_id, department_name FROM departments ORDER BY department_name")
         job_titles = qall("SELECT job_title_id, title_name FROM job_titles ORDER BY title_name")
+        print("Rendering employees.html template...")
         return render_template("admin/employees.html", employees=employees, departments=departments, job_titles=job_titles)
     except Exception as e:
+        print(f"ERROR in admin_employees: {str(e)}")
+        import traceback
+        traceback.print_exc()
         flash(f"Error loading employees: {str(e)}", "danger")
         return redirect(url_for("admin_dashboard"))
 
