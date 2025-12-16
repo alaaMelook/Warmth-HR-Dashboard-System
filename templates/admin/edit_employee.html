@@ -35,6 +35,10 @@
                     <span class="icon">💰</span>
                     Payroll
                 </a>
+                <a href="{{ url_for('admin_announcements') }}">
+                    <span class="icon">📢</span>
+                    Announcements
+                </a>
                 <a href="{{ url_for('logout') }}">
                     <span class="icon">🚪</span>
                     Logout
@@ -142,5 +146,21 @@
             </div>
         </main>
     </div>
+
+    <script>
+        // Auto-hide flash messages after 3 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    alert.style.transition = 'opacity 0.5s ease';
+                    alert.style.opacity = '0';
+                    setTimeout(function() {
+                        alert.remove();
+                    }, 500);
+                }, 3000);
+            });
+        });
+    </script>
 </body>
 </html>
