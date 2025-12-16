@@ -1,5 +1,4 @@
 # 🎨 Warmth HR Dashboard System
-
 > A modern, elegant, and user-friendly HR Management System interface designed with warmth and professionalism in mind.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
@@ -37,6 +36,64 @@ The UI is built around a warm, elegant color scheme:
 | Secondary | `#E2B59A` | Cards, backgrounds, secondary elements |
 | Accent | `#FFE1AF` | Highlights, notifications, badges |
 | Alert | `#B77466` | Important actions, warnings, delete buttons |
+
+---
+
+## 🔐 Keycloak Setup (Docker + Realm Import)
+
+To run the project with authentication using Keycloak:
+
+### 1️⃣ Prerequisites
+
+* Install **Docker Desktop** and ensure it is running
+* Port `8080` should be free (for Keycloak)
+
+### 2️⃣ Run Keycloak Container
+
+```powershell
+docker run --name keycloak -p 8080:8080 `
+  -e KEYCLOAK_ADMIN=admin `
+  -e KEYCLOAK_ADMIN_PASSWORD=admin `
+  quay.io/keycloak/keycloak:22.0.1 start-dev
+```
+
+**Access the Admin Console:**
+* URL: http://localhost:8080
+* Login credentials:
+  * **Username:** `admin`
+  * **Password:** `admin`
+
+### 3️⃣ Import Pre-configured Realm
+
+1. Place the `hr-realm.json` file in your project folder
+2. Run the import command:
+
+```powershell
+docker run --name keycloak -p 8080:8080 `
+  -v ${PWD}:/opt/keycloak/data/import `
+  -e KEYCLOAK_ADMIN=admin `
+  -e KEYCLOAK_ADMIN_PASSWORD=admin `
+  quay.io/keycloak/keycloak:22.0.1 start-dev --import-realm
+```
+
+This will import the **HR-System Realm** with all clients, roles, and basic configuration.
+
+### 4️⃣ Optional: Export Realm (Backup)
+
+If you want to back up the current Realm:
+
+```powershell
+docker exec keycloak /opt/keycloak/bin/kc.sh export --realm HR-System --file /tmp/hr-realm.json
+docker cp keycloak:/tmp/hr-realm.json .
+```
+
+> **Note:** Replace `keycloak` with your actual container name if different.
+
+### 5️⃣ Access Keys for Frontend / Backend
+
+* **Frontend Client:** `hr-frontend` (OpenID Connect)
+* **Backend Client:** `hr-backend` (OpenID Connect, secret enabled)
+* Use the credentials from the imported Realm JSON
 
 ---
 
@@ -91,7 +148,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Mahmoud zaghloula** - *Initial Design* - [@zaghloula](https://github.com/zaghloula)
 - **Abdelrahman Elmoghazy** - *Initial Design* - [@abdelrahman-elmoghazy](https://github.com/abdelrahman-elmoghazy)
 
-
 ---
 
 ## 🙏 Acknowledgments
@@ -101,7 +157,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Built with attention to user experience
 
 ---
-
 
 ---
 
