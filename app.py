@@ -12,9 +12,43 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
 from mysql.connector import Error
 
+# ========== Keycloak Imports ==========
+from keycloak import KeycloakOpenID
+from jose import jwt, JWTError
+import requests
+
+# ========== Load Environment Variables ==========
+from dotenv import load_dotenv
+load_dotenv()  # This loads the .env file
+
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET", "dev-secret-key-change-in-production")
 
+# ==================== KEYCLOAK CONFIG ====================
+
+KEYCLOAK_SERVER_URL = os.environ.get("KEYCLOAK_SERVER_URL", "http://localhost:8080")
+KEYCLOAK_REALM = os.environ.get("KEYCLOAK_REALM", "HR-System")
+KEYCLOAK_CLIENT_ID = os.environ.get("KEYCLOAK_CLIENT_ID", "hr-backend")
+KEYCLOAK_CLIENT_SECRET = os.environ.get("KEYCLOAK_CLIENT_SECRET")
+KEYCLOAK_FRONTEND_CLIENT_ID = os.environ.get("KEYCLOAK_FRONTEND_CLIENT_ID", "hr-frontend")
+
+# Initialize Keycloak
+keycloak_openid = KeycloakOpenID(
+    server_url=KEYCLOAK_SERVER_URL,
+    client_id=KEYCLOAK_CLIENT_ID,
+    realm_name=KEYCLOAK_REALM,
+    client_secret_key=KEYCLOAK_CLIENT_SECRET
+)
+
+# Get Keycloak public key for token verification
+try:
+    KEYCLOAK_PUBLIC_KEY = "-----BEGIN PUBLIC KEY-----\n" + \
+        keycloak_openid.public_key() + \
+        "\n-----END PUBLIC KEY-----"
+    print("✅ Keycloak public key fetched successfully!")
+except Exception as e:
+    print(f"⚠️ Warning: Could not fetch Keycloak public key: {e}")
+    KEYCLOAK_PUBLIC_KEY = None
 # ==================== DB CONFIG ====================
 
 DB_CONFIG = {
@@ -81,40 +115,172 @@ def exec_sql(sql, params=None, *, commit=True):
     finally:
         cur.close()
 
-# ==================== AUTH DECORATORS ====================
+# ==================== TOKEN VERIFICATION ====================
+
+def verify_keycloak_token(token):
+    """
+    Verify JWT token from Keycloak
+    Returns decoded token if valid, None otherwise
+    """
+    try:
+        if not KEYCLOAK_PUBLIC_KEY:
+            app.logger.error("Keycloak public key not available")
+            return None
+            
+        # Remove "Bearer " prefix if exists
+        if token.startswith("Bearer "):
+            token = token[7:]
+        
+        # Decode and verify token
+        decoded_token = jwt.decode(
+            token,
+            KEYCLOAK_PUBLIC_KEY,
+            algorithms=["RS256"],
+            audience="account",
+            options={
+                "verify_signature": True,
+                "verify_aud": True,
+                "verify_exp": True
+            }
+        )
+        
+        return decoded_token
+    
+    except JWTError as e:
+        app.logger.error(f"JWT verification failed: {str(e)}")
+        return None
+    except Exception as e:
+        app.logger.error(f"Token verification error: {str(e)}")
+        return None
+
+
+def get_user_roles(decoded_token):
+    """
+    Extract user roles from decoded token
+    """
+    try:
+        realm_roles = decoded_token.get("realm_access", {}).get("roles", [])
+        return realm_roles
+    except Exception:
+        return []
+
+
+def check_role_permission(required_role, user_roles):
+    """
+    Check if user has required role
+    """
+    return required_role in user_roles
+
+# ==================== AUTH DECORATORS (KEYCLOAK) ====================
 
 def login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        if "user_id" not in session:
-            flash("Please login first.", "danger")
-            return redirect(url_for("login"))
-        return f(*args, **kwargs)
+        # First check session (for compatibility)
+        if "user_id" in session and "access_token" in session:
+            # Verify token is still valid
+            decoded_token = verify_keycloak_token(session["access_token"])
+            if decoded_token:
+                g.user_email = decoded_token.get("email")
+                g.user_roles = get_user_roles(decoded_token)
+                return f(*args, **kwargs)
+        
+        # No valid session, redirect to login
+        flash("Please login first.", "danger")
+        return redirect(url_for("login"))
+    
     return decorated
+
 
 def admin_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        if "user_id" not in session:
+        # Check session
+        if "user_id" not in session or "access_token" not in session:
             flash("Please login first.", "danger")
             return redirect(url_for("login"))
-        if session.get("role_id") != 2:
+        
+        # Verify token
+        decoded_token = verify_keycloak_token(session["access_token"])
+        if not decoded_token:
+            flash("Invalid or expired session.", "danger")
+            session.clear()
+            return redirect(url_for("login"))
+        
+        # Get roles
+        user_roles = get_user_roles(decoded_token)
+        
+        # Check if user has HR_ADMIN role
+        if "HR_ADMIN" not in user_roles:
             flash("Access denied. Admin only.", "danger")
             return redirect(url_for("user_dashboard"))
+        
+        g.user_email = decoded_token.get("email")
+        g.user_roles = user_roles
+        
         return f(*args, **kwargs)
+    
     return decorated
+
 
 def user_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        if "user_id" not in session:
+        # Check session
+        if "user_id" not in session or "access_token" not in session:
             flash("Please login first.", "danger")
             return redirect(url_for("login"))
-        if session.get("role_id") != 1:
+        
+        # Verify token
+        decoded_token = verify_keycloak_token(session["access_token"])
+        if not decoded_token:
+            flash("Invalid or expired session.", "danger")
+            session.clear()
+            return redirect(url_for("login"))
+        
+        # Get roles
+        user_roles = get_user_roles(decoded_token)
+        
+        # Check if user has EMPLOYEE role (or any non-admin role)
+        if "HR_ADMIN" in user_roles:
             flash("Access denied. User only.", "danger")
             return redirect(url_for("admin_dashboard"))
+        
+        g.user_email = decoded_token.get("email")
+        g.user_roles = user_roles
+        
         return f(*args, **kwargs)
+    
     return decorated
+
+
+def role_required(required_role):
+    """
+    Decorator to check specific Keycloak role
+    Usage: @role_required('HR_OFFICER')
+    """
+    def decorator(f):
+        @wraps(f)
+        def decorated(*args, **kwargs):
+            if "access_token" not in session:
+                return jsonify({"error": "Unauthorized"}), 401
+            
+            decoded_token = verify_keycloak_token(session["access_token"])
+            if not decoded_token:
+                return jsonify({"error": "Invalid token"}), 401
+            
+            user_roles = get_user_roles(decoded_token)
+            
+            if not check_role_permission(required_role, user_roles):
+                return jsonify({"error": "Forbidden - Insufficient permissions"}), 403
+            
+            g.user_email = decoded_token.get("email")
+            g.user_roles = user_roles
+            
+            return f(*args, **kwargs)
+        
+        return decorated
+    return decorator
 
 # ==================== USER HELPERS ====================
 
@@ -166,39 +332,142 @@ def index():
         return redirect(url_for("user_dashboard"))
     return redirect(url_for("login"))
 
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        email = request.form.get("email", "").strip().lower()
-        password = request.form.get("password", "").strip()
+# ==================== KEYCLOAK ROUTES ====================
 
-        if not email or not password:
-            flash("Please fill in both fields.", "danger")
+@app.route("/keycloak-login")
+def keycloak_login():
+    """
+    Redirect user to Keycloak login page
+    """
+    # استخدام dynamic redirect_uri
+    redirect_uri = request.url_root.rstrip('/') + '/callback'
+    
+    authorization_url = (
+        f"{KEYCLOAK_SERVER_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/auth"
+        f"?client_id={KEYCLOAK_FRONTEND_CLIENT_ID}"
+        f"&redirect_uri={redirect_uri}"
+        f"&response_type=code"
+        f"&scope=openid email profile"
+    )
+    
+    print(f"🔍 Redirecting to Keycloak:")
+    print(f"   Auth URL: {authorization_url}")
+    print(f"   Redirect URI: {redirect_uri}")
+    
+    return redirect(authorization_url)
+
+@app.route("/callback")
+def keycloak_callback():
+    """
+    Handle callback from Keycloak after authentication
+    """
+    try:
+        code = request.args.get('code')
+        
+        if not code:
+            flash("Authentication failed. No authorization code received.", "danger")
             return redirect(url_for("login"))
-
-        user = find_user_by_email(email)
+        
+        # Exchange code for token
+        token_url = f"{KEYCLOAK_SERVER_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/token"
+        
+        # استخدام نفس الـ redirect_uri
+        redirect_uri = request.url_root.rstrip('/') + '/callback'
+        
+        # ========== المهم: استخدام hr-frontend مش hr-backend ==========
+        data = {
+            'grant_type': 'authorization_code',
+            'client_id': KEYCLOAK_FRONTEND_CLIENT_ID,  # ← frontend client
+            'code': code,
+            'redirect_uri': redirect_uri
+        }
+        
+        print(f"🔍 Token exchange request:")
+        print(f"   Token URL: {token_url}")
+        print(f"   Redirect URI: {redirect_uri}")
+        print(f"   Client ID: {KEYCLOAK_FRONTEND_CLIENT_ID}")  # ← تأكيد
+        print(f"   Code: {code[:20]}...")
+        
+        response = requests.post(token_url, data=data)
+        
+        print(f"🔍 Token response status: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ Token response error: {response.text}")
+            flash(f"Failed to obtain access token: {response.text}", "danger")
+            return redirect(url_for("login"))
+        
+        token_data = response.json()
+        access_token = token_data.get('access_token')
+        
+        print(f"✅ Token received successfully!")
+        
+        # Verify and decode token
+        decoded_token = verify_keycloak_token(access_token)
+        
+        if not decoded_token:
+            flash("Invalid token received.", "danger")
+            return redirect(url_for("login"))
+        
+        # Get user email from token
+        user_email = decoded_token.get('email')
+        
+        if not user_email:
+            flash("Email not found in token.", "danger")
+            return redirect(url_for("login"))
+        
+        print(f"🔍 User email from token: {user_email}")
+        
+        # Find user in database
+        user = find_user_by_email(user_email.lower())
+        
         if not user:
-            flash("Invalid email or password.", "danger")
+            flash("User not found in system. Please contact admin.", "danger")
             return redirect(url_for("login"))
-
-        stored_pw = user.get("password") or ""
-        try:
-            valid = check_password_hash(stored_pw, password)
-        except Exception:
-            valid = False
-
-        if not valid:
-            flash("Invalid email or password.", "danger")
-            return redirect(url_for("login"))
-
+        
+        print(f"✅ User found in database: {user['first_name']} {user['last_name']}")
+        
+        # Store in session
         session["user_id"] = user["user_id"]
-        session["user_name"] = f"{user.get('first_name','')} {user.get('last_name','')}".strip()
+        session["user_name"] = f"{user['first_name']} {user['last_name']}"
         session["email"] = user["email"]
         session["role_id"] = user["role_id"]
+        session["access_token"] = access_token
+        
+        # Get user roles from Keycloak
+        user_roles = get_user_roles(decoded_token)
+        
+        print(f"✅ User roles: {user_roles}")
+        
+        flash(f"Welcome back, {user['first_name']}!", "success")
+        
+        # Redirect based on role
+        if "HR_ADMIN" in user_roles:
+            return redirect(url_for("admin_dashboard"))
+        else:
+            return redirect(url_for("user_dashboard"))
+    
+    except Exception as e:
+        app.logger.error(f"Callback error: {str(e)}")
+        print(f"❌ Callback exception: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        flash(f"Login error: {str(e)}", "danger")
+        return redirect(url_for("login"))
 
-        flash(f"Welcome back, {user.get('first_name','')}!", "success")
-        return redirect(url_for("admin_dashboard" if user["role_id"] == 2 else "user_dashboard"))
+# ==================== LOGIN & REGISTER ====================
 
+@app.route("/login", methods=["GET"])
+def login():
+    """
+    Show login page with Keycloak login button
+    """
+    # If already logged in, redirect to dashboard
+    if "user_id" in session:
+        if session.get("role_id") == 2:
+            return redirect(url_for("admin_dashboard"))
+        return redirect(url_for("user_dashboard"))
+    
     return render_template("login.html", title="Login")
 
 @app.route("/register", methods=["GET", "POST"])
@@ -249,9 +518,20 @@ def register():
 
 @app.route("/logout")
 def logout():
+    """
+    Logout from both Flask session and Keycloak
+    """
+    # Clear Flask session
     session.clear()
+    
+    # Redirect to Keycloak logout
+    logout_url = (
+        f"{KEYCLOAK_SERVER_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/logout"
+        f"?redirect_uri=http://localhost:5000/login"
+    )
+    
     flash("You have been logged out successfully.", "success")
-    return redirect(url_for("login"))
+    return redirect(logout_url)
 
 # ==================== ADMIN ROUTES ====================
 

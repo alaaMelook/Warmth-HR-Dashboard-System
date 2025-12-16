@@ -4,9 +4,9 @@
   <div class="auth-card">
     <!-- Header -->
     <div class="auth-header">
-      <div class="auth-logo">👥</div>
-      <h1 class="auth-title">Welcome Back</h1>
-      <p class="auth-subtitle">Sign in to your HR dashboard</p>
+      <div class="auth-logo">🔐</div>
+      <h1 class="auth-title">HR Management System</h1>
+      <p class="auth-subtitle">Secure login powered by Keycloak</p>
     </div>
 
     <!-- Flash Messages -->
@@ -26,24 +26,16 @@
       {% endif %}
     {% endwith %}
 
-    <!-- Login Form -->
-    <form method="POST" action="{{ url_for('login') }}">
-      <div class="form-group">
-        <label for="email" class="form-label">Email Address</label>
-        <input type="email" id="email" name="email" class="input" placeholder="admin@hr.com" required autofocus>
-      </div>
+    <!-- Keycloak Login Button -->
+    <a href="{{ url_for('keycloak_login') }}" class="btn" style="display: block; text-align: center; text-decoration: none;">
+      🔐 Login with Keycloak
+    </a>
 
-      <div class="form-group">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" id="password" name="password" class="input" placeholder="Enter your password" required>
-      </div>
-
-      <button type="submit" class="btn">Sign In</button>
-    </form>
-
-    <!-- Register Link -->
-    <div class="register-link">
-      Don't have an account? <a href="{{ url_for('register') }}">Create a new account</a>
+    <!-- Info Text -->
+    <div class="register-link" style="text-align: center; margin-top: 20px;">
+      <p style="color: #666; font-size: 14px;">
+        Click the button above to securely authenticate via Keycloak
+      </p>
     </div>
   </div>
 </div>
