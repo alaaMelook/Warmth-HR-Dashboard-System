@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Import - Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
+</head>
+
+<body>
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <span>👥 HR System</span>
+            </div>
+
+            <nav class="nav">
+                <a href="{{ url_for('admin_dashboard') }}">
+                    <span class="icon">📊</span>
+                    Dashboard
+                </a>
+                <a href="{{ url_for('admin_employees') }}">
+                    <span class="icon">👥</span>
+                    Employees
+                </a>
+                <a href="{{ url_for('admin_user_import') }}" class="active">
+                    <span class="icon">📥</span>
+                    User Import
+                </a>
+                <a href="{{ url_for('admin_attendance') }}">
+                    <span class="icon">📅</span>
+                    Attendance
+                </a>
+                <a href="{{ url_for('admin_leaves') }}">
+                    <span class="icon">📄</span>
+                    Leaves
+                </a>
+                <a href="{{ url_for('admin_payroll') }}">
+                    <span class="icon">💰</span>
+                    Payroll
+                </a>
+                <a href="{{ url_for('admin_announcements') }}">
+                    <span class="icon">📢</span>
+                    Announcements
+                </a>
+                <a href="{{ url_for('logout') }}">
+                    <span class="icon">🚪</span>
+                    Logout
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="avatar">AD</div>
+                <div style="flex:1; min-width:0;">
+                    <div
+                        style="font-weight:600; font-size:14px; color:#6e625a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                        {{ session.user_name }}
+                    </div>
+                    <div style="font-size:11px; color:#9b8f86;">Administrator</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="header-hero">
+                <h1>Bulk User Import</h1>
+                <p>Import multiple users to Keycloak from CSV file</p>
+            </div>
+
+            <!-- Upload Card -->
+            <div class="card pad" style="max-width: 800px; margin: 0 auto;">
+                <div style="margin-bottom: 24px;">
+                    <h2 style="font-size: 18px; margin: 0 0 8px; color: #6f4e3f;">Upload CSV File</h2>
+                    <p style="color: #8a7f76; margin: 0; font-size: 14px;">
+                        Upload a CSV file containing user data to import to Keycloak
+                    </p>
+                </div>
+
+                <!-- Upload Form -->
+                <form action="{{ url_for('admin_user_import_upload') }}" method="POST" enctype="multipart/form-data"
+                    class="upload-form">
+                    <div
+                        style="border: 2px dashed var(--line); border-radius: 12px; padding: 40px; text-align: center; margin-bottom: 24px;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">📁</div>
+                        <div style="margin-bottom: 16px;">
+                            <label for="csv_file" class="btn" style="display: inline-block; cursor: pointer;">
+                                Choose CSV File
+                            </label>
+                            <input type="file" id="csv_file" name="csv_file" accept=".csv" style="display: none;"
+                                required onchange="updateFileName()">
+                        </div>
+                        <div id="file_name" style="color: var(--muted); font-size: 14px;">
+                            No file chosen
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 12px;">
+                        <button type="submit" class="btn"
+                            style="flex: 1; background: var(--brown1); color: white; border: none;">
+                            📥 Import Users
+                        </button>
+                        <a href="{{ url_for('admin_user_import_template') }}" class="btn"
+                            style="flex: 1; background: transparent; border: 1px solid var(--line);">
+                            📋 Download Template
+                        </a>
+                    </div>
+                </form>
+
+                <!-- CSV Format Instructions -->
+                <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line);">
+                    <h3 style="font-size: 16px; margin: 0 0 12px; color: #6f4e3f;">CSV Format Requirements</h3>
+                    <div
+                        style="background: var(--bg); padding: 16px; border-radius: 8px; font-family: monospace; font-size: 13px;">
+                        username,email,password,role<br>
+                        john.doe,john@example.com,password123,EMPLOYEE<br>
+                        jane.admin,jane@example.com,admin123,HR_ADMIN
+                    </div>
+                    <ul style="margin: 16px 0 0 20px; color: #8a7f76; font-size: 14px;">
+                        <li><strong>username:</strong> Unique username for Keycloak</li>
+                        <li><strong>email:</strong> User's email address (will be used for login)</li>
+                        <li><strong>password:</strong> Initial password (users should change on first login)</li>
+                        <li><strong>role:</strong> Either "EMPLOYEE" or "HR_ADMIN"</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Display Flash Messages (Success/Warning/Danger) -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            {% if category == 'success' %}
+            <div class="card pad"
+                style="max-width: 800px; margin: 24px auto 0; border-left: 4px solid #4CAF50; background: #e8f5e9;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 24px;">✅</span>
+                    <div>
+                        <h3 style="font-size: 16px; margin: 0 0 4px; color: #2e7d32;">Import Successful!</h3>
+                        <p style="margin: 0; color: #388e3c; font-size: 14px;">{{ message }}</p>
+                    </div>
+                </div>
+            </div>
+            {% elif category == 'warning' %}
+            <div class="card pad"
+                style="max-width: 800px; margin: 24px auto 0; border-left: 4px solid #ff9800; background: #fff3e0;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 24px;">⚠️</span>
+                    <div>
+                        <h3 style="font-size: 16px; margin: 0 0 4px; color: #e65100;">Warning</h3>
+                        <p style="margin: 0; color: #f57c00; font-size: 14px;">{{ message }}</p>
+                    </div>
+                </div>
+            </div>
+            {% elif category == 'danger' %}
+            <div class="card pad"
+                style="max-width: 800px; margin: 24px auto 0; border-left: 4px solid #f44336; background: #ffebee;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 24px;">❌</span>
+                    <div>
+                        <h3 style="font-size: 16px; margin: 0 0 4px; color: #c62828;">Error</h3>
+                        <p style="margin: 0; color: #d32f2f; font-size: 14px;">{{ message }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <!-- Display Import Errors -->
+            {% if session.get('import_errors') %}
+            <div class="card pad" style="max-width: 800px; margin: 24px auto 0; border-left: 4px solid #f44336;">
+                <h3 style="font-size: 16px; margin: 0 0 12px; color: #f44336;">
+                    ⚠️ Import Errors
+                </h3>
+                <div style="max-height: 300px; overflow-y: auto;">
+                    {% for error in session.pop('import_errors', []) %}
+                    <div
+                        style="padding: 8px 12px; background: #ffebee; border-radius: 6px; margin-bottom: 8px; font-size: 13px;">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </main>
+    </div>
+
+    <script>
+        function updateFileName() {
+            const fileInput = document.getElementById('csv_file');
+            const fileNameDisplay = document.getElementById('file_name');
+
+            if (fileInput.files.length > 0) {
+                fileNameDisplay.textContent = fileInput.files[0].name;
+                fileNameDisplay.style.color = '#4CAF50';
+                fileNameDisplay.style.fontWeight = '600';
+            } else {
+                fileNameDisplay.textContent = 'No file chosen';
+                fileNameDisplay.style.color = 'var(--muted)';
+                fileNameDisplay.style.fontWeight = 'normal';
+            }
+        }
+
+        // Form submission confirmation
+        document.querySelector('.upload-form').addEventListener('submit', function (e) {
+            const fileInput = document.getElementById('csv_file');
+            if (!fileInput.files.length) {
+                e.preventDefault();
+                alert('Please select a CSV file first.');
+                return;
+            }
+
+            if (!confirm('This will import users to Keycloak. Continue?')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -3,6 +3,11 @@ import csv
 from io import StringIO
 from functools import wraps
 from datetime import date, datetime, timedelta
+import requests
+import io
+import json
+import pandas as pd
+from werkzeug.utils import secure_filename
 
 from flask import (
     Flask, render_template, request, redirect, url_for,
@@ -21,8 +26,14 @@ import requests
 from dotenv import load_dotenv
 load_dotenv()  # This loads the .env file
 
+import logging
+
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET", "dev-secret-key-change-in-production")
+
+# Enable request logging
+logging.basicConfig(level=logging.DEBUG)
+app.logger.setLevel(logging.DEBUG)
 
 # ==================== KEYCLOAK CONFIG ====================
 
@@ -31,6 +42,7 @@ KEYCLOAK_REALM = os.environ.get("KEYCLOAK_REALM", "HR-System")
 KEYCLOAK_CLIENT_ID = os.environ.get("KEYCLOAK_CLIENT_ID", "hr-backend")
 KEYCLOAK_CLIENT_SECRET = os.environ.get("KEYCLOAK_CLIENT_SECRET")
 KEYCLOAK_FRONTEND_CLIENT_ID = os.environ.get("KEYCLOAK_FRONTEND_CLIENT_ID", "hr-frontend")
+KEYCLOAK_MASTER_REALM = "master"  # Master realm for admin authentication
 
 # Initialize Keycloak
 keycloak_openid = KeycloakOpenID(
@@ -2310,7 +2322,287 @@ def server_error(e):
         return redirect(url_for("user_dashboard"))
     return redirect(url_for("login"))
 
+# ==================== USER IMPORT ROUTES ====================
+
+@app.route("/admin/user-import", methods=["GET"])
+@admin_required
+def admin_user_import():
+    """
+    Show user import page
+    """
+    return render_template("admin/user_import.html")
+
+@app.route("/admin/user-import/upload", methods=["POST"])
+@admin_required
+def admin_user_import_upload():
+    """
+    Handle CSV file upload and import users
+    """
+    try:
+        if 'csv_file' not in request.files:
+            flash("No file selected", "danger")
+            return redirect(url_for("admin_user_import"))
+        
+        file = request.files['csv_file']
+        
+        if file.filename == '':
+            flash("No file selected", "danger")
+            return redirect(url_for("admin_user_import"))
+        
+        if not file.filename.endswith('.csv'):
+            flash("Please upload a CSV file", "danger")
+            return redirect(url_for("admin_user_import"))
+        
+        # Read CSV content
+        csv_content = file.read().decode('utf-8')
+        print(f"📄 Processing CSV file: {file.filename}")
+        
+        # Import users
+        success_count, errors = bulk_import_users(csv_content)
+        print(f"📊 Import result: {success_count} successful, {len(errors)} errors")
+        
+        if success_count > 0:
+            flash(f"Successfully imported {success_count} users to Keycloak", "success")
+            print(f"✅ Successfully imported {success_count} users")
+        elif not errors:
+            flash("No users were imported. Please check your CSV file.", "warning")
+            print("⚠️ No users were imported")
+        
+        if errors:
+            # Store errors in session to display on page
+            session['import_errors'] = errors[:10]  # Limit to 10 errors
+            flash(f"Some users failed to import. {len(errors)} errors found.", "warning")
+            for err in errors[:5]:
+                print(f"❌ Error: {err}")
+        
+        return redirect(url_for("admin_user_import"))
+        
+    except Exception as e:
+        print(f"❌ Import failed with exception: {str(e)}")
+        flash(f"Import failed: {str(e)}", "danger")
+        return redirect(url_for("admin_user_import"))
+
+@app.route("/admin/user-import/template")
+@admin_required
+def admin_user_import_template():
+    """
+    Download CSV template for user import
+    """
+    template = """username,email,password,role
+john.doe,john@example.com,password123,EMPLOYEE
+jane.admin,jane@example.com,admin123,HR_ADMIN
+mike.smith,mike@example.com,password456,EMPLOYEE
+sarah.jones,sarah@example.com,admin456,HR_ADMIN"""
+    
+    output = StringIO()
+    output.write(template)
+    output.seek(0)
+    
+    resp = make_response(output.getvalue())
+    resp.headers["Content-Disposition"] = "attachment; filename=user_import_template.csv"
+    resp.headers["Content-type"] = "text/csv"
+    return resp
+
+# ==================== KEYCLOAK ADMIN API HELPERS ====================
+
+def get_keycloak_admin_token():
+    """
+    Get admin access token for Keycloak REST API
+    """
+    try:
+        token_url = f"{KEYCLOAK_SERVER_URL}/realms/{KEYCLOAK_MASTER_REALM}/protocol/openid-connect/token"
+        data = {
+            'username': os.environ.get("KEYCLOAK_ADMIN_USER", "admin"),
+            'password': os.environ.get("KEYCLOAK_ADMIN_PASSWORD", "admin"),
+            'grant_type': 'password',
+            'client_id': 'admin-cli'
+        }
+        
+        response = requests.post(token_url, data=data)
+        if response.status_code == 200:
+            return response.json().get('access_token')
+        else:
+            app.logger.error(f"Failed to get admin token: {response.text}")
+            return None
+    except Exception as e:
+        app.logger.error(f"Error getting admin token: {str(e)}")
+        return None
+
+def create_keycloak_user(user_data, token):
+    """
+    Create user in Keycloak via Admin REST API
+    """
+    try:
+        create_url = f"{KEYCLOAK_SERVER_URL}/admin/realms/{KEYCLOAK_REALM}/users"
+        
+        # Prepare user payload
+        payload = {
+            "username": user_data['username'],
+            "email": user_data['email'],
+            "enabled": True,
+            "emailVerified": True,
+            "credentials": [{
+                "type": "password",
+                "value": user_data['password'],
+                "temporary": False
+            }]
+        }
+        
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json"
+        }
+        
+        response = requests.post(create_url, json=payload, headers=headers)
+        
+        if response.status_code in [201, 200]:
+            # Get user ID to assign roles
+            location = response.headers.get('Location')
+            user_id = location.split('/')[-1] if location else None
+            
+            if user_id and user_data['role']:
+                assign_role_to_user(user_id, user_data['role'], token)
+            
+            return True, "User created successfully"
+        else:
+            return False, f"Failed to create user: {response.text}"
+            
+    except Exception as e:
+        return False, f"Error creating user: {str(e)}"
+
+def assign_role_to_user(user_id, role_name, token):
+    """
+    Assign realm role to user
+    """
+    try:
+        # Get role ID
+        roles_url = f"{KEYCLOAK_SERVER_URL}/admin/realms/{KEYCLOAK_REALM}/roles/{role_name}"
+        headers = {"Authorization": f"Bearer {token}"}
+        
+        response = requests.get(roles_url, headers=headers)
+        if response.status_code != 200:
+            return False
+        
+        role_data = response.json()
+        
+        # Assign role to user
+        assign_url = f"{KEYCLOAK_SERVER_URL}/admin/realms/{KEYCLOAK_REALM}/users/{user_id}/role-mappings/realm"
+        assign_response = requests.post(
+            assign_url, 
+            json=[role_data], 
+            headers=headers
+        )
+        
+        return assign_response.status_code in [200, 204]
+        
+    except Exception as e:
+        app.logger.error(f"Error assigning role: {str(e)}")
+        return False
+
+
+def bulk_import_users(csv_content):
+    """
+    Bulk import users from CSV content
+    Returns: (success_count, error_list)
+    """
+    try:
+        # Parse CSV using StringIO
+        csv_file = StringIO(csv_content)  # <-- استخدم StringIO مباشرة
+        csv_reader = csv.DictReader(csv_file)
+        
+        # Get fieldnames from reader
+        fieldnames = csv_reader.fieldnames
+        
+        if not fieldnames:
+            return 0, ["CSV file is empty or has no headers"]
+        
+        # Validate columns
+        required_columns = ['username', 'email', 'password', 'role']
+        missing = [col for col in required_columns if col not in fieldnames]
+        if missing:
+            return 0, [f"Missing columns: {', '.join(missing)}"]
+        
+        # Get admin token
+        admin_token = get_keycloak_admin_token()
+        if not admin_token:
+            return 0, ["Failed to authenticate with Keycloak admin"]
+        
+        success_count = 0
+        errors = []
+        rows = list(csv_reader)  # Convert to list to process
+        
+        for index, row in enumerate(rows, start=1):
+            user_data = {
+                'username': str(row.get('username', '')).strip(),
+                'email': str(row.get('email', '')).strip().lower(),
+                'password': str(row.get('password', '')),
+                'role': str(row.get('role', '')).strip().upper()
+            }
+            
+            # Validate role
+            if user_data['role'] not in ['EMPLOYEE', 'HR_ADMIN']:
+                errors.append(f"Row {index}: Invalid role '{user_data['role']}'. Must be EMPLOYEE or HR_ADMIN")
+                continue
+            
+            # Validate required fields
+            if not user_data['username']:
+                errors.append(f"Row {index}: Username is required")
+                continue
+            
+            if not user_data['email']:
+                errors.append(f"Row {index}: Email is required")
+                continue
+            
+            if not user_data['password']:
+                errors.append(f"Row {index}: Password is required")
+                continue
+            
+            # Create user in Keycloak
+            success, message = create_keycloak_user(user_data, admin_token)
+            
+            if success:
+                success_count += 1
+                # Also create user in local database for HR system
+                try:
+                    # Check if user already exists
+                    existing_user = find_user_by_email(user_data['email'])
+                    if not existing_user:
+                        # Determine role_id based on Keycloak role
+                        role_id = 2 if user_data['role'] == 'HR_ADMIN' else 1
+                        
+                        # Create user in local DB
+                        create_user(
+                            first_name=user_data['username'].split('.')[0] if '.' in user_data['username'] else user_data['username'],
+                            last_name=user_data['username'].split('.')[1] if '.' in user_data['username'] else "User",
+                            email=user_data['email'],
+                            password=user_data['password'],
+                            role_id=role_id
+                        )
+                        
+                        # Create employee record
+                        new_user = find_user_by_email(user_data['email'])
+                        if new_user:
+                            exec_sql("""
+                                INSERT INTO employees (user_id, hire_date, status)
+                                VALUES (%s, CURDATE(), 'active')
+                            """, (new_user['user_id'],))
+                            app.logger.info(f"Created employee record for {user_data['email']}")
+                            
+                except Exception as db_error:
+                    app.logger.warning(f"Could not create user in local DB: {db_error}")
+                    errors.append(f"Row {index}: Created in Keycloak but failed in local DB: {str(db_error)}")
+            else:
+                errors.append(f"Row {index}: {message}")
+        
+        return success_count, errors
+        
+    except Exception as e:
+        app.logger.error(f"Import error: {str(e)}")
+        return 0, [f"Import error: {str(e)}"]
+
 # ==================== RUN APP ====================
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000, debug=True)
+    
+    
