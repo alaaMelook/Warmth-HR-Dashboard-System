@@ -1,0 +1,699 @@
+2025-12-18 02:27:58 [INFO] app: ====================================================================================================
+2025-12-18 02:27:58 [INFO] app: ====================================================================================================
+2025-12-18 02:27:58 [INFO] app: [STARTUP] Flask Application Started - Log file: logs/app_2025-12-18.log
+2025-12-18 02:27:58 [INFO] app: [STARTUP] Flask Application Started - Log file: logs/app_2025-12-18.log
+2025-12-18 02:27:58 [INFO] app: ====================================================================================================
+2025-12-18 02:27:58 [INFO] app: ====================================================================================================
+2025-12-18 02:27:58 [DEBUG] urllib3.util.retry: Converted retries value: 1 -> Retry(total=1, connect=None, read=None, redirect=None, status=None)
+2025-12-18 02:27:58 [DEBUG] urllib3.util.retry: Converted retries value: 1 -> Retry(total=1, connect=None, read=None, redirect=None, status=None)
+2025-12-18 02:27:59 [DEBUG] urllib3.connectionpool: Starting new HTTP connection (1): localhost:8080
+2025-12-18 02:27:59 [DEBUG] urllib3.connectionpool: http://localhost:8080 "GET /realms/HR-System HTTP/1.1" 200 599
+2025-12-18 02:27:59 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-12-18 02:27:59 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-12-18 02:27:59 [INFO] werkzeug:  * Restarting with stat
+2025-12-18 02:28:00 [INFO] app: ====================================================================================================
+2025-12-18 02:28:00 [INFO] app: ====================================================================================================
+2025-12-18 02:28:00 [INFO] app: [STARTUP] Flask Application Started - Log file: logs/app_2025-12-18.log
+2025-12-18 02:28:00 [INFO] app: [STARTUP] Flask Application Started - Log file: logs/app_2025-12-18.log
+2025-12-18 02:28:00 [INFO] app: ====================================================================================================
+2025-12-18 02:28:00 [INFO] app: ====================================================================================================
+2025-12-18 02:28:00 [DEBUG] urllib3.util.retry: Converted retries value: 1 -> Retry(total=1, connect=None, read=None, redirect=None, status=None)
+2025-12-18 02:28:00 [DEBUG] urllib3.util.retry: Converted retries value: 1 -> Retry(total=1, connect=None, read=None, redirect=None, status=None)
+2025-12-18 02:28:00 [DEBUG] urllib3.connectionpool: Starting new HTTP connection (1): localhost:8080
+2025-12-18 02:28:00 [DEBUG] urllib3.connectionpool: http://localhost:8080 "GET /realms/HR-System HTTP/1.1" 200 599
+2025-12-18 02:28:00 [WARNING] werkzeug:  * Debugger is active!
+2025-12-18 02:28:00 [INFO] werkzeug:  * Debugger PIN: 664-443-932
+2025-12-18 02:29:23 [INFO] app: ====================================================================================================
+2025-12-18 02:29:23 [INFO] app: ====================================================================================================
+2025-12-18 02:29:23 [INFO] app: [REQUEST] GET http://localhost:5000/
+2025-12-18 02:29:23 [INFO] app: [REQUEST] GET http://localhost:5000/
+2025-12-18 02:29:23 [INFO] app: [ENDPOINT] index
+2025-12-18 02:29:23 [INFO] app: [ENDPOINT] index
+2025-12-18 02:29:23 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:29:23 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:29:23 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:29:23 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:29:23 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:29:23 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:29:23 [INFO] app: ====================================================================================================
+2025-12-18 02:29:23 [INFO] app: ====================================================================================================
+2025-12-18 02:29:23 [INFO] app: [OK] RESPONSE: 302 - GET /
+2025-12-18 02:29:23 [INFO] app: [OK] RESPONSE: 302 - GET /
+2025-12-18 02:29:23 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:29:23] "[32mGET / HTTP/1.1[0m" 302 -
+2025-12-18 02:29:23 [INFO] app: ====================================================================================================
+2025-12-18 02:29:23 [INFO] app: ====================================================================================================
+2025-12-18 02:29:23 [INFO] app: [REQUEST] GET http://localhost:5000/admin/dashboard
+2025-12-18 02:29:23 [INFO] app: [REQUEST] GET http://localhost:5000/admin/dashboard
+2025-12-18 02:29:23 [INFO] app: [ENDPOINT] admin_dashboard
+2025-12-18 02:29:23 [INFO] app: [ENDPOINT] admin_dashboard
+2025-12-18 02:29:23 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:29:23 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:29:23 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:29:23 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:29:23 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:29:23 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:29:23 [INFO] app: ====================================================================================================
+2025-12-18 02:29:23 [INFO] app: ====================================================================================================
+2025-12-18 02:29:24 [ERROR] app: JWT verification failed: Signature has expired.
+2025-12-18 02:29:24 [ERROR] app: JWT verification failed: Signature has expired.
+2025-12-18 02:29:24 [INFO] app: [OK] RESPONSE: 302 - GET /admin/dashboard
+2025-12-18 02:29:24 [INFO] app: [OK] RESPONSE: 302 - GET /admin/dashboard
+2025-12-18 02:29:24 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:29:24] "[32mGET /admin/dashboard HTTP/1.1[0m" 302 -
+2025-12-18 02:29:24 [INFO] app: ====================================================================================================
+2025-12-18 02:29:24 [INFO] app: ====================================================================================================
+2025-12-18 02:29:24 [INFO] app: [REQUEST] GET http://localhost:5000/login
+2025-12-18 02:29:24 [INFO] app: [REQUEST] GET http://localhost:5000/login
+2025-12-18 02:29:24 [INFO] app: [ENDPOINT] login
+2025-12-18 02:29:24 [INFO] app: [ENDPOINT] login
+2025-12-18 02:29:24 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:29:24 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:29:24 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:29:24 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:29:24 [INFO] app: ====================================================================================================
+2025-12-18 02:29:24 [INFO] app: ====================================================================================================
+2025-12-18 02:29:24 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-18 02:29:24 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-18 02:29:24 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:29:24] "GET /login HTTP/1.1" 200 -
+2025-12-18 02:29:24 [INFO] app: ====================================================================================================
+2025-12-18 02:29:24 [INFO] app: ====================================================================================================
+2025-12-18 02:29:24 [INFO] app: [REQUEST] GET http://localhost:5000/static/css/user.css
+2025-12-18 02:29:24 [INFO] app: [REQUEST] GET http://localhost:5000/static/css/user.css
+2025-12-18 02:29:24 [INFO] app: [ENDPOINT] static
+2025-12-18 02:29:24 [INFO] app: [ENDPOINT] static
+2025-12-18 02:29:24 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:29:24 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:29:24 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:29:24 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:29:24 [INFO] app: ====================================================================================================
+2025-12-18 02:29:24 [INFO] app: ====================================================================================================
+2025-12-18 02:29:24 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-18 02:29:24 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-18 02:29:24 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:29:24] "[36mGET /static/css/user.css HTTP/1.1[0m" 304 -
+2025-12-18 02:29:24 [INFO] app: ====================================================================================================
+2025-12-18 02:29:24 [INFO] app: ====================================================================================================
+2025-12-18 02:29:24 [INFO] app: [REQUEST] GET http://localhost:5000/favicon.ico
+2025-12-18 02:29:24 [INFO] app: [REQUEST] GET http://localhost:5000/favicon.ico
+2025-12-18 02:29:24 [INFO] app: [ENDPOINT] None
+2025-12-18 02:29:24 [INFO] app: [ENDPOINT] None
+2025-12-18 02:29:24 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:29:24 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:29:24 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:29:24 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:29:24 [INFO] app: ====================================================================================================
+2025-12-18 02:29:24 [INFO] app: ====================================================================================================
+2025-12-18 02:29:24 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-18 02:29:24 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-18 02:29:24 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:29:24] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-12-18 02:29:24 [INFO] app: ====================================================================================================
+2025-12-18 02:29:24 [INFO] app: ====================================================================================================
+2025-12-18 02:29:24 [INFO] app: [REQUEST] GET http://localhost:5000/login
+2025-12-18 02:29:24 [INFO] app: [REQUEST] GET http://localhost:5000/login
+2025-12-18 02:29:24 [INFO] app: [ENDPOINT] login
+2025-12-18 02:29:24 [INFO] app: [ENDPOINT] login
+2025-12-18 02:29:24 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:29:24 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:29:24 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:29:24 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:29:24 [INFO] app: ====================================================================================================
+2025-12-18 02:29:24 [INFO] app: ====================================================================================================
+2025-12-18 02:29:24 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-18 02:29:24 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-18 02:29:24 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:29:24] "GET /login HTTP/1.1" 200 -
+2025-12-18 02:29:29 [INFO] app: ====================================================================================================
+2025-12-18 02:29:29 [INFO] app: ====================================================================================================
+2025-12-18 02:29:29 [INFO] app: [REQUEST] GET http://localhost:5000/keycloak-login
+2025-12-18 02:29:29 [INFO] app: [REQUEST] GET http://localhost:5000/keycloak-login
+2025-12-18 02:29:29 [INFO] app: [ENDPOINT] keycloak_login
+2025-12-18 02:29:29 [INFO] app: [ENDPOINT] keycloak_login
+2025-12-18 02:29:29 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:29:29 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:29:29 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:29:29 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:29:29 [INFO] app: ====================================================================================================
+2025-12-18 02:29:29 [INFO] app: ====================================================================================================
+2025-12-18 02:29:29 [INFO] app: [OK] RESPONSE: 302 - GET /keycloak-login
+2025-12-18 02:29:29 [INFO] app: [OK] RESPONSE: 302 - GET /keycloak-login
+2025-12-18 02:29:29 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:29:29] "[32mGET /keycloak-login HTTP/1.1[0m" 302 -
+2025-12-18 02:29:31 [INFO] app: ====================================================================================================
+2025-12-18 02:29:31 [INFO] app: ====================================================================================================
+2025-12-18 02:29:31 [INFO] app: [REQUEST] GET http://localhost:5000/callback?session_state=304fb664-f993-455c-985c-cbe13a11960b&code=5fbea616-91f6-438d-a380-9179df52cc07.304fb664-f993-455c-985c-cbe13a11960b.7b918fca-c51b-4007-ad82-6106c658b294
+2025-12-18 02:29:31 [INFO] app: [REQUEST] GET http://localhost:5000/callback?session_state=304fb664-f993-455c-985c-cbe13a11960b&code=5fbea616-91f6-438d-a380-9179df52cc07.304fb664-f993-455c-985c-cbe13a11960b.7b918fca-c51b-4007-ad82-6106c658b294
+2025-12-18 02:29:31 [INFO] app: [ENDPOINT] keycloak_callback
+2025-12-18 02:29:31 [INFO] app: [ENDPOINT] keycloak_callback
+2025-12-18 02:29:31 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:29:31 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:29:31 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:29:31 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:29:31 [INFO] app: [PARAMS] {'session_state': '304fb664-f993-455c-985c-cbe13a11960b', 'code': '5fbea616-91f6-438d-a380-9179df52cc07.304fb664-f993-455c-985c-cbe13a11960b.7b918fca-c51b-4007-ad82-6106c658b294'}
+2025-12-18 02:29:31 [INFO] app: [PARAMS] {'session_state': '304fb664-f993-455c-985c-cbe13a11960b', 'code': '5fbea616-91f6-438d-a380-9179df52cc07.304fb664-f993-455c-985c-cbe13a11960b.7b918fca-c51b-4007-ad82-6106c658b294'}
+2025-12-18 02:29:31 [INFO] app: ====================================================================================================
+2025-12-18 02:29:31 [INFO] app: ====================================================================================================
+2025-12-18 02:29:31 [DEBUG] urllib3.connectionpool: Starting new HTTP connection (1): localhost:8080
+2025-12-18 02:29:31 [DEBUG] urllib3.connectionpool: http://localhost:8080 "POST /realms/HR-System/protocol/openid-connect/token HTTP/1.1" 200 3558
+2025-12-18 02:29:32 [INFO] app: [OK] RESPONSE: 302 - GET /callback
+2025-12-18 02:29:32 [INFO] app: [OK] RESPONSE: 302 - GET /callback
+2025-12-18 02:29:32 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:29:32] "[32mGET /callback?session_state=304fb664-f993-455c-985c-cbe13a11960b&code=5fbea616-91f6-438d-a380-9179df52cc07.304fb664-f993-455c-985c-cbe13a11960b.7b918fca-c51b-4007-ad82-6106c658b294 HTTP/1.1[0m" 302 -
+2025-12-18 02:29:32 [INFO] app: ====================================================================================================
+2025-12-18 02:29:32 [INFO] app: ====================================================================================================
+2025-12-18 02:29:32 [INFO] app: [REQUEST] GET http://localhost:5000/admin/dashboard
+2025-12-18 02:29:32 [INFO] app: [REQUEST] GET http://localhost:5000/admin/dashboard
+2025-12-18 02:29:32 [INFO] app: [ENDPOINT] admin_dashboard
+2025-12-18 02:29:32 [INFO] app: [ENDPOINT] admin_dashboard
+2025-12-18 02:29:32 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:29:32 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:29:32 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:29:32 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:29:32 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:29:32 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:29:32 [INFO] app: ====================================================================================================
+2025-12-18 02:29:32 [INFO] app: ====================================================================================================
+2025-12-18 02:29:32 [ERROR] app: Error loading admin dashboard
+Traceback (most recent call last):
+  File "D:\Desktop\Semester 7\Human Security\Project\Warmth-HR-Dashboard-System\app.py", line 644, in admin_dashboard
+    return render_template(
+           ^^^^^^^^^^^^^^^^
+  File "D:\Desktop\Semester 7\Human Security\Project\Warmth-HR-Dashboard-System\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Desktop\Semester 7\Human Security\Project\Warmth-HR-Dashboard-System\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Desktop\Semester 7\Human Security\Project\Warmth-HR-Dashboard-System\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "D:\Desktop\Semester 7\Human Security\Project\Warmth-HR-Dashboard-System\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "D:\Desktop\Semester 7\Human Security\Project\Warmth-HR-Dashboard-System\templates\admin\dashboard.html", line 16, in top-level template code
+    <a href="{{ url_for('admin_user_import') }}">
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Desktop\Semester 7\Human Security\Project\Warmth-HR-Dashboard-System\.venv\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Desktop\Semester 7\Human Security\Project\Warmth-HR-Dashboard-System\.venv\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Desktop\Semester 7\Human Security\Project\Warmth-HR-Dashboard-System\.venv\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'admin_user_import'. Did you mean 'admin_employees' instead?
+2025-12-18 02:29:32 [ERROR] app: Error loading admin dashboard
+Traceback (most recent call last):
+  File "D:\Desktop\Semester 7\Human Security\Project\Warmth-HR-Dashboard-System\app.py", line 644, in admin_dashboard
+    return render_template(
+           ^^^^^^^^^^^^^^^^
+  File "D:\Desktop\Semester 7\Human Security\Project\Warmth-HR-Dashboard-System\.venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Desktop\Semester 7\Human Security\Project\Warmth-HR-Dashboard-System\.venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Desktop\Semester 7\Human Security\Project\Warmth-HR-Dashboard-System\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "D:\Desktop\Semester 7\Human Security\Project\Warmth-HR-Dashboard-System\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "D:\Desktop\Semester 7\Human Security\Project\Warmth-HR-Dashboard-System\templates\admin\dashboard.html", line 16, in top-level template code
+    <a href="{{ url_for('admin_user_import') }}">
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Desktop\Semester 7\Human Security\Project\Warmth-HR-Dashboard-System\.venv\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Desktop\Semester 7\Human Security\Project\Warmth-HR-Dashboard-System\.venv\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Desktop\Semester 7\Human Security\Project\Warmth-HR-Dashboard-System\.venv\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'admin_user_import'. Did you mean 'admin_employees' instead?
+2025-12-18 02:29:32 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:29:32] "[35m[1mGET /admin/dashboard HTTP/1.1[0m" 500 -
+2025-12-18 02:29:32 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:29:32] "GET /admin/dashboard?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2025-12-18 02:29:33 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:29:33] "GET /admin/dashboard?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2025-12-18 02:29:33 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:29:33] "GET /admin/dashboard?__debugger__=yes&cmd=resource&f=console.png&s=MkGQXJwUyHkMyvnOPUA8 HTTP/1.1" 200 -
+2025-12-18 02:29:33 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:29:33] "GET /admin/dashboard?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-12-18 02:31:19 [INFO] werkzeug:  * Detected change in 'D:\\Desktop\\Semester 7\\Human Security\\Project\\Warmth-HR-Dashboard-System\\app.py', reloading
+2025-12-18 02:31:19 [INFO] werkzeug:  * Restarting with stat
+2025-12-18 02:31:20 [INFO] app: ====================================================================================================
+2025-12-18 02:31:20 [INFO] app: ====================================================================================================
+2025-12-18 02:31:20 [INFO] app: [STARTUP] Flask Application Started - Log file: logs/app_2025-12-18.log
+2025-12-18 02:31:20 [INFO] app: [STARTUP] Flask Application Started - Log file: logs/app_2025-12-18.log
+2025-12-18 02:31:20 [INFO] app: ====================================================================================================
+2025-12-18 02:31:20 [INFO] app: ====================================================================================================
+2025-12-18 02:31:20 [DEBUG] urllib3.util.retry: Converted retries value: 1 -> Retry(total=1, connect=None, read=None, redirect=None, status=None)
+2025-12-18 02:31:20 [DEBUG] urllib3.util.retry: Converted retries value: 1 -> Retry(total=1, connect=None, read=None, redirect=None, status=None)
+2025-12-18 02:31:20 [DEBUG] urllib3.connectionpool: Starting new HTTP connection (1): localhost:8080
+2025-12-18 02:31:20 [DEBUG] urllib3.connectionpool: http://localhost:8080 "GET /realms/HR-System HTTP/1.1" 200 599
+2025-12-18 02:31:21 [WARNING] werkzeug:  * Debugger is active!
+2025-12-18 02:31:21 [INFO] werkzeug:  * Debugger PIN: 664-443-932
+2025-12-18 02:31:37 [INFO] app: ====================================================================================================
+2025-12-18 02:31:37 [INFO] app: ====================================================================================================
+2025-12-18 02:31:37 [INFO] app: [REQUEST] GET http://localhost:5000/admin/dashboard
+2025-12-18 02:31:37 [INFO] app: [REQUEST] GET http://localhost:5000/admin/dashboard
+2025-12-18 02:31:37 [INFO] app: [ENDPOINT] admin_dashboard
+2025-12-18 02:31:37 [INFO] app: [ENDPOINT] admin_dashboard
+2025-12-18 02:31:37 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:31:37 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:31:37 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:31:37 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:31:37 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:31:37 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:31:37 [INFO] app: ====================================================================================================
+2025-12-18 02:31:37 [INFO] app: ====================================================================================================
+2025-12-18 02:31:37 [INFO] app: [OK] RESPONSE: 200 - GET /admin/dashboard
+2025-12-18 02:31:37 [INFO] app: [OK] RESPONSE: 200 - GET /admin/dashboard
+2025-12-18 02:31:37 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:31:37] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-12-18 02:31:37 [INFO] app: ====================================================================================================
+2025-12-18 02:31:37 [INFO] app: ====================================================================================================
+2025-12-18 02:31:37 [INFO] app: [REQUEST] GET http://localhost:5000/static/css/user.css
+2025-12-18 02:31:37 [INFO] app: [REQUEST] GET http://localhost:5000/static/css/user.css
+2025-12-18 02:31:37 [INFO] app: [ENDPOINT] static
+2025-12-18 02:31:37 [INFO] app: [ENDPOINT] static
+2025-12-18 02:31:37 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:31:37 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:31:37 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:31:37 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:31:37 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:31:37 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:31:37 [INFO] app: ====================================================================================================
+2025-12-18 02:31:37 [INFO] app: ====================================================================================================
+2025-12-18 02:31:37 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-18 02:31:37 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-18 02:31:37 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:31:37] "[36mGET /static/css/user.css HTTP/1.1[0m" 304 -
+2025-12-18 02:31:37 [INFO] app: ====================================================================================================
+2025-12-18 02:31:37 [INFO] app: ====================================================================================================
+2025-12-18 02:31:37 [INFO] app: [REQUEST] GET http://localhost:5000/favicon.ico
+2025-12-18 02:31:37 [INFO] app: [REQUEST] GET http://localhost:5000/favicon.ico
+2025-12-18 02:31:37 [INFO] app: [ENDPOINT] None
+2025-12-18 02:31:37 [INFO] app: [ENDPOINT] None
+2025-12-18 02:31:37 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:31:37 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:31:37 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:31:37 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:31:37 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:31:37 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:31:37 [INFO] app: ====================================================================================================
+2025-12-18 02:31:37 [INFO] app: ====================================================================================================
+2025-12-18 02:31:37 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-18 02:31:37 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-18 02:31:37 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:31:37] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-12-18 02:31:37 [INFO] app: ====================================================================================================
+2025-12-18 02:31:37 [INFO] app: ====================================================================================================
+2025-12-18 02:31:37 [INFO] app: [REQUEST] GET http://localhost:5000/admin/dashboard
+2025-12-18 02:31:37 [INFO] app: [REQUEST] GET http://localhost:5000/admin/dashboard
+2025-12-18 02:31:37 [INFO] app: [ENDPOINT] admin_dashboard
+2025-12-18 02:31:37 [INFO] app: [ENDPOINT] admin_dashboard
+2025-12-18 02:31:37 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:31:37 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:31:37 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:31:37 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:31:37 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:31:37 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:31:37 [INFO] app: ====================================================================================================
+2025-12-18 02:31:37 [INFO] app: ====================================================================================================
+2025-12-18 02:31:37 [INFO] app: [OK] RESPONSE: 200 - GET /admin/dashboard
+2025-12-18 02:31:37 [INFO] app: [OK] RESPONSE: 200 - GET /admin/dashboard
+2025-12-18 02:31:37 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:31:37] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-12-18 02:31:39 [INFO] app: ====================================================================================================
+2025-12-18 02:31:39 [INFO] app: ====================================================================================================
+2025-12-18 02:31:39 [INFO] app: [REQUEST] GET http://localhost:5000/admin/user-import
+2025-12-18 02:31:39 [INFO] app: [REQUEST] GET http://localhost:5000/admin/user-import
+2025-12-18 02:31:39 [INFO] app: [ENDPOINT] admin_user_import
+2025-12-18 02:31:39 [INFO] app: [ENDPOINT] admin_user_import
+2025-12-18 02:31:39 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:31:39 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:31:39 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:31:39 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:31:39 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:31:39 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:31:39 [INFO] app: ====================================================================================================
+2025-12-18 02:31:39 [INFO] app: ====================================================================================================
+2025-12-18 02:31:39 [INFO] app: [OK] RESPONSE: 200 - GET /admin/user-import
+2025-12-18 02:31:39 [INFO] app: [OK] RESPONSE: 200 - GET /admin/user-import
+2025-12-18 02:31:39 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:31:39] "GET /admin/user-import HTTP/1.1" 200 -
+2025-12-18 02:31:40 [INFO] app: ====================================================================================================
+2025-12-18 02:31:40 [INFO] app: ====================================================================================================
+2025-12-18 02:31:40 [INFO] app: [REQUEST] GET http://localhost:5000/static/css/user.css
+2025-12-18 02:31:40 [INFO] app: [REQUEST] GET http://localhost:5000/static/css/user.css
+2025-12-18 02:31:40 [INFO] app: [ENDPOINT] static
+2025-12-18 02:31:40 [INFO] app: [ENDPOINT] static
+2025-12-18 02:31:40 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:31:40 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:31:40 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:31:40 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:31:40 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:31:40 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:31:40 [INFO] app: ====================================================================================================
+2025-12-18 02:31:40 [INFO] app: ====================================================================================================
+2025-12-18 02:31:40 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-18 02:31:40 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-18 02:31:40 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:31:40] "[36mGET /static/css/user.css HTTP/1.1[0m" 304 -
+2025-12-18 02:31:40 [INFO] app: ====================================================================================================
+2025-12-18 02:31:40 [INFO] app: ====================================================================================================
+2025-12-18 02:31:40 [INFO] app: [REQUEST] GET http://localhost:5000/favicon.ico
+2025-12-18 02:31:40 [INFO] app: [REQUEST] GET http://localhost:5000/favicon.ico
+2025-12-18 02:31:40 [INFO] app: [ENDPOINT] None
+2025-12-18 02:31:40 [INFO] app: [ENDPOINT] None
+2025-12-18 02:31:40 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:31:40 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:31:40 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:31:40 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:31:40 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:31:40 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:31:40 [INFO] app: ====================================================================================================
+2025-12-18 02:31:40 [INFO] app: ====================================================================================================
+2025-12-18 02:31:40 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-18 02:31:40 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-18 02:31:40 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:31:40] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-12-18 02:31:40 [INFO] app: ====================================================================================================
+2025-12-18 02:31:40 [INFO] app: ====================================================================================================
+2025-12-18 02:31:40 [INFO] app: [REQUEST] GET http://localhost:5000/admin/dashboard
+2025-12-18 02:31:40 [INFO] app: [REQUEST] GET http://localhost:5000/admin/dashboard
+2025-12-18 02:31:40 [INFO] app: [ENDPOINT] admin_dashboard
+2025-12-18 02:31:40 [INFO] app: [ENDPOINT] admin_dashboard
+2025-12-18 02:31:40 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:31:40 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:31:40 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:31:40 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:31:40 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:31:40 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:31:40 [INFO] app: ====================================================================================================
+2025-12-18 02:31:40 [INFO] app: ====================================================================================================
+2025-12-18 02:31:40 [INFO] app: [OK] RESPONSE: 200 - GET /admin/dashboard
+2025-12-18 02:31:40 [INFO] app: [OK] RESPONSE: 200 - GET /admin/dashboard
+2025-12-18 02:31:40 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:31:40] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-12-18 02:32:03 [INFO] app: ====================================================================================================
+2025-12-18 02:32:03 [INFO] app: ====================================================================================================
+2025-12-18 02:32:03 [INFO] app: [REQUEST] POST http://localhost:5000/admin/user-import/upload
+2025-12-18 02:32:03 [INFO] app: [REQUEST] POST http://localhost:5000/admin/user-import/upload
+2025-12-18 02:32:03 [INFO] app: [ENDPOINT] admin_user_import_upload
+2025-12-18 02:32:03 [INFO] app: [ENDPOINT] admin_user_import_upload
+2025-12-18 02:32:03 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:03 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:03 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:03 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:03 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:03 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:03 [INFO] app: ====================================================================================================
+2025-12-18 02:32:03 [INFO] app: ====================================================================================================
+2025-12-18 02:32:03 [INFO] app: Processing CSV file: users_import.csv
+2025-12-18 02:32:03 [INFO] app: Processing CSV file: users_import.csv
+2025-12-18 02:32:03 [DEBUG] urllib3.connectionpool: Starting new HTTP connection (1): localhost:8080
+2025-12-18 02:32:03 [DEBUG] urllib3.connectionpool: http://localhost:8080 "POST /realms/master/protocol/openid-connect/token HTTP/1.1" 200 1818
+2025-12-18 02:32:03 [DEBUG] urllib3.connectionpool: Starting new HTTP connection (1): localhost:8080
+2025-12-18 02:32:04 [DEBUG] urllib3.connectionpool: http://localhost:8080 "POST /admin/realms/HR-System/users HTTP/1.1" 201 0
+2025-12-18 02:32:04 [DEBUG] urllib3.connectionpool: Starting new HTTP connection (1): localhost:8080
+2025-12-18 02:32:04 [DEBUG] urllib3.connectionpool: http://localhost:8080 "GET /admin/realms/HR-System/roles/HR_ADMIN HTTP/1.1" 200 221
+2025-12-18 02:32:04 [DEBUG] urllib3.connectionpool: Starting new HTTP connection (1): localhost:8080
+2025-12-18 02:32:04 [DEBUG] urllib3.connectionpool: http://localhost:8080 "POST /admin/realms/HR-System/users/490374e8-eccb-4b32-ae2f-048e58f1cd85/role-mappings/realm HTTP/1.1" 204 0
+2025-12-18 02:32:04 [INFO] app: Import result: 1 successful, 0 errors
+2025-12-18 02:32:04 [INFO] app: Import result: 1 successful, 0 errors
+2025-12-18 02:32:04 [INFO] app: [OK] RESPONSE: 302 - POST /admin/user-import/upload
+2025-12-18 02:32:04 [INFO] app: [OK] RESPONSE: 302 - POST /admin/user-import/upload
+2025-12-18 02:32:04 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:32:04] "[32mPOST /admin/user-import/upload HTTP/1.1[0m" 302 -
+2025-12-18 02:32:04 [INFO] app: ====================================================================================================
+2025-12-18 02:32:04 [INFO] app: ====================================================================================================
+2025-12-18 02:32:04 [INFO] app: [REQUEST] GET http://localhost:5000/admin/user-import
+2025-12-18 02:32:04 [INFO] app: [REQUEST] GET http://localhost:5000/admin/user-import
+2025-12-18 02:32:04 [INFO] app: [ENDPOINT] admin_user_import
+2025-12-18 02:32:04 [INFO] app: [ENDPOINT] admin_user_import
+2025-12-18 02:32:04 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:04 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:04 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:04 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:04 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:04 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:04 [INFO] app: ====================================================================================================
+2025-12-18 02:32:04 [INFO] app: ====================================================================================================
+2025-12-18 02:32:04 [INFO] app: [OK] RESPONSE: 200 - GET /admin/user-import
+2025-12-18 02:32:04 [INFO] app: [OK] RESPONSE: 200 - GET /admin/user-import
+2025-12-18 02:32:04 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:32:04] "GET /admin/user-import HTTP/1.1" 200 -
+2025-12-18 02:32:04 [INFO] app: ====================================================================================================
+2025-12-18 02:32:04 [INFO] app: ====================================================================================================
+2025-12-18 02:32:04 [INFO] app: [REQUEST] GET http://localhost:5000/static/css/user.css
+2025-12-18 02:32:04 [INFO] app: [REQUEST] GET http://localhost:5000/static/css/user.css
+2025-12-18 02:32:04 [INFO] app: [ENDPOINT] static
+2025-12-18 02:32:04 [INFO] app: [ENDPOINT] static
+2025-12-18 02:32:04 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:04 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:04 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:04 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:04 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:04 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:04 [INFO] app: ====================================================================================================
+2025-12-18 02:32:04 [INFO] app: ====================================================================================================
+2025-12-18 02:32:04 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-18 02:32:04 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-18 02:32:04 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:32:04] "[36mGET /static/css/user.css HTTP/1.1[0m" 304 -
+2025-12-18 02:32:04 [INFO] app: ====================================================================================================
+2025-12-18 02:32:04 [INFO] app: ====================================================================================================
+2025-12-18 02:32:04 [INFO] app: [REQUEST] GET http://localhost:5000/favicon.ico
+2025-12-18 02:32:04 [INFO] app: [REQUEST] GET http://localhost:5000/favicon.ico
+2025-12-18 02:32:04 [INFO] app: [ENDPOINT] None
+2025-12-18 02:32:04 [INFO] app: [ENDPOINT] None
+2025-12-18 02:32:04 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:04 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:04 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:04 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:04 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:04 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:04 [INFO] app: ====================================================================================================
+2025-12-18 02:32:04 [INFO] app: ====================================================================================================
+2025-12-18 02:32:04 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-18 02:32:04 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-18 02:32:04 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:32:04] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-12-18 02:32:04 [INFO] app: ====================================================================================================
+2025-12-18 02:32:04 [INFO] app: ====================================================================================================
+2025-12-18 02:32:04 [INFO] app: [REQUEST] GET http://localhost:5000/admin/dashboard
+2025-12-18 02:32:04 [INFO] app: [REQUEST] GET http://localhost:5000/admin/dashboard
+2025-12-18 02:32:04 [INFO] app: [ENDPOINT] admin_dashboard
+2025-12-18 02:32:04 [INFO] app: [ENDPOINT] admin_dashboard
+2025-12-18 02:32:04 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:04 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:04 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:04 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:04 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:04 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:04 [INFO] app: ====================================================================================================
+2025-12-18 02:32:04 [INFO] app: ====================================================================================================
+2025-12-18 02:32:04 [INFO] app: [OK] RESPONSE: 200 - GET /admin/dashboard
+2025-12-18 02:32:04 [INFO] app: [OK] RESPONSE: 200 - GET /admin/dashboard
+2025-12-18 02:32:04 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:32:04] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-12-18 02:32:08 [INFO] app: ====================================================================================================
+2025-12-18 02:32:08 [INFO] app: ====================================================================================================
+2025-12-18 02:32:08 [INFO] app: [REQUEST] GET http://localhost:5000/admin/employees
+2025-12-18 02:32:08 [INFO] app: [REQUEST] GET http://localhost:5000/admin/employees
+2025-12-18 02:32:08 [INFO] app: [ENDPOINT] admin_employees
+2025-12-18 02:32:08 [INFO] app: [ENDPOINT] admin_employees
+2025-12-18 02:32:08 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:08 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:08 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:08 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:08 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:08 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:08 [INFO] app: ====================================================================================================
+2025-12-18 02:32:08 [INFO] app: ====================================================================================================
+2025-12-18 02:32:08 [INFO] app: [OK] RESPONSE: 200 - GET /admin/employees
+2025-12-18 02:32:08 [INFO] app: [OK] RESPONSE: 200 - GET /admin/employees
+2025-12-18 02:32:08 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:32:08] "GET /admin/employees HTTP/1.1" 200 -
+2025-12-18 02:32:09 [INFO] app: ====================================================================================================
+2025-12-18 02:32:09 [INFO] app: ====================================================================================================
+2025-12-18 02:32:09 [INFO] app: [REQUEST] GET http://localhost:5000/static/css/user.css
+2025-12-18 02:32:09 [INFO] app: [REQUEST] GET http://localhost:5000/static/css/user.css
+2025-12-18 02:32:09 [INFO] app: [ENDPOINT] static
+2025-12-18 02:32:09 [INFO] app: [ENDPOINT] static
+2025-12-18 02:32:09 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:09 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:09 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:09 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:09 [INFO] app: ====================================================================================================
+2025-12-18 02:32:09 [INFO] app: ====================================================================================================
+2025-12-18 02:32:09 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-18 02:32:09 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-18 02:32:09 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:32:09] "[36mGET /static/css/user.css HTTP/1.1[0m" 304 -
+2025-12-18 02:32:09 [INFO] app: ====================================================================================================
+2025-12-18 02:32:09 [INFO] app: ====================================================================================================
+2025-12-18 02:32:09 [INFO] app: [REQUEST] GET http://localhost:5000/favicon.ico
+2025-12-18 02:32:09 [INFO] app: [REQUEST] GET http://localhost:5000/favicon.ico
+2025-12-18 02:32:09 [INFO] app: [ENDPOINT] None
+2025-12-18 02:32:09 [INFO] app: [ENDPOINT] None
+2025-12-18 02:32:09 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:09 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:09 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:09 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:09 [INFO] app: ====================================================================================================
+2025-12-18 02:32:09 [INFO] app: ====================================================================================================
+2025-12-18 02:32:09 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-18 02:32:09 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-18 02:32:09 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:32:09] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-12-18 02:32:09 [INFO] app: ====================================================================================================
+2025-12-18 02:32:09 [INFO] app: ====================================================================================================
+2025-12-18 02:32:09 [INFO] app: [REQUEST] GET http://localhost:5000/admin/dashboard
+2025-12-18 02:32:09 [INFO] app: [REQUEST] GET http://localhost:5000/admin/dashboard
+2025-12-18 02:32:09 [INFO] app: [ENDPOINT] admin_dashboard
+2025-12-18 02:32:09 [INFO] app: [ENDPOINT] admin_dashboard
+2025-12-18 02:32:09 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:09 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:09 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:09 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:09 [INFO] app: ====================================================================================================
+2025-12-18 02:32:09 [INFO] app: ====================================================================================================
+2025-12-18 02:32:09 [INFO] app: [OK] RESPONSE: 200 - GET /admin/dashboard
+2025-12-18 02:32:09 [INFO] app: [OK] RESPONSE: 200 - GET /admin/dashboard
+2025-12-18 02:32:09 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:32:09] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-12-18 02:32:19 [INFO] app: ====================================================================================================
+2025-12-18 02:32:19 [INFO] app: ====================================================================================================
+2025-12-18 02:32:19 [INFO] app: [REQUEST] GET http://localhost:5000/admin/employees/edit/15
+2025-12-18 02:32:19 [INFO] app: [REQUEST] GET http://localhost:5000/admin/employees/edit/15
+2025-12-18 02:32:19 [INFO] app: [ENDPOINT] admin_edit_employee
+2025-12-18 02:32:19 [INFO] app: [ENDPOINT] admin_edit_employee
+2025-12-18 02:32:19 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:19 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:19 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:19 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:19 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:19 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:19 [INFO] app: ====================================================================================================
+2025-12-18 02:32:19 [INFO] app: ====================================================================================================
+2025-12-18 02:32:19 [INFO] app: [OK] RESPONSE: 200 - GET /admin/employees/edit/15
+2025-12-18 02:32:19 [INFO] app: [OK] RESPONSE: 200 - GET /admin/employees/edit/15
+2025-12-18 02:32:19 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:32:19] "GET /admin/employees/edit/15 HTTP/1.1" 200 -
+2025-12-18 02:32:20 [INFO] app: ====================================================================================================
+2025-12-18 02:32:20 [INFO] app: ====================================================================================================
+2025-12-18 02:32:20 [INFO] app: [REQUEST] GET http://localhost:5000/static/css/user.css
+2025-12-18 02:32:20 [INFO] app: [REQUEST] GET http://localhost:5000/static/css/user.css
+2025-12-18 02:32:20 [INFO] app: [ENDPOINT] static
+2025-12-18 02:32:20 [INFO] app: [ENDPOINT] static
+2025-12-18 02:32:20 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:20 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:20 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:20 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:20 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:20 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:20 [INFO] app: ====================================================================================================
+2025-12-18 02:32:20 [INFO] app: ====================================================================================================
+2025-12-18 02:32:20 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-18 02:32:20 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-18 02:32:20 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:32:20] "[36mGET /static/css/user.css HTTP/1.1[0m" 304 -
+2025-12-18 02:32:20 [INFO] app: ====================================================================================================
+2025-12-18 02:32:20 [INFO] app: ====================================================================================================
+2025-12-18 02:32:20 [INFO] app: [REQUEST] GET http://localhost:5000/favicon.ico
+2025-12-18 02:32:20 [INFO] app: [REQUEST] GET http://localhost:5000/favicon.ico
+2025-12-18 02:32:20 [INFO] app: [ENDPOINT] None
+2025-12-18 02:32:20 [INFO] app: [ENDPOINT] None
+2025-12-18 02:32:20 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:20 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:20 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:20 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:20 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:20 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:20 [INFO] app: ====================================================================================================
+2025-12-18 02:32:20 [INFO] app: ====================================================================================================
+2025-12-18 02:32:20 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-18 02:32:20 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-18 02:32:20 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:32:20] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-12-18 02:32:20 [INFO] app: ====================================================================================================
+2025-12-18 02:32:20 [INFO] app: ====================================================================================================
+2025-12-18 02:32:20 [INFO] app: [REQUEST] GET http://localhost:5000/admin/dashboard
+2025-12-18 02:32:20 [INFO] app: [REQUEST] GET http://localhost:5000/admin/dashboard
+2025-12-18 02:32:20 [INFO] app: [ENDPOINT] admin_dashboard
+2025-12-18 02:32:20 [INFO] app: [ENDPOINT] admin_dashboard
+2025-12-18 02:32:20 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:20 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:20 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:20 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:20 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:20 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:20 [INFO] app: ====================================================================================================
+2025-12-18 02:32:20 [INFO] app: ====================================================================================================
+2025-12-18 02:32:20 [INFO] app: [OK] RESPONSE: 200 - GET /admin/dashboard
+2025-12-18 02:32:20 [INFO] app: [OK] RESPONSE: 200 - GET /admin/dashboard
+2025-12-18 02:32:20 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:32:20] "GET /admin/dashboard HTTP/1.1" 200 -
+2025-12-18 02:32:34 [INFO] app: ====================================================================================================
+2025-12-18 02:32:34 [INFO] app: ====================================================================================================
+2025-12-18 02:32:34 [INFO] app: [REQUEST] POST http://localhost:5000/admin/employees/edit/15
+2025-12-18 02:32:34 [INFO] app: [REQUEST] POST http://localhost:5000/admin/employees/edit/15
+2025-12-18 02:32:34 [INFO] app: [ENDPOINT] admin_edit_employee
+2025-12-18 02:32:34 [INFO] app: [ENDPOINT] admin_edit_employee
+2025-12-18 02:32:34 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:34 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:34 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:34 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:34 [INFO] app: [FORM] {'first_name': 'admin20', 'last_name': 'User', 'email': 'admin20@hr.com', 'phone': '', 'role_id': '2', 'department_id': '', 'job_title_id': '', 'hire_date': '2025-12-18', 'status': 'active'}
+2025-12-18 02:32:34 [INFO] app: [FORM] {'first_name': 'admin20', 'last_name': 'User', 'email': 'admin20@hr.com', 'phone': '', 'role_id': '2', 'department_id': '', 'job_title_id': '', 'hire_date': '2025-12-18', 'status': 'active'}
+2025-12-18 02:32:34 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:34 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:34 [INFO] app: ====================================================================================================
+2025-12-18 02:32:34 [INFO] app: ====================================================================================================
+2025-12-18 02:32:34 [INFO] app: [OK] RESPONSE: 302 - POST /admin/employees/edit/15
+2025-12-18 02:32:34 [INFO] app: [OK] RESPONSE: 302 - POST /admin/employees/edit/15
+2025-12-18 02:32:34 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:32:34] "[32mPOST /admin/employees/edit/15 HTTP/1.1[0m" 302 -
+2025-12-18 02:32:34 [INFO] app: ====================================================================================================
+2025-12-18 02:32:34 [INFO] app: ====================================================================================================
+2025-12-18 02:32:34 [INFO] app: [REQUEST] GET http://localhost:5000/admin/employees
+2025-12-18 02:32:34 [INFO] app: [REQUEST] GET http://localhost:5000/admin/employees
+2025-12-18 02:32:34 [INFO] app: [ENDPOINT] admin_employees
+2025-12-18 02:32:34 [INFO] app: [ENDPOINT] admin_employees
+2025-12-18 02:32:34 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:34 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:34 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:34 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:34 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:34 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:34 [INFO] app: ====================================================================================================
+2025-12-18 02:32:34 [INFO] app: ====================================================================================================
+2025-12-18 02:32:34 [INFO] app: [OK] RESPONSE: 200 - GET /admin/employees
+2025-12-18 02:32:34 [INFO] app: [OK] RESPONSE: 200 - GET /admin/employees
+2025-12-18 02:32:34 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:32:34] "GET /admin/employees HTTP/1.1" 200 -
+2025-12-18 02:32:34 [INFO] app: ====================================================================================================
+2025-12-18 02:32:34 [INFO] app: ====================================================================================================
+2025-12-18 02:32:34 [INFO] app: [REQUEST] GET http://localhost:5000/static/css/user.css
+2025-12-18 02:32:34 [INFO] app: [REQUEST] GET http://localhost:5000/static/css/user.css
+2025-12-18 02:32:34 [INFO] app: [ENDPOINT] static
+2025-12-18 02:32:34 [INFO] app: [ENDPOINT] static
+2025-12-18 02:32:34 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:34 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:34 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:34 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:34 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:34 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:34 [INFO] app: ====================================================================================================
+2025-12-18 02:32:34 [INFO] app: ====================================================================================================
+2025-12-18 02:32:34 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-18 02:32:34 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-18 02:32:34 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:32:34] "[36mGET /static/css/user.css HTTP/1.1[0m" 304 -
+2025-12-18 02:32:34 [INFO] app: ====================================================================================================
+2025-12-18 02:32:34 [INFO] app: ====================================================================================================
+2025-12-18 02:32:34 [INFO] app: [REQUEST] GET http://localhost:5000/favicon.ico
+2025-12-18 02:32:34 [INFO] app: [REQUEST] GET http://localhost:5000/favicon.ico
+2025-12-18 02:32:34 [INFO] app: [ENDPOINT] None
+2025-12-18 02:32:34 [INFO] app: [ENDPOINT] None
+2025-12-18 02:32:34 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:34 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:34 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:34 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:34 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:34 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:34 [INFO] app: ====================================================================================================
+2025-12-18 02:32:34 [INFO] app: ====================================================================================================
+2025-12-18 02:32:34 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-18 02:32:34 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-18 02:32:34 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:32:34] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-12-18 02:32:35 [INFO] app: ====================================================================================================
+2025-12-18 02:32:35 [INFO] app: ====================================================================================================
+2025-12-18 02:32:35 [INFO] app: [REQUEST] GET http://localhost:5000/admin/dashboard
+2025-12-18 02:32:35 [INFO] app: [REQUEST] GET http://localhost:5000/admin/dashboard
+2025-12-18 02:32:35 [INFO] app: [ENDPOINT] admin_dashboard
+2025-12-18 02:32:35 [INFO] app: [ENDPOINT] admin_dashboard
+2025-12-18 02:32:35 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:35 [INFO] app: [IP] 127.0.0.1
+2025-12-18 02:32:35 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:35 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+2025-12-18 02:32:35 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:35 [INFO] app: [SESSION] User: HR Admin (ID: 9)
+2025-12-18 02:32:35 [INFO] app: ====================================================================================================
+2025-12-18 02:32:35 [INFO] app: ====================================================================================================
+2025-12-18 02:32:35 [INFO] app: [OK] RESPONSE: 200 - GET /admin/dashboard
+2025-12-18 02:32:35 [INFO] app: [OK] RESPONSE: 200 - GET /admin/dashboard
+2025-12-18 02:32:35 [INFO] werkzeug: 127.0.0.1 - - [18/Dec/2025 02:32:35] "GET /admin/dashboard HTTP/1.1" 200 -
