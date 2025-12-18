@@ -1,2 +1,4 @@
 username,email,password,role
-admin20,admin20@hr.com,admin@123,HR_ADMIN
+emp1,emp1@hr.com,test@123,EMPLOYEE
+admin1,admin1@hr.com,admin@123,HR_ADMIN
+manor,manar@gmail.com,manor@123,EMPLOYEE
