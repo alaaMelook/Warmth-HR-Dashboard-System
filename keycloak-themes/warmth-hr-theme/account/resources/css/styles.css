@@ -1,0 +1,248 @@
+/* ============================================
+   Warmth HR Dashboard - Account Theme Styles
+   ============================================ */
+
+/* ---------- CSS Variables / Brand Colors ---------- */
+:root {
+    /* Primary Colors - Warm Orange Theme */
+    --warmth-primary: #FF6B35;
+    --warmth-primary-hover: #E85A2B;
+    --warmth-primary-light: #FF8C5A;
+
+    /* Secondary Colors */
+    --warmth-secondary: #4ECDC4;
+    --warmth-secondary-hover: #3DBDB5;
+
+    /* Background Colors */
+    --warmth-bg-light: #F8F9FA;
+    --warmth-bg-white: #FFFFFF;
+
+    /* Text Colors */
+    --warmth-text-dark: #2C3E50;
+    --warmth-text-muted: #6C757D;
+
+    /* Shadows */
+    --warmth-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* ---------- Global Styles ---------- */
+body {
+    background: linear-gradient(135deg, #F8F9FA 0%, #E9ECEF 100%);
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* ---------- Header Styling ---------- */
+.navbar,
+header {
+    background: linear-gradient(135deg, var(--warmth-primary) 0%, var(--warmth-primary-hover) 100%) !important;
+    box-shadow: var(--warmth-shadow);
+}
+
+.navbar-brand,
+header h1 {
+    color: var(--warmth-text-light) !important;
+    font-weight: 700;
+}
+
+.navbar-brand::before {
+    content: '🔥 ';
+}
+
+/* ---------- Sidebar Navigation ---------- */
+.nav-pills .nav-link {
+    color: var(--warmth-text-dark);
+    border-radius: 10px;
+    padding: 12px 20px;
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+}
+
+.nav-pills .nav-link:hover {
+    background: rgba(255, 107, 53, 0.1);
+    color: var(--warmth-primary);
+}
+
+.nav-pills .nav-link.active {
+    background: linear-gradient(135deg, var(--warmth-primary) 0%, var(--warmth-primary-hover) 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+}
+
+/* ---------- Card Styling ---------- */
+.card,
+.panel {
+    background: var(--warmth-bg-white);
+    border: none;
+    border-radius: 16px;
+    box-shadow: var(--warmth-shadow);
+    margin-bottom: 20px;
+}
+
+.card-header,
+.panel-heading {
+    background: transparent;
+    border-bottom: 1px solid #E9ECEF;
+    padding: 20px;
+    font-weight: 600;
+    color: var(--warmth-text-dark);
+}
+
+.card-body,
+.panel-body {
+    padding: 25px;
+}
+
+/* ---------- Form Elements ---------- */
+.form-control {
+    background-color: #F8F9FA;
+    border: 2px solid #E9ECEF;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--warmth-primary);
+    box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.15);
+    outline: none;
+}
+
+label {
+    font-weight: 600;
+    color: var(--warmth-text-dark);
+    margin-bottom: 8px;
+}
+
+/* ---------- Buttons ---------- */
+.btn-primary {
+    background: linear-gradient(135deg, var(--warmth-primary) 0%, var(--warmth-primary-hover) 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--warmth-primary-hover) 0%, #D04A1F 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+}
+
+.btn-secondary,
+.btn-default {
+    background: transparent;
+    border: 2px solid var(--warmth-primary);
+    color: var(--warmth-primary);
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover,
+.btn-default:hover {
+    background: var(--warmth-primary);
+    color: white;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
+    border: none;
+    border-radius: 10px;
+}
+
+/* ---------- Tables ---------- */
+.table {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table thead th {
+    background: #F8F9FA;
+    border-bottom: 2px solid #E9ECEF;
+    color: var(--warmth-text-dark);
+    font-weight: 600;
+    padding: 15px;
+}
+
+.table tbody td {
+    padding: 15px;
+    vertical-align: middle;
+    border-color: #F1F3F5;
+}
+
+.table tbody tr:hover {
+    background: rgba(255, 107, 53, 0.05);
+}
+
+/* ---------- Alerts ---------- */
+.alert {
+    border-radius: 10px;
+    border: none;
+    padding: 15px 20px;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #E8F8EE 0%, #D4F1DE 100%);
+    color: #2ECC71;
+    border-left: 4px solid #2ECC71;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #FFE8E8 0%, #FFDBDB 100%);
+    color: #E74C3C;
+    border-left: 4px solid #E74C3C;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, #FFF8E8 0%, #FFF0D4 100%);
+    color: #F39C12;
+    border-left: 4px solid #F39C12;
+}
+
+.alert-info {
+    background: linear-gradient(135deg, #E8F4FF 0%, #D4ECFF 100%);
+    color: #3498DB;
+    border-left: 4px solid #3498DB;
+}
+
+/* ---------- Page Titles ---------- */
+h1,
+h2,
+h3 {
+    color: var(--warmth-text-dark);
+    font-weight: 700;
+}
+
+.page-header {
+    border-bottom: none;
+    margin-bottom: 30px;
+}
+
+/* ---------- Footer ---------- */
+footer {
+    background: transparent;
+    text-align: center;
+    padding: 20px;
+    color: var(--warmth-text-muted);
+    font-size: 13px;
+}
+
+/* ---------- Responsive Design ---------- */
+@media (max-width: 768px) {
+
+    .card,
+    .panel {
+        margin: 15px;
+        border-radius: 12px;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}

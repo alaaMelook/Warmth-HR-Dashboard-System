@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <defs>
+    <linearGradient id="fireGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#FF6B35"/>
+      <stop offset="50%" style="stop-color:#FF8C5A"/>
+      <stop offset="100%" style="stop-color:#FFB088"/>
+    </linearGradient>
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FF6B35"/>
+      <stop offset="100%" style="stop-color:#E85A2B"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Fire Icon -->
+  <g transform="translate(5, 5)">
+    <!-- Outer flame -->
+    <path d="M25 45 C15 35 10 25 15 15 C18 20 22 18 24 12 C26 18 32 20 35 15 C40 25 35 35 25 45 Z" 
+          fill="url(#fireGradient)" opacity="0.9"/>
+    <!-- Inner flame -->
+    <path d="M25 42 C20 35 17 28 20 20 C22 24 25 22 26 18 C27 22 30 24 32 20 C35 28 32 35 25 42 Z" 
+          fill="#FFD93D"/>
+    <!-- Core -->
+    <ellipse cx="25" cy="35" rx="4" ry="6" fill="#FFFFFF" opacity="0.6"/>
+  </g>
+  
+  <!-- Text: WARMTH -->
+  <text x="55" y="30" font-family="'Segoe UI', Arial, sans-serif" font-size="22" font-weight="700" fill="url(#textGradient)">
+    WARMTH
+  </text>
+  
+  <!-- Text: HR Dashboard -->
+  <text x="55" y="48" font-family="'Segoe UI', Arial, sans-serif" font-size="12" font-weight="500" fill="#6C757D">
+    HR Dashboard
+  </text>
+</svg>

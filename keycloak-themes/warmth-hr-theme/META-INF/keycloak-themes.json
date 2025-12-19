@@ -1,0 +1,12 @@
+{
+    "themes": [
+        {
+            "name": "warmth-hr-theme",
+            "types": [
+                "login",
+                "account",
+                "email"
+            ]
+        }
+    ]
+}

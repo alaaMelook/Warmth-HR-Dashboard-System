@@ -78,6 +78,17 @@ docker run --name keycloak -p 8080:8080 `
 
 This will import the **HR-System Realm** with all clients, roles, and basic configuration.
 
+## OR  3. Start Keycloak
+```bash
+docker-compose up -d
+```
+
+## 4. Import Configuration
+1. Open: http://localhost:8080/admin
+2. Login: admin/admin
+3. Create Realm → Import `keycloak-config/HR-System-realm.json`
+
+
 ### 4️⃣ Optional: Export Realm (Backup)
 
 If you want to back up the current Realm:
