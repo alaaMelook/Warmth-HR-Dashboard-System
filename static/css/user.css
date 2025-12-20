@@ -330,7 +330,7 @@ textarea{ min-height:92px; resize:none; }
   padding:12px 14px;
   border-radius:12px;
   background:linear-gradient(90deg,var(--brown1),var(--brown2));
-  color:#fff;
+  color:#f7892a;
   font-weight:700;
   width:100%;
   transition: all 0.2s ease;

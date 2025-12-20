@@ -1,0 +1,16 @@
+# Flask Configuration
+FLASK_SECRET=your-super-secret-key-here-change-me
+
+# Database Configuration
+DB_HOST=127.0.0.1
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=hr_management
+DB_PORT=3306
+
+# Keycloak Configuration
+KEYCLOAK_SERVER_URL=http://localhost:8080
+KEYCLOAK_REALM=HR-System
+KEYCLOAK_CLIENT_ID=hr-backend
+KEYCLOAK_CLIENT_SECRET=nlEsTDXxrI9wsovYTAUVzONtsjbLaf54
+KEYCLOAK_FRONTEND_CLIENT_ID=hr-frontend

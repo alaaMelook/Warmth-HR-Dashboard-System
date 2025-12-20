@@ -2,6 +2,52 @@
 {% set active = "leaves" %}
 
 {% block content %}
+  <!-- Flash Messages (Fixed at top) -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        {% if category == 'success' %}
+          <div class="alert-success" style="position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; min-width:300px; max-width:500px; text-align:center; box-shadow:0 4px 12px rgba(0,0,0,0.15); animation:slideDown 0.3s ease-out;">
+            {{ message }}
+          </div>
+        {% elif category == 'danger' or category == 'error' %}
+          <div class="alert-error" style="position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; min-width:300px; max-width:500px; text-align:center; box-shadow:0 4px 12px rgba(0,0,0,0.15); animation:slideDown 0.3s ease-out;">
+            {{ message }}
+          </div>
+        {% elif category == 'warning' %}
+          <div style="position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; min-width:300px; max-width:500px; background:#fff6cc; border:1px solid #f2e6a2; color:#9b7e00; padding:12px 24px; border-radius:8px; font-weight:500; box-shadow:0 4px 12px rgba(0,0,0,0.15); animation:slideDown 0.3s ease-out; text-align:center;">
+            {{ message }}
+          </div>
+        {% else %}
+          <div style="position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; min-width:300px; max-width:500px; background:#e8f4ff; border:1px solid #b3d9ff; color:#0056b3; padding:12px 24px; border-radius:8px; font-weight:500; box-shadow:0 4px 12px rgba(0,0,0,0.15); animation:slideDown 0.3s ease-out; text-align:center;">
+            {{ message }}
+          </div>
+        {% endif %}
+      {% endfor %}
+      <script>
+        setTimeout(function() {
+          const alerts = document.querySelectorAll('.alert-success, .alert-error, [style*="position:fixed"]');
+          alerts.forEach(alert => {
+            if (alert && alert.closest('.page-title') === null) {
+              alert.style.animation = 'fadeOut 0.5s ease-out forwards';
+              setTimeout(() => alert.remove(), 500);
+            }
+          });
+        }, 3000);
+      </script>
+      <style>
+        @keyframes slideDown {
+          from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+          to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        @keyframes fadeOut {
+          from { opacity: 1; transform: translateX(-50%) translateY(0); }
+          to { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+        }
+      </style>
+    {% endif %}
+  {% endwith %}
+
   <h1 class="page-title">Leave Management</h1>
   <p class="page-sub">Request time off and view your leave history</p>
 

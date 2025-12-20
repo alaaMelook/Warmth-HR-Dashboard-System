@@ -2,6 +2,56 @@
 {% set active = "attendance" %}
 
 {% block content %}
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        {% if category == 'success' %}
+          <!-- Success Alert (Auto-hide after 3 seconds) -->
+          <div id="successAlert" class="alert-success" style="position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; min-width:300px; box-shadow:0 4px 12px rgba(0,0,0,0.15); animation:slideDown 0.3s ease;">
+            {{ message }}
+          </div>
+        {% elif category == 'danger' or category == 'error' %}
+          <!-- Error Alert (Auto-hide after 3 seconds) -->
+          <div id="errorAlert" class="alert-error" style="position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; min-width:300px; box-shadow:0 4px 12px rgba(0,0,0,0.15); animation:slideDown 0.3s ease;">
+            {{ message }}
+          </div>
+        {% elif category == 'warning' %}
+          <!-- Warning Alert (Auto-hide after 3 seconds) -->
+          <div id="warningAlert" style="position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; min-width:300px; background:#fff6cc; border:1px solid #f2e6a2; color:#9b7e00; padding:12px 14px; border-radius:14px; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,0.15); animation:slideDown 0.3s ease;">
+            {{ message }}
+          </div>
+        {% else %}
+          <!-- Info Alert (Auto-hide after 3 seconds) -->
+          <div id="infoAlert" style="position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; min-width:300px; background:#e8f4ff; border:1px solid #b3d9ff; color:#0056b3; padding:12px 14px; border-radius:14px; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,0.15); animation:slideDown 0.3s ease;">
+            {{ message }}
+          </div>
+        {% endif %}
+      {% endfor %}
+      <script>
+        setTimeout(function() {
+          const successAlert = document.getElementById('successAlert');
+          const errorAlert = document.getElementById('errorAlert');
+          const warningAlert = document.getElementById('warningAlert');
+          const infoAlert = document.getElementById('infoAlert');
+          
+          [successAlert, errorAlert, warningAlert, infoAlert].forEach(alert => {
+            if (alert) {
+              alert.style.animation = 'fadeOut 0.3s ease';
+              setTimeout(() => alert.remove(), 300);
+            }
+          });
+        }, 3000);
+      </script>
+      <style>
+        @keyframes fadeOut {
+          from { opacity: 1; transform: translateX(-50%) translateY(0); }
+          to { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+        }
+      </style>
+    {% endif %}
+  {% endwith %}
+
   <h1 class="page-title">Attendance History</h1>
   <p class="page-sub">Track your attendance and working hours</p>
 
@@ -201,21 +251,15 @@
           const data = await response.json();
           
           if(data.success) {
-            alert('✅ ' + data.message + '\nTime: ' + data.check_in_time);
-            document.getElementById('todayStatus').textContent = '✓ Checked in at ' + data.check_in_time;
-            this.style.display = 'none';
-            document.getElementById('checkOutBtn').style.display = 'block';
-            location.reload();
+            // Redirect to show flash message
+            window.location.href = '/user/attendance?message=Checked in successfully at ' + data.check_in_time + '&type=success';
           } else {
-            alert('❌ ' + data.message);
-            this.disabled = false;
-            this.textContent = '🟢 Check In';
+            // Redirect with error message
+            window.location.href = '/user/attendance?message=' + encodeURIComponent(data.message) + '&type=error';
           }
         } catch(error) {
           console.error('Error:', error);
-          alert('❌ An error occurred. Please try again.');
-          this.disabled = false;
-          this.textContent = '🟢 Check In';
+          window.location.href = '/user/attendance?message=An error occurred. Please try again.&type=error';
         }
       });
     }
@@ -238,22 +282,38 @@
           const data = await response.json();
           
           if(data.success) {
-            alert('✅ ' + data.message + '\nTime: ' + data.check_out_time);
-            document.getElementById('todayStatus').textContent = '✓ Checked out at ' + data.check_out_time;
-            this.style.display = 'none';
-            location.reload();
+            // Redirect to show flash message
+            window.location.href = '/user/attendance?message=Checked out successfully at ' + data.check_out_time + '&type=success';
           } else {
-            alert('❌ ' + data.message);
-            this.disabled = false;
-            this.textContent = '🔴 Check Out';
+            // Redirect with error message
+            window.location.href = '/user/attendance?message=' + encodeURIComponent(data.message) + '&type=error';
           }
         } catch(error) {
           console.error('Error:', error);
-          alert('❌ An error occurred. Please try again.');
-          this.disabled = false;
-          this.textContent = '🔴 Check Out';
+          window.location.href = '/user/attendance?message=An error occurred. Please try again.&type=error';
         }
       });
+    }
+
+    // Display URL parameter messages as flash alerts
+    const urlParams = new URLSearchParams(window.location.search);
+    const message = urlParams.get('message');
+    const type = urlParams.get('type');
+    if (message && type) {
+      const alertDiv = document.createElement('div');
+      alertDiv.id = type === 'success' ? 'successAlert' : 'errorAlert';
+      alertDiv.className = type === 'success' ? 'alert-success' : 'alert-error';
+      alertDiv.style.cssText = 'position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; min-width:300px; box-shadow:0 4px 12px rgba(0,0,0,0.15); animation:slideDown 0.3s ease;';
+      alertDiv.textContent = decodeURIComponent(message);
+      document.body.appendChild(alertDiv);
+      
+      setTimeout(function() {
+        alertDiv.style.animation = 'fadeOut 0.3s ease';
+        setTimeout(() => alertDiv.remove(), 300);
+      }, 3000);
+      
+      // Clean URL
+      window.history.replaceState({}, document.title, window.location.pathname);
     }
   </script>
 {% endblock %}

@@ -13,13 +13,13 @@
     </div>
   </div>
 
-  <!-- Success Message -->
-  <div id="successMsg" class="alert-success" style="display:none;margin-bottom:16px;">
-    ✅ Profile updated successfully!
+  <!-- Success Message (Fixed at top) -->
+  <div id="successMsg" class="alert-success" style="display:none; position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; min-width:300px; max-width:500px; text-align:center; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+    Profile updated successfully!
   </div>
 
-  <!-- Error Message -->
-  <div id="errorMsg" class="alert-error" style="display:none;margin-bottom:16px;">
+  <!-- Error Message (Fixed at top) -->
+  <div id="errorMsg" class="alert-error" style="display:none; position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; min-width:300px; max-width:500px; text-align:center; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
     ❌ <span id="errorText">Something went wrong!</span>
   </div>
 
@@ -249,17 +249,29 @@
     function showSuccess(message) {
       successMsg.textContent = '✅ ' + message;
       successMsg.style.display = 'block';
+      successMsg.style.animation = 'slideDown 0.3s ease-out';
       errorMsg.style.display = 'none';
       
       setTimeout(() => {
-        successMsg.style.display = 'none';
-      }, 5000);
+        successMsg.style.animation = 'fadeOut 0.5s ease-out forwards';
+        setTimeout(() => {
+          successMsg.style.display = 'none';
+        }, 500);
+      }, 3000);
     }
 
     function showError(message) {
       errorText.textContent = message;
       errorMsg.style.display = 'block';
+      errorMsg.style.animation = 'slideDown 0.3s ease-out';
       successMsg.style.display = 'none';
+      
+      setTimeout(() => {
+        errorMsg.style.animation = 'fadeOut 0.5s ease-out forwards';
+        setTimeout(() => {
+          errorMsg.style.display = 'none';
+        }, 500);
+      }, 3000);
     }
 
     function hideMessages() {
@@ -267,4 +279,28 @@
       errorMsg.style.display = 'none';
     }
   </script>
+
+  <style>
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px);
+      }
+    }
+  </style>
 {% endblock %}

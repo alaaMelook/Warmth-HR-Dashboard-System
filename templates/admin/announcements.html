@@ -23,6 +23,10 @@
                     <span class="icon">👥</span>
                     Employees
                 </a>
+                <a href="{{ url_for('admin_user_import') }}">
+                    <span class="icon">📥</span>
+                    User Import
+                </a>
                 <a href="{{ url_for('admin_attendance') }}">
                     <span class="icon">📅</span>
                     Attendance
@@ -265,6 +269,56 @@
         </div>
     </div>
 
+    <!-- Flash Message Display -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                {% if category == 'success' %}
+                    <!-- Success Alert (Auto-hide after 3 seconds) -->
+                    <div id="successAlert" class="alert-success" style="position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; min-width:300px; box-shadow:0 4px 12px rgba(0,0,0,0.15); animation:slideDown 0.3s ease;">
+                        {{ message }}
+                    </div>
+                {% elif category == 'danger' or category == 'error' %}
+                    <!-- Error Alert (Auto-hide after 3 seconds) -->
+                    <div id="errorAlert" class="alert-error" style="position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; min-width:300px; box-shadow:0 4px 12px rgba(0,0,0,0.15); animation:slideDown 0.3s ease;">
+                        {{ message }}
+                    </div>
+                {% elif category == 'warning' %}
+                    <!-- Warning Alert (Auto-hide after 3 seconds) -->
+                    <div id="warningAlert" style="position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; min-width:300px; background:#fff6cc; border:1px solid #f2e6a2; color:#9b7e00; padding:12px 14px; border-radius:14px; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,0.15); animation:slideDown 0.3s ease;">
+                        {{ message }}
+                    </div>
+                {% else %}
+                    <!-- Info Alert (Auto-hide after 3 seconds) -->
+                    <div id="infoAlert" style="position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; min-width:300px; background:#e8f4ff; border:1px solid #b3d9ff; color:#0056b3; padding:12px 14px; border-radius:14px; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,0.15); animation:slideDown 0.3s ease;">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+            <script>
+                setTimeout(function() {
+                    const successAlert = document.getElementById('successAlert');
+                    const errorAlert = document.getElementById('errorAlert');
+                    const warningAlert = document.getElementById('warningAlert');
+                    const infoAlert = document.getElementById('infoAlert');
+                    
+                    [successAlert, errorAlert, warningAlert, infoAlert].forEach(alert => {
+                        if (alert) {
+                            alert.style.animation = 'fadeOut 0.3s ease';
+                            setTimeout(() => alert.remove(), 300);
+                        }
+                    });
+                }, 3000);
+            </script>
+            <style>
+                @keyframes fadeOut {
+                    from { opacity: 1; transform: translateX(-50%) translateY(0); }
+                    to { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+                }
+            </style>
+        {% endif %}
+    {% endwith %}
+
     <script>
         function openHolidayModal() {
             document.getElementById('holidayModal').style.display = 'flex';
@@ -282,15 +336,27 @@
             document.getElementById('notificationModal').style.display = 'none';
         }
 
+        function closeFlashModal() {
+            const flashModal = document.getElementById('flashModal');
+            if (flashModal) {
+                flashModal.style.display = 'none';
+            }
+        }
+
         // Close modal when clicking outside
         window.onclick = function(event) {
             const holidayModal = document.getElementById('holidayModal');
             const notificationModal = document.getElementById('notificationModal');
+            const flashModal = document.getElementById('flashModal');
+            
             if (event.target == holidayModal) {
                 closeHolidayModal();
             }
             if (event.target == notificationModal) {
                 closeNotificationModal();
+            }
+            if (event.target == flashModal) {
+                closeFlashModal();
             }
         }
     </script>

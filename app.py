@@ -5,6 +5,7 @@ from functools import wraps
 from datetime import date, datetime, timedelta
 import logging
 from logging.handlers import RotatingFileHandler
+from urllib.parse import quote
 from flask import (
     Flask, render_template, request, redirect, url_for,
     flash, g, session, jsonify, make_response
@@ -23,6 +24,12 @@ from dotenv import load_dotenv
 load_dotenv()  # This loads the .env file
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET", "dev-secret-key-change-in-production")
+
+# ========== Session Configuration ==========
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=8)  # Session expires after 8 hours of inactivity
+app.config['SESSION_COOKIE_SECURE'] = False  # Set to True in production with HTTPS
+app.config['SESSION_COOKIE_HTTPONLY'] = True  # Prevent XSS attacks
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # CSRF protection
 
 # ========== Enhanced Logging Configuration ==========
 # Create logs directory if it doesn't exist
@@ -196,51 +203,103 @@ def exec_sql(sql, params=None, *, commit=True):
 
 # ==================== TOKEN VERIFICATION ====================
 
-def verify_keycloak_token(token):
+def verify_keycloak_token(token, verify_exp=True):
     """
-    Verify JWT token from Keycloak
-    Returns decoded token if valid, None otherwise
+    Enhanced JWT token verification from Keycloak
+    Verifies: Signature, Expiration, Audience, Issuer
+    
+    Args:
+        token: JWT token string
+        verify_exp: Whether to verify expiration (default: True)
+    
+    Returns:
+        Decoded token dict if valid, None otherwise
     """
     try:
         if not KEYCLOAK_PUBLIC_KEY:
-            app.logger.error("Keycloak public key not available")
+            app.logger.error("[SECURITY] Keycloak public key not available")
             return None
             
         # Remove "Bearer " prefix if exists
         if token.startswith("Bearer "):
             token = token[7:]
         
-        # Decode and verify token
+        # Decode and verify token with comprehensive checks
         decoded_token = jwt.decode(
             token,
             KEYCLOAK_PUBLIC_KEY,
             algorithms=["RS256"],
             audience="account",
+            issuer=f"{KEYCLOAK_SERVER_URL}/realms/{KEYCLOAK_REALM}",
             options={
-                "verify_signature": True,
-                "verify_aud": True,
-                "verify_exp": True
+                "verify_signature": True,  # ✅ Verify cryptographic signature
+                "verify_aud": True,        # ✅ Verify audience
+                "verify_exp": verify_exp,  # ✅ Verify expiration
+                "verify_iss": True         # ✅ Verify issuer
             }
         )
         
+        # Additional custom validations
+        if not decoded_token.get("sub"):
+            app.logger.error("[SECURITY] Token missing subject (sub) claim")
+            return None
+        
+        # Log successful verification
+        app.logger.info(f"[SECURITY] Token verified for user: {decoded_token.get('email', 'unknown')}")
+        
         return decoded_token
     
+    except jwt.ExpiredSignatureError:
+        app.logger.warning("[SECURITY] Token expired")
+        return None
+    except jwt.InvalidAudienceError:
+        app.logger.error("[SECURITY] Invalid token audience")
+        return None
+    except jwt.InvalidIssuerError:
+        app.logger.error("[SECURITY] Invalid token issuer")
+        return None
     except JWTError as e:
-        app.logger.error(f"JWT verification failed: {str(e)}")
+        app.logger.error(f"[SECURITY] JWT verification failed: {str(e)}")
         return None
     except Exception as e:
-        app.logger.error(f"Token verification error: {str(e)}")
+        app.logger.error(f"[SECURITY] Token verification error: {str(e)}")
         return None
 
 
 def get_user_roles(decoded_token):
     """
-    Extract user roles from decoded token
+    Extract user roles from decoded Keycloak token
+    Supports both realm roles and client roles
+    
+    Args:
+        decoded_token: Decoded JWT token dict
+    
+    Returns:
+        List of role names
     """
     try:
+        roles = []
+        
+        # Extract realm-level roles
         realm_roles = decoded_token.get("realm_access", {}).get("roles", [])
-        return realm_roles
-    except Exception:
+        roles.extend(realm_roles)
+        
+        # Extract client-level roles (optional)
+        resource_access = decoded_token.get("resource_access", {})
+        for client, client_data in resource_access.items():
+            client_roles = client_data.get("roles", [])
+            roles.extend(client_roles)
+        
+        # Remove duplicates and system roles
+        roles = list(set(roles))
+        system_roles = ['offline_access', 'uma_authorization', 'default-roles-hr-system']
+        roles = [r for r in roles if r not in system_roles]
+        
+        app.logger.debug(f"[SECURITY] Extracted roles: {roles}")
+        return roles
+        
+    except Exception as e:
+        app.logger.error(f"[SECURITY] Error extracting roles: {str(e)}")
         return []
 
 
@@ -291,7 +350,7 @@ def admin_required(f):
         
         # Check if user has HR_ADMIN role
         if "HR_ADMIN" not in user_roles:
-            flash("Access denied. Admin only.", "danger")
+            flash("Access denied , Admin only.", "danger")
             return redirect(url_for("user_dashboard"))
         
         g.user_email = decoded_token.get("email")
@@ -333,10 +392,68 @@ def user_required(f):
     return decorated
 
 
-def role_required(required_role):
+def role_required(*required_roles):
     """
-    Decorator to check specific Keycloak role
-    Usage: @role_required('HR_OFFICER')
+    Enhanced decorator to check Keycloak roles
+    Supports multiple roles (OR logic)
+    
+    Usage:
+        @role_required('HR_ADMIN')           # Single role
+        @role_required('HR_ADMIN', 'HR_MANAGER')  # Multiple roles (OR)
+    
+    Args:
+        *required_roles: One or more role names
+    
+    Returns:
+        Decorator function
+    """
+    def decorator(f):
+        @wraps(f)
+        def decorated(*args, **kwargs):
+            if "access_token" not in session:
+                app.logger.warning(f"[SECURITY] Unauthorized access attempt to {f.__name__}")
+                return jsonify({"error": "Unauthorized", "message": "Authentication required"}), 401
+            
+            decoded_token = verify_keycloak_token(session["access_token"])
+            if not decoded_token:
+                app.logger.warning(f"[SECURITY] Invalid token for {f.__name__}")
+                return jsonify({"error": "Unauthorized", "message": "Invalid or expired token"}), 401
+            
+            user_roles = get_user_roles(decoded_token)
+            
+            # Check if user has any of the required roles (OR logic)
+            has_access = any(role in user_roles for role in required_roles)
+            
+            if not has_access:
+                app.logger.warning(
+                    f"[SECURITY] Access denied to {f.__name__} - "
+                    f"User roles: {user_roles}, Required: {required_roles}"
+                )
+                return jsonify({
+                    "error": "Forbidden",
+                    "message": "You don't have permission to access this resource",
+                    "required_roles": list(required_roles),
+                    "user_roles": user_roles
+                }), 403
+            
+            g.user_email = decoded_token.get("email")
+            g.user_roles = user_roles
+            g.decoded_token = decoded_token
+            
+            app.logger.info(f"[SECURITY] Access granted to {f.__name__} for user {g.user_email}")
+            
+            return f(*args, **kwargs)
+        
+        return decorated
+    return decorator
+
+
+def roles_required_all(*required_roles):
+    """
+    Decorator requiring ALL specified roles (AND logic)
+    
+    Usage:
+        @roles_required_all('HR_ADMIN', 'SUPER_USER')
     """
     def decorator(f):
         @wraps(f)
@@ -350,16 +467,101 @@ def role_required(required_role):
             
             user_roles = get_user_roles(decoded_token)
             
-            if not check_role_permission(required_role, user_roles):
-                return jsonify({"error": "Forbidden - Insufficient permissions"}), 403
+            # Check if user has ALL required roles (AND logic)
+            has_all_roles = all(role in user_roles for role in required_roles)
+            
+            if not has_all_roles:
+                app.logger.warning(
+                    f"[SECURITY] Access denied to {f.__name__} - "
+                    f"Missing roles. User: {user_roles}, Required: {required_roles}"
+                )
+                return jsonify({
+                    "error": "Forbidden",
+                    "message": "You don't have all required permissions",
+                    "required_roles": list(required_roles),
+                    "user_roles": user_roles
+                }), 403
             
             g.user_email = decoded_token.get("email")
             g.user_roles = user_roles
+            g.decoded_token = decoded_token
             
             return f(*args, **kwargs)
         
         return decorated
     return decorator
+
+
+def hr_management_required(f):
+    """
+    Decorator for HR management access (HR_ADMIN or HR_OFFICER)
+    Both can access admin dashboard but with different permissions
+    """
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        # Check session
+        if "user_id" not in session or "access_token" not in session:
+            flash("Please login first.", "danger")
+            return redirect(url_for("login"))
+        
+        # Verify token
+        decoded_token = verify_keycloak_token(session["access_token"])
+        if not decoded_token:
+            flash("Invalid or expired session.", "danger")
+            session.clear()
+            return redirect(url_for("login"))
+        
+        # Get roles
+        user_roles = get_user_roles(decoded_token)
+        
+        # Check if user has HR_ADMIN or HR_OFFICER role
+        if "HR_ADMIN" not in user_roles and "HR_OFFICER" not in user_roles:
+            flash("Access denied. HR Management access required.", "danger")
+            return redirect(url_for("user_dashboard"))
+        
+        g.user_email = decoded_token.get("email")
+        g.user_roles = user_roles
+        g.is_admin = "HR_ADMIN" in user_roles
+        g.is_officer = "HR_OFFICER" in user_roles
+        
+        return f(*args, **kwargs)
+    
+    return decorated
+
+
+def admin_only_required(f):
+    """
+    Decorator for HR_ADMIN only (full access including delete)
+    """
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        # Check session
+        if "user_id" not in session or "access_token" not in session:
+            flash("Please login first.", "danger")
+            return redirect(url_for("login"))
+        
+        # Verify token
+        decoded_token = verify_keycloak_token(session["access_token"])
+        if not decoded_token:
+            flash("Invalid or expired session.", "danger")
+            session.clear()
+            return redirect(url_for("login"))
+        
+        # Get roles
+        user_roles = get_user_roles(decoded_token)
+        
+        # Check if user has HR_ADMIN role only
+        if "HR_ADMIN" not in user_roles:
+            flash("Access denied , Admin only.", "danger")
+            # Return to previous page instead of redirecting to another page
+            return redirect(request.referrer or url_for("admin_dashboard"))
+        
+        g.user_email = decoded_token.get("email")
+        g.user_roles = user_roles
+        
+        return f(*args, **kwargs)
+    
+    return decorated
 
 # ==================== USER HELPERS ====================
 
@@ -507,6 +709,7 @@ def keycloak_callback():
         print(f"✅ User found in database: {user['first_name']} {user['last_name']}")
         
         # Store in session
+        session.permanent = True  # Make session permanent (uses PERMANENT_SESSION_LIFETIME)
         session["user_id"] = user["user_id"]
         session["user_name"] = f"{user['first_name']} {user['last_name']}"
         session["email"] = user["email"]
@@ -518,10 +721,12 @@ def keycloak_callback():
         
         print(f"✅ User roles: {user_roles}")
         
-        flash(f"Welcome back, {user['first_name']}!", "success")
+        # Set flag to show welcome message on next page
+        session["show_welcome"] = True
+        session["welcome_name"] = user['first_name']
         
         # Redirect based on role
-        if "HR_ADMIN" in user_roles:
+        if "HR_ADMIN" in user_roles or "HR_OFFICER" in user_roles:
             return redirect(url_for("admin_dashboard"))
         else:
             return redirect(url_for("user_dashboard"))
@@ -603,20 +808,34 @@ def logout():
     # Clear Flask session
     session.clear()
     
-    # Redirect to Keycloak logout
+    # استخدام dynamic redirect_uri مع URL encoding
+    redirect_uri = request.url_root.rstrip('/') + '/login'
+    
+    # Redirect to Keycloak logout - استخدام post_logout_redirect_uri بدلاً من redirect_uri
     logout_url = (
         f"{KEYCLOAK_SERVER_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/logout"
-        f"?redirect_uri=http://localhost:5000/login"
+        f"?post_logout_redirect_uri={quote(redirect_uri, safe='')}"
+        f"&client_id={KEYCLOAK_FRONTEND_CLIENT_ID}"
     )
     
-    flash("You have been logged out successfully.", "success")
+    app.logger.info(f"[LOGOUT] Redirect URI: {redirect_uri}")
+    app.logger.info(f"[LOGOUT] Full logout URL: {logout_url}")
+    
+    flash("You have been logged out successfully", "success")
     return redirect(logout_url)
 
 # ==================== ADMIN ROUTES ====================
 
 @app.route("/admin/dashboard")
-@admin_required
+@hr_management_required
 def admin_dashboard():
+    # Show welcome message only once after login (as template variable, not flash)
+    welcome_message = None
+    if session.get("show_welcome"):
+        welcome_name = session.pop("welcome_name", "HR")
+        session.pop("show_welcome", None)
+        welcome_message = f"Welcome back, {welcome_name}!"
+    
     try:
         total_employees = (q1("SELECT COUNT(*) AS cnt FROM employees WHERE status='active'") or {}).get("cnt", 0)
         today_attendance = (q1("""
@@ -648,6 +867,7 @@ def admin_dashboard():
             pending_leaves=pending_leaves,
             monthly_payroll=monthly_payroll,
             recent_leaves=recent_leaves,
+            welcome_message=welcome_message,
         )
     except Exception as e:
         app.logger.exception("Error loading admin dashboard")
@@ -662,8 +882,13 @@ def admin_dashboard():
         )
 
 @app.route("/admin/employees")
-@admin_required
+@hr_management_required
 def admin_employees():
+    # Clear welcome flag without showing message (only show in dashboard)
+    if session.get("show_welcome"):
+        session.pop("show_welcome", None)
+        session.pop("welcome_name", None)
+    
     print("=== ADMIN EMPLOYEES ROUTE HIT ===")
     try:
         print("Fetching employees...")
@@ -704,7 +929,7 @@ def admin_employees():
         return redirect(url_for("admin_dashboard"))
 
 @app.route("/admin/employees/add", methods=["GET", "POST"])
-@admin_required
+@hr_management_required
 def admin_add_employee():
     if request.method == "POST":
         first_name = request.form.get("first_name", "").strip()
@@ -758,7 +983,7 @@ def admin_add_employee():
     return render_template("admin/add_employee.html", departments=departments, job_titles=job_titles)
 
 @app.route("/admin/employees/edit/<int:employee_id>", methods=["GET", "POST"])
-@admin_required
+@hr_management_required
 def admin_edit_employee(employee_id):
     if request.method == "POST":
         first_name = request.form.get("first_name", "").strip()
@@ -833,7 +1058,7 @@ def admin_edit_employee(employee_id):
     return render_template("admin/edit_employee.html", employee=employee, departments=departments, job_titles=job_titles)
 
 @app.route("/admin/employees/delete/<int:employee_id>", methods=["DELETE", "POST"])
-@admin_required
+@admin_only_required
 def admin_delete_employee(employee_id):
     try:
         emp_row = q1("SELECT user_id FROM employees WHERE employee_id=%s", (employee_id,))
@@ -872,7 +1097,7 @@ def admin_delete_employee(employee_id):
         return redirect(url_for("admin_employees"))
 
 @app.route("/admin/attendance")
-@admin_required
+@hr_management_required
 def admin_attendance():
     try:
         selected_date = request.args.get("date", date.today().strftime("%Y-%m-%d"))
@@ -982,7 +1207,7 @@ def admin_attendance():
         )
 
 @app.route("/admin/attendance/export")
-@admin_required
+@hr_management_required
 def export_attendance_csv():
     try:
         selected_date = request.args.get("date", date.today().strftime("%Y-%m-%d"))
@@ -1035,7 +1260,7 @@ def export_attendance_csv():
         return redirect(url_for("admin_attendance"))
 
 @app.route("/admin/leaves")
-@admin_required
+@hr_management_required
 def admin_leaves():
     try:
         pending_count = (q1("SELECT COUNT(*) AS c FROM leaves WHERE status='pending'") or {}).get("c", 0)
@@ -1084,7 +1309,7 @@ def admin_leaves():
         )
 
 @app.route("/admin/leaves/<int:leave_id>/update", methods=["POST"])
-@admin_required
+@hr_management_required
 def admin_update_leave(leave_id):
     new_status = request.form.get("status")
     if new_status not in ["approved", "rejected"]:
@@ -1098,7 +1323,7 @@ def admin_update_leave(leave_id):
     return redirect(url_for("admin_leaves"))
 
 @app.route("/admin/payroll")
-@admin_required
+@hr_management_required
 def admin_payroll():
     """
     Admin payroll management page with full control over salaries, bonuses, and deductions
@@ -1217,7 +1442,7 @@ def admin_payroll():
         )
 
 @app.route("/admin/payroll/export")
-@admin_required
+@hr_management_required
 def export_payroll_csv():
     try:
         rows = qall("""
@@ -1308,7 +1533,7 @@ def process_payroll():
         return redirect(url_for("admin_payroll"))
 
 @app.route("/admin/payroll/update-salary", methods=["POST"])
-@admin_required
+@hr_management_required
 def update_employee_salary():
     """Update employee salary, bonus, deductions, and status for current month"""
     try:
@@ -1351,7 +1576,7 @@ def update_employee_salary():
         return redirect(url_for("admin_payroll"))
 
 @app.route("/admin/payroll/add-bonus", methods=["POST"])
-@admin_required
+@hr_management_required
 def add_bonus():
     """Add bonus to employee's current month payroll"""
     try:
@@ -1393,7 +1618,7 @@ def add_bonus():
         return redirect(url_for("admin_payroll"))
 
 @app.route("/admin/payroll/add-deduction", methods=["POST"])
-@admin_required
+@hr_management_required
 def add_deduction():
     """Add deduction to employee's current month payroll"""
     try:
@@ -1435,7 +1660,7 @@ def add_deduction():
         return redirect(url_for("admin_payroll"))
 
 @app.route("/admin/payroll/add-transaction", methods=["POST"])
-@admin_required
+@hr_management_required
 def add_payroll_transaction():
     """General route to add bonus or deduction - creates new payroll record"""
     try:
@@ -1493,7 +1718,7 @@ def add_payroll_transaction():
 # ==================== ANNOUNCEMENTS ROUTES ====================
 
 @app.route("/admin/announcements")
-@admin_required
+@hr_management_required
 def admin_announcements():
     """Admin page to manage holidays and notifications"""
     try:
@@ -1521,7 +1746,7 @@ def admin_announcements():
         return redirect(url_for("admin_dashboard"))
 
 @app.route("/admin/holidays/add", methods=["POST"])
-@admin_required
+@hr_management_required
 def add_holiday():
     """Add a new holiday"""
     try:
@@ -1545,7 +1770,7 @@ def add_holiday():
     return redirect(url_for("admin_announcements"))
 
 @app.route("/admin/holidays/delete/<int:holiday_id>", methods=["POST"])
-@admin_required
+@admin_only_required
 def delete_holiday(holiday_id):
     """Delete a holiday"""
     try:
@@ -1557,7 +1782,7 @@ def delete_holiday(holiday_id):
     return redirect(url_for("admin_announcements"))
 
 @app.route("/admin/notifications/add", methods=["POST"])
-@admin_required
+@hr_management_required
 def add_notification():
     """Add a new notification"""
     try:
@@ -1582,7 +1807,7 @@ def add_notification():
     return redirect(url_for("admin_announcements"))
 
 @app.route("/admin/notifications/toggle/<int:notification_id>", methods=["POST"])
-@admin_required
+@hr_management_required
 def toggle_notification(notification_id):
     """Toggle notification active status"""
     try:
@@ -1599,7 +1824,7 @@ def toggle_notification(notification_id):
     return redirect(url_for("admin_announcements"))
 
 @app.route("/admin/notifications/delete/<int:notification_id>", methods=["POST"])
-@admin_required
+@admin_only_required
 def delete_notification(notification_id):
     """Delete a notification"""
     try:
@@ -2372,6 +2597,44 @@ def api_check_out():
 
 # ==================== ERROR HANDLERS ====================
 
+@app.errorhandler(403)
+def forbidden(e):
+    """Handle 403 Forbidden errors with proper logging"""
+    app.logger.warning(f"[SECURITY] 403 Forbidden - Path: {request.path}, User: {session.get('email', 'anonymous')}")
+    
+    # Return JSON for API requests
+    if request.path.startswith('/api/') or request.accept_mimetypes.accept_json:
+        return jsonify({
+            "error": "Forbidden",
+            "message": "You don't have permission to access this resource",
+            "path": request.path
+        }), 403
+    
+    # Return HTML for browser requests
+    flash("Access denied. You don't have permission to access this resource.", "danger")
+    if "user_id" in session:
+        # Always return to previous page (referrer) to stay on same page
+        if request.referrer:
+            return redirect(request.referrer)
+        # If no referrer, redirect to appropriate dashboard
+        return redirect(url_for("admin_dashboard"))
+    return redirect(url_for("login"))
+
+@app.errorhandler(401)
+def unauthorized(e):
+    """Handle 401 Unauthorized errors"""
+    app.logger.warning(f"[SECURITY] 401 Unauthorized - Path: {request.path}")
+    
+    if request.path.startswith('/api/') or request.accept_mimetypes.accept_json:
+        return jsonify({
+            "error": "Unauthorized",
+            "message": "Authentication required",
+            "path": request.path
+        }), 401
+    
+    flash("Please login to access this resource.", "warning")
+    return redirect(url_for("login"))
+
 @app.errorhandler(404)
 def not_found(e):
     if "user_id" in session:
@@ -2392,12 +2655,12 @@ def server_error(e):
 # ==================== USER IMPORT ROUTES ====================
 
 @app.route("/admin/user-import", methods=["GET"])
-@admin_required
+@hr_management_required
 def admin_user_import():
     return render_template("admin/user_import.html")
 
 @app.route("/admin/user-import/upload", methods=["POST"])
-@admin_required
+@hr_management_required
 def admin_user_import_upload():
     try:
         if 'csv_file' not in request.files:
@@ -2437,7 +2700,7 @@ def admin_user_import_upload():
         return redirect(url_for("admin_user_import"))
 
 @app.route("/admin/user-import/template")
-@admin_required
+@hr_management_required
 def admin_user_import_template():
     template = """username,email,password,role
 john.doe,john@example.com,password123,EMPLOYEE
@@ -2615,6 +2878,265 @@ def bulk_import_users(csv_content):
     except Exception as e:
         app.logger.error(f"Import error: {str(e)}")
         return 0, [f"Import error: {str(e)}"]
+
+# ==================== SECURITY TEST ROUTES ====================
+
+@app.route("/api/security/test/public")
+def test_public_endpoint():
+    """🔓 PUBLIC endpoint - No authentication required"""
+    app.logger.info("[TEST] Public endpoint accessed")
+    return jsonify({
+        "status": "success",
+        "message": "This is a public endpoint - no authentication required",
+        "timestamp": datetime.now().isoformat()
+    }), 200
+
+
+@app.route("/api/security/test/authenticated")
+@login_required
+def test_authenticated_endpoint():
+    """🔒 AUTHENTICATED endpoint - Requires valid login"""
+    app.logger.info(f"[TEST] Authenticated endpoint accessed by {session.get('email')}")
+    return jsonify({
+        "status": "success",
+        "message": "You are authenticated!",
+        "user": {
+            "email": session.get("email"),
+            "name": session.get("user_name"),
+            "user_id": session.get("user_id")
+        },
+        "timestamp": datetime.now().isoformat()
+    }), 200
+
+
+@app.route("/api/security/test/admin-only")
+@role_required('HR_ADMIN')
+def test_admin_only_endpoint():
+    """👑 ADMIN ONLY endpoint - Requires HR_ADMIN role"""
+    app.logger.info(f"[TEST] Admin-only endpoint accessed by {g.user_email}")
+    return jsonify({
+        "status": "success",
+        "message": "Welcome, Admin!",
+        "user": {
+            "email": g.user_email,
+            "roles": g.user_roles
+        },
+        "timestamp": datetime.now().isoformat()
+    }), 200
+
+
+@app.route("/api/security/test/employee-only")
+@role_required('EMPLOYEE')
+def test_employee_only_endpoint():
+    """👤 EMPLOYEE ONLY endpoint - Requires EMPLOYEE role"""
+    app.logger.info(f"[TEST] Employee-only endpoint accessed by {g.user_email}")
+    return jsonify({
+        "status": "success",
+        "message": "Welcome, Employee!",
+        "user": {
+            "email": g.user_email,
+            "roles": g.user_roles
+        },
+        "timestamp": datetime.now().isoformat()
+    }), 200
+
+
+@app.route("/api/security/test/multi-role")
+@role_required('HR_ADMIN', 'HR_MANAGER', 'HR_OFFICER')
+def test_multi_role_endpoint():
+    """🎭 MULTI-ROLE endpoint - Requires any of: HR_ADMIN, HR_MANAGER, or HR_OFFICER"""
+    app.logger.info(f"[TEST] Multi-role endpoint accessed by {g.user_email}")
+    return jsonify({
+        "status": "success",
+        "message": "You have management access!",
+        "user": {
+            "email": g.user_email,
+            "roles": g.user_roles,
+            "matched_roles": [r for r in g.user_roles if r in ['HR_ADMIN', 'HR_MANAGER', 'HR_OFFICER']]
+        },
+        "timestamp": datetime.now().isoformat()
+    }), 200
+
+
+@app.route("/api/security/test/verify-token")
+@login_required
+def test_verify_token():
+    """🔐 TOKEN VERIFICATION endpoint - Shows detailed token info"""
+    if "access_token" not in session:
+        return jsonify({"error": "No token found"}), 401
+    
+    decoded_token = verify_keycloak_token(session["access_token"])
+    
+    if not decoded_token:
+        return jsonify({"error": "Token verification failed"}), 401
+    
+    return jsonify({
+        "status": "success",
+        "message": "Token is valid ✅",
+        "token_info": {
+            "subject": decoded_token.get("sub"),
+            "email": decoded_token.get("email"),
+            "email_verified": decoded_token.get("email_verified"),
+            "name": decoded_token.get("name"),
+            "preferred_username": decoded_token.get("preferred_username"),
+            "roles": get_user_roles(decoded_token),
+            "issued_at": datetime.fromtimestamp(decoded_token.get("iat")).isoformat() if decoded_token.get("iat") else None,
+            "expires_at": datetime.fromtimestamp(decoded_token.get("exp")).isoformat() if decoded_token.get("exp") else None,
+            "issuer": decoded_token.get("iss"),
+            "audience": decoded_token.get("aud")
+        },
+        "verification_checks": {
+            "signature": "✅ Valid",
+            "expiration": "✅ Not expired",
+            "issuer": "✅ Correct",
+            "audience": "✅ Correct"
+        }
+    }), 200
+
+
+@app.route("/api/security/test/whoami")
+@login_required
+def test_whoami():
+    """👋 WHO AM I endpoint - Shows current user info and permissions"""
+    decoded_token = verify_keycloak_token(session["access_token"])
+    user_roles = get_user_roles(decoded_token) if decoded_token else []
+    
+    return jsonify({
+        "status": "success",
+        "user": {
+            "user_id": session.get("user_id"),
+            "email": session.get("email"),
+            "name": session.get("user_name"),
+            "role_id": session.get("role_id")
+        },
+        "keycloak": {
+            "email": decoded_token.get("email") if decoded_token else None,
+            "roles": user_roles,
+            "is_admin": "HR_ADMIN" in user_roles,
+            "is_employee": "EMPLOYEE" in user_roles
+        },
+        "session": {
+            "has_access_token": "access_token" in session,
+            "logged_in": "user_id" in session
+        }
+    }), 200
+
+
+@app.route("/api/security/test/all")
+def test_all_security_endpoints():
+    """📋 SECURITY TEST DASHBOARD - List all security test endpoints"""
+    tests = [
+        {
+            "name": "Public Endpoint",
+            "url": "/api/security/test/public",
+            "method": "GET",
+            "auth_required": False,
+            "roles_required": [],
+            "description": "No authentication required - should work for everyone"
+        },
+        {
+            "name": "Authenticated Endpoint",
+            "url": "/api/security/test/authenticated",
+            "method": "GET",
+            "auth_required": True,
+            "roles_required": [],
+            "description": "Requires login - works for any authenticated user"
+        },
+        {
+            "name": "Admin Only",
+            "url": "/api/security/test/admin-only",
+            "method": "GET",
+            "auth_required": True,
+            "roles_required": ["HR_ADMIN"],
+            "description": "Requires HR_ADMIN role - returns 403 for others"
+        },
+        {
+            "name": "Employee Only",
+            "url": "/api/security/test/employee-only",
+            "method": "GET",
+            "auth_required": True,
+            "roles_required": ["EMPLOYEE"],
+            "description": "Requires EMPLOYEE role - returns 403 for admins"
+        },
+        {
+            "name": "Multi-Role (OR)",
+            "url": "/api/security/test/multi-role",
+            "method": "GET",
+            "auth_required": True,
+            "roles_required": ["HR_ADMIN", "HR_MANAGER", "HR_OFFICER"],
+            "description": "Requires ANY of: HR_ADMIN, HR_MANAGER, or HR_OFFICER"
+        },
+        {
+            "name": "Token Verification",
+            "url": "/api/security/test/verify-token",
+            "method": "GET",
+            "auth_required": True,
+            "roles_required": [],
+            "description": "Shows detailed JWT token verification info"
+        },
+        {
+            "name": "Who Am I",
+            "url": "/api/security/test/whoami",
+            "method": "GET",
+            "auth_required": True,
+            "roles_required": [],
+            "description": "Shows current user info and permissions"
+        }
+    ]
+    
+    return jsonify({
+        "status": "success",
+        "message": "Security Test Endpoints",
+        "total_tests": len(tests),
+        "tests": tests,
+        "instructions": {
+            "1": "Test each endpoint with different user roles",
+            "2": "Check that 403 errors are returned for unauthorized roles",
+            "3": "Verify JWT token signature and expiration",
+            "4": "Test with expired tokens",
+            "5": "Test without authentication"
+        }
+    }), 200
+
+
+@app.route("/security-test")
+def security_test_page():
+    """
+    📋 Interactive Security Test Dashboard (HTML)
+    Open in browser for visual testing
+    """
+    return render_template("security_test.html")
+
+
+@app.route("/api/check-permissions")
+@login_required
+def check_permissions():
+    """
+    Check current user permissions
+    """
+    decoded_token = verify_keycloak_token(session["access_token"])
+    user_roles = get_user_roles(decoded_token) if decoded_token else []
+    
+    permissions = {
+        "can_view_admin_dashboard": "HR_ADMIN" in user_roles or "HR_OFFICER" in user_roles,
+        "can_create": "HR_ADMIN" in user_roles or "HR_OFFICER" in user_roles,
+        "can_read": "HR_ADMIN" in user_roles or "HR_OFFICER" in user_roles or "EMPLOYEE" in user_roles,
+        "can_update": "HR_ADMIN" in user_roles or "HR_OFFICER" in user_roles,
+        "can_delete": "HR_ADMIN" in user_roles,
+        "is_admin": "HR_ADMIN" in user_roles,
+        "is_officer": "HR_OFFICER" in user_roles,
+        "is_employee": "EMPLOYEE" in user_roles
+    }
+    
+    return jsonify({
+        "status": "success",
+        "user": {
+            "email": session.get("email"),
+            "name": session.get("user_name"),
+            "roles": user_roles
+        },
+        "permissions": permissions
+    }), 200
 
 # ==================== RUN APP ====================
 

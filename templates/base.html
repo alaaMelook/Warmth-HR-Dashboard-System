@@ -90,21 +90,143 @@
         .alert-messages {
             margin-bottom: 20px;
         }
+
+        /* Flash Alert Styles */
+        .alert-success {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #e9f8ef;
+            color: #2d6a3e;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 9999;
+            min-width: 300px;
+            max-width: 500px;
+            text-align: center;
+            border: 1px solid #c3e6cb;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .alert-error {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fff0f0;
+            color: #c93a3a;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 9999;
+            min-width: 300px;
+            max-width: 500px;
+            text-align: center;
+            border: 1px solid #f5c6cb;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .alert-warning {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fff6cc;
+            color: #856404;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 9999;
+            min-width: 300px;
+            max-width: 500px;
+            text-align: center;
+            border: 1px solid #ffeaa7;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .alert-info {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #e8f4ff;
+            color: #004085;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 9999;
+            min-width: 300px;
+            max-width: 500px;
+            text-align: center;
+            border: 1px solid #bee5eb;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <div class="alert-messages">
-                {% for category, msg in messages %}
-                    <div class="alert-{{ category }}" style="margin-bottom:12px;">
-                        {{ msg }}
-                    </div>
-                {% endfor %}
-            </div>
+            {% for category, msg in messages %}
+                {% if category == 'success' %}
+                    <div class="alert-success">{{ msg }}</div>
+                {% elif category == 'danger' or category == 'error' %}
+                    <div class="alert-error">{{ msg }}</div>
+                {% elif category == 'warning' %}
+                    <div class="alert-warning">{{ msg }}</div>
+                {% elif category == 'info' %}
+                    <div class="alert-info">{{ msg }}</div>
+                {% else %}
+                    <div class="alert-info">{{ msg }}</div>
+                {% endif %}
+            {% endfor %}
         {% endif %}
     {% endwith %}
+
+    <script>
+        // Auto-hide flash messages after 3 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert-success, .alert-error, .alert-warning, .alert-info');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    alert.style.animation = 'fadeOut 0.5s ease-out forwards';
+                    setTimeout(function() {
+                        alert.remove();
+                    }, 500);
+                }, 3000);
+            });
+        });
+    </script>
 
     <!-- Content -->
     {% block content %}{% endblock %}

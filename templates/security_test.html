@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔒 Security Testing Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .status {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .test-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .test-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-color: #667eea;
+        }
+
+        .test-card.tested {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        }
+
+        .test-card.failed {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        }
+
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .test-icon {
+            font-size: 2em;
+        }
+
+        .test-status {
+            font-size: 1.5em;
+        }
+
+        .test-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .test-description {
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .test-details {
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        .test-url {
+            background: #fff;
+            padding: 8px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            width: 100%;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+            transform: scale(1.05);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .response-box {
+            margin-top: 15px;
+            padding: 15px;
+            background: #2d3748;
+            color: #68d391;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .response-box.show {
+            display: block;
+        }
+
+        .response-box pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 1em;
+            margin-top: 5px;
+        }
+
+        .controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .controls button {
+            margin: 0 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔒 Security Testing Dashboard</h1>
+        <p class="subtitle">Test all Security Endpoints easily</p>
+
+        <div id="appStatus" class="status info">
+            ⏳ Checking connection to application...
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalTests">0</div>
+                <div class="stat-label">Total Tests</div>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);">
+                <div class="stat-number" id="passedTests">0</div>
+                <div class="stat-label">✅ Passed</div>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);">
+                <div class="stat-number" id="failedTests">0</div>
+                <div class="stat-label">❌ Failed</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" onclick="testAllEndpoints()" style="width: auto; padding: 15px 40px;">
+                🚀 Test All Endpoints
+            </button>
+            <button class="btn" onclick="clearResults()" style="width: auto; padding: 15px 40px; background: #f45c43;">
+                🗑️ Clear Results
+            </button>
+        </div>
+
+        <div class="test-grid" id="testGrid">
+            <!-- Tests will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://127.0.0.1:5000';
+        let tests = [];
+        let stats = { total: 0, passed: 0, failed: 0 };
+
+        // Check app status
+        async function checkAppStatus() {
+            try {
+                const response = await fetch(`${BASE_URL}/api/security/test/public`);
+                if (response.ok) {
+                    showStatus('success', '✅ Application is running successfully!');
+                    loadTests();
+                } else {
+                    showStatus('error', '⚠️ Application is running but there is an API issue');
+                }
+            } catch (error) {
+                showStatus('error', `❌ Cannot connect to application. Make sure it's running on ${BASE_URL}`);
+            }
+        }
+
+        function showStatus(type, message) {
+            const statusDiv = document.getElementById('appStatus');
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+        }
+
+        // Load all tests
+        async function loadTests() {
+            try {
+                const response = await fetch(`${BASE_URL}/api/security/test/all`);
+                const data = await response.json();
+                tests = data.tests;
+                stats.total = tests.length;
+                updateStats();
+                renderTests();
+            } catch (error) {
+                showStatus('error', 'Failed to load test list');
+            }
+        }
+
+        // Render tests
+        function renderTests() {
+            const grid = document.getElementById('testGrid');
+            grid.innerHTML = '';
+
+            tests.forEach((test, index) => {
+                const card = document.createElement('div');
+                card.className = 'test-card';
+                card.id = `test-${index}`;
+
+                const icon = test.auth_required ? '🔒' : '🔓';
+                const rolesText = test.roles_required.length > 0 
+                    ? `Roles: ${test.roles_required.join(', ')}` 
+                    : 'No specific roles required';
+
+                card.innerHTML = `
+                    <div class="test-header">
+                        <span class="test-icon">${icon}</span>
+                        <span class="test-status" id="status-${index}"></span>
+                    </div>
+                    <div class="test-title">${test.name}</div>
+                    <div class="test-description">${test.description}</div>
+                    <div class="test-details">
+                        <strong>Method:</strong> ${test.method}<br>
+                        <strong>${rolesText}</strong>
+                    </div>
+                    <div class="test-url">${test.url}</div>
+                    <button class="btn" onclick="runTest(${index})">
+                        ▶️ Run Test
+                    </button>
+                    <div class="response-box" id="response-${index}"></div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // Run single test
+        async function runTest(index) {
+            const test = tests[index];
+            const card = document.getElementById(`test-${index}`);
+            const statusIcon = document.getElementById(`status-${index}`);
+            const responseBox = document.getElementById(`response-${index}`);
+
+            // Show loading
+            statusIcon.innerHTML = '⏳';
+            statusIcon.className = 'test-status loading';
+            responseBox.classList.remove('show');
+
+            try {
+                const response = await fetch(`${BASE_URL}${test.url}`);
+                const data = await response.json();
+
+                // Determine success
+                let success = false;
+                if (test.auth_required) {
+                    if (test.roles_required.length > 0) {
+                        // Should be 200 if user has role, or 403 if not
+                        success = response.status === 200 || response.status === 403;
+                    } else {
+                        // Should be 200 for any authenticated user
+                        success = response.status === 200;
+                    }
+                } else {
+                    // Public endpoint should always be 200
+                    success = response.status === 200;
+                }
+
+                // Update UI
+                if (success) {
+                    statusIcon.innerHTML = '✅';
+                    card.classList.add('tested');
+                    card.classList.remove('failed');
+                    stats.passed++;
+                } else {
+                    statusIcon.innerHTML = '❌';
+                    card.classList.add('failed');
+                    card.classList.remove('tested');
+                    stats.failed++;
+                }
+
+                // Show response
+                responseBox.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                responseBox.classList.add('show');
+
+                updateStats();
+
+            } catch (error) {
+                statusIcon.innerHTML = '❌';
+                card.classList.add('failed');
+                responseBox.innerHTML = `<pre>Error: ${error.message}</pre>`;
+                responseBox.classList.add('show');
+                stats.failed++;
+                updateStats();
+            }
+
+            statusIcon.classList.remove('loading');
+        }
+
+        // Test all endpoints
+        async function testAllEndpoints() {
+            stats.passed = 0;
+            stats.failed = 0;
+
+            for (let i = 0; i < tests.length; i++) {
+                await runTest(i);
+                await new Promise(resolve => setTimeout(resolve, 500)); // Delay between tests
+            }
+
+            showStatus('success', `✅ All tests completed! Success: ${stats.passed}/${stats.total}`);
+        }
+
+        // Clear results
+        function clearResults() {
+            stats.passed = 0;
+            stats.failed = 0;
+            updateStats();
+
+            document.querySelectorAll('.test-card').forEach(card => {
+                card.classList.remove('tested', 'failed');
+            });
+
+            document.querySelectorAll('.test-status').forEach(status => {
+                status.innerHTML = '';
+            });
+
+            document.querySelectorAll('.response-box').forEach(box => {
+                box.classList.remove('show');
+                box.innerHTML = '';
+            });
+
+            showStatus('info', '🔄 All results cleared');
+        }
+
+        // Update stats
+        function updateStats() {
+            document.getElementById('totalTests').textContent = stats.total;
+            document.getElementById('passedTests').textContent = stats.passed;
+            document.getElementById('failedTests').textContent = stats.failed;
+        }
+
+        // Initialize
+        checkAppStatus();
+    </script>
+</body>
+</html>

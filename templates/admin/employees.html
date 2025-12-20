@@ -142,6 +142,10 @@
                     <span class="icon">👥</span>
                     Employees
                 </a>
+                <a href="{{ url_for('admin_user_import') }}">
+                    <span class="icon">📥</span>
+                    User Import
+                </a>
                 <a href="{{ url_for('admin_attendance') }}">
                     <span class="icon">📅</span>
                     Attendance
@@ -250,7 +254,9 @@
                                     <td>
                                         <div class="actions">
                                             <a href="{{ url_for('admin_edit_employee', employee_id=emp.employee_id) }}" class="btn-sm">✏️ Edit</a>
-                                            <button class="btn-sm" onclick="deleteEmployee('{{ emp.employee_id }}', '{{ emp.first_name }} {{ emp.last_name }}')" style="background:#fde2e2; border-color:#f7c9c9; color:#c54949;">🗑️ Delete</button>
+                                            <form method="POST" action="{{ url_for('admin_delete_employee', employee_id=emp.employee_id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete {{ emp.first_name }} {{ emp.last_name }}?');">
+                                                <button type="submit" class="btn-sm" style="background:#fde2e2; border-color:#f7c9c9; color:#c54949;">🗑️ Delete</button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
@@ -271,7 +277,64 @@
         </main>
     </div>
 
+    <!-- Flash Message Display -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                {% if category == 'success' %}
+                    <!-- Success Alert (Auto-hide after 3 seconds) -->
+                    <div id="successAlert" class="alert-success" style="position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; min-width:300px; box-shadow:0 4px 12px rgba(0,0,0,0.15); animation:slideDown 0.3s ease;">
+                        {{ message }}
+                    </div>
+                {% elif category == 'danger' or category == 'error' %}
+                    <!-- Error Alert (Auto-hide after 3 seconds) -->
+                    <div id="errorAlert" class="alert-error" style="position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; min-width:300px; box-shadow:0 4px 12px rgba(0,0,0,0.15); animation:slideDown 0.3s ease;">
+                        {{ message }}
+                    </div>
+                {% elif category == 'warning' %}
+                    <!-- Warning Alert (Auto-hide after 3 seconds) -->
+                    <div id="warningAlert" style="position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; min-width:300px; background:#fff6cc; border:1px solid #f2e6a2; color:#9b7e00; padding:12px 14px; border-radius:14px; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,0.15); animation:slideDown 0.3s ease;">
+                        {{ message }}
+                    </div>
+                {% else %}
+                    <!-- Info Alert (Auto-hide after 3 seconds) -->
+                    <div id="infoAlert" style="position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; min-width:300px; background:#e8f4ff; border:1px solid #b3d9ff; color:#0056b3; padding:12px 14px; border-radius:14px; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,0.15); animation:slideDown 0.3s ease;">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+            <script>
+                setTimeout(function() {
+                    const successAlert = document.getElementById('successAlert');
+                    const errorAlert = document.getElementById('errorAlert');
+                    const warningAlert = document.getElementById('warningAlert');
+                    const infoAlert = document.getElementById('infoAlert');
+                    
+                    [successAlert, errorAlert, warningAlert, infoAlert].forEach(alert => {
+                        if (alert) {
+                            alert.style.animation = 'fadeOut 0.3s ease';
+                            setTimeout(() => alert.remove(), 300);
+                        }
+                    });
+                }, 3000);
+            </script>
+            <style>
+                @keyframes fadeOut {
+                    from { opacity: 1; transform: translateX(-50%) translateY(0); }
+                    to { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+                }
+            </style>
+        {% endif %}
+    {% endwith %}
+
     <script>
+        function closeFlashModal() {
+            const flashModal = document.getElementById('flashModal');
+            if (flashModal) {
+                flashModal.style.display = 'none';
+            }
+        }
+
         // Dropdown functionality
         const filterBtn = document.getElementById('departmentFilter');
         const dropdownMenu = document.getElementById('dropdownMenu');
@@ -342,29 +405,6 @@
                 row.style.display = matchFound ? '' : 'none';
             });
         });
-
-        // Delete employee
-        function deleteEmployee(id, name) {
-            if(confirm(`Are you sure you want to delete ${name}?`)) {
-                fetch(`/admin/employees/delete/${id}`, {
-                    method: 'DELETE',
-                    headers: {'Content-Type': 'application/json'}
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if(data.success) {
-                        alert('Employee deleted successfully');
-                        location.reload();
-                    } else {
-                        alert('Failed to delete employee');
-                    }
-                })
-                .catch(err => {
-                    console.error('Error:', err);
-                    alert('An error occurred');
-                });
-            }
-        }
     </script>
 </body>
 </html>
