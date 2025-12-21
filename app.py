@@ -821,7 +821,7 @@ def api_update_employee(id):
 def api_delete_employee(id):
     """Delete employee - JSON API"""
     try:
-        exec_sql("DELETE FROM employees WHERE id=%s", (id,), commit=True)
+        exec_sql("DELETE FROM employees WHERE employee_id=%s", (id,), commit=True)
         return jsonify({"success": True, "message": "Employee deleted"}), 200
     except Exception as e:
         app.logger.error(f"Delete employee error: {str(e)}")
