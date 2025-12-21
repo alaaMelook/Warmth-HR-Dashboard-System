@@ -312,139 +312,111 @@
     {% endwith %}
 
     <script>
-        function closeFlashModal() {
-            const flashModal = document.getElementById('flashModal');
-            if (flashModal) {
-                flashModal.style.display = 'none';
-            }
+    function closeFlashModal() {
+        const flashModal = document.getElementById('flashModal');
+        if (flashModal) {
+            flashModal.style.display = 'none';
         }
+    }
 
-        // Dropdown functionality
-        const filterBtn = document.getElementById('departmentFilter');
-        const dropdownMenu = document.getElementById('dropdownMenu');
-        const filterText = document.getElementById('filterText');
-        const dropdownItems = document.querySelectorAll('.dropdown-item');
+    // Dropdown functionality
+    const filterBtn = document.getElementById('departmentFilter');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+    const filterText = document.getElementById('filterText');
+    const dropdownItems = document.querySelectorAll('.dropdown-item');
 
-        filterBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            dropdownMenu.classList.toggle('show');
+    filterBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('show');
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!filterBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+            dropdownMenu.classList.remove('show');
+        }
+    });
+
+    dropdownItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            const text = this.textContent;
+            
+            dropdownItems.forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+            
+            filterText.textContent = text;
+            filterByDepartment(value);
+            dropdownMenu.classList.remove('show');
         });
+    });
 
-        document.addEventListener('click', function(e) {
-            if (!filterBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
-                dropdownMenu.classList.remove('show');
+    function filterByDepartment(department) {
+        const rows = document.querySelectorAll('#employeesTable tbody tr');
+        
+        rows.forEach(row => {
+            if (row.querySelector('.empty-state')) return;
+            
+            if (department === 'all') {
+                row.style.display = '';
+            } else {
+                const rowDept = row.getAttribute('data-department');
+                row.style.display = rowDept === department ? '' : 'none';
             }
         });
+    }
 
-        dropdownItems.forEach(item => {
-            item.addEventListener('click', function() {
-                const value = this.getAttribute('data-value');
-                const text = this.textContent;
-                
-                dropdownItems.forEach(i => i.classList.remove('active'));
-                this.classList.add('active');
-                
-                filterText.textContent = text;
-                filterByDepartment(value);
-                dropdownMenu.classList.remove('show');
-            });
-        });
-
-        function filterByDepartment(department) {
-            const rows = document.querySelectorAll('#employeesTable tbody tr');
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase().trim();
+        const rows = document.querySelectorAll('#employeesTable tbody tr');
+        
+        rows.forEach(row => {
+            if (row.querySelector('.empty-state')) return;
             
-            rows.forEach(row => {
-                if (row.querySelector('.empty-state')) return;
-                
-                if (department === 'all') {
-                    row.style.display = '';
-                } else {
-                    const rowDept = row.getAttribute('data-department');
-                    row.style.display = rowDept === department ? '' : 'none';
+            const name = row.querySelector('.employee-name')?.textContent.toLowerCase() || '';
+            const email = row.querySelector('.employee-email')?.textContent.toLowerCase() || '';
+            const cells = row.querySelectorAll('td');
+            const role = cells[1]?.textContent.toLowerCase() || '';
+            const department = cells[2]?.textContent.toLowerCase() || '';
+            const contact = cells[3]?.textContent.toLowerCase() || '';
+            
+            const matchFound = name.includes(searchTerm) || 
+                              email.includes(searchTerm) || 
+                              role.includes(searchTerm) || 
+                              department.includes(searchTerm) ||
+                              contact.includes(searchTerm);
+            
+            row.style.display = matchFound ? '' : 'none';
+        });
+    });
+
+    // Delete Employee function
+    function deleteEmployee(id) {
+        if (confirm('Are you sure you want to delete this employee?')) {
+            fetch(`/admin/employees/delete/${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
                 }
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Employee deleted successfully!');
+                    location.reload();
+                } else {
+                    return response.json().then(data => {
+                        alert(data.message || 'Failed to delete employee');
+                    });
+                }
+            })
+            .catch(err => {
+                console.error('Error:', err);
+                alert('Failed to delete employee. Please try again.');
             });
         }
-
-        // Search functionality
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase().trim();
-            const rows = document.querySelectorAll('#employeesTable tbody tr');
-            
-            rows.forEach(row => {
-                if (row.querySelector('.empty-state')) return;
-                
-                const name = row.querySelector('.employee-name')?.textContent.toLowerCase() || '';
-                const email = row.querySelector('.employee-email')?.textContent.toLowerCase() || '';
-                const cells = row.querySelectorAll('td');
-                const role = cells[1]?.textContent.toLowerCase() || '';
-                const department = cells[2]?.textContent.toLowerCase() || '';
-                const contact = cells[3]?.textContent.toLowerCase() || '';
-                
-                const matchFound = name.includes(searchTerm) || 
-                                  email.includes(searchTerm) || 
-                                  role.includes(searchTerm) || 
-                                  department.includes(searchTerm) ||
-                                  contact.includes(searchTerm);
-                
-                row.style.display = matchFound ? '' : 'none';
-            });
-        });
-
-        // JS for Add Employee with fetch POST (simple prompt example; add modal for full form)
-        function addEmployee() {
-            // Example: Prompt for data (replace with modal form for production)
-            const first_name = prompt('First Name:');
-            const last_name = prompt('Last Name:');
-            const email = prompt('Email:');
-            const phone = prompt('Phone:');
-            const department = prompt('Department:');
-            const role = prompt('Role:');
-            const status = prompt('Status:');
-
-            if (first_name && last_name && email) {
-                fetch('/api/employees', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        first_name, last_name, email, phone, department, role, status
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Employee added!');
-                        location.reload();
-                    } else {
-                        alert(data.message || 'Error adding employee');
-                    }
-                })
-                .catch(err => console.error('Error:', err));
-            }
-        }
-
-        // JS for Delete Employee with fetch DELETE
-        function deleteEmployee(id) {
-            if (confirm('Are you sure you want to delete this employee?')) {
-                fetch(`/api/employees/${id}`, {
-                    method: 'DELETE'
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Employee deleted successfully!');
-                        location.reload();
-                    } else {
-                        alert(data.message || 'Error deleting employee');
-                    }
-                })
-                .catch(err => console.error('Error:', err));
-            }
-        }
-    </script>
+    }
+</script>
 </body>
 </html>
-''')
 </parameter>
 </xai:function_call>
