@@ -222,44 +222,28 @@
                         </thead>
                         <tbody>
                             {% if employees %}
-                                {% for emp in employees %}
-                                <tr data-employee-id="{{ emp.employee_id }}" data-department="{{ emp.department_name|lower|replace(' ', '-') if emp.department_name else '' }}">
-                                    <td>
-                                        <div class="employee-cell">
-                                            <div class="avatar" style="width:38px; height:38px;">
-                                                {{ emp.first_name[0]|upper }}{{ emp.last_name[0]|upper }}
+                                {% for employee in employees %}
+                                    <tr data-department="{{ employee.department_name|lower|replace(' ', '-') if employee.department_name else 'unassigned' }}">
+                                        <td>
+                                            <div class="employee-cell">
+                                                <div class="avatar" style="background:linear-gradient(135deg,var(--brown1),var(--brown2));">{{ employee.first_name[0]|upper + employee.last_name[0]|upper }}</div>
+                                                <div>
+                                                    <div class="employee-name">{{ employee.first_name }} {{ employee.last_name }}</div>
+                                                    <div class="employee-email">{{ employee.email }}</div>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <div class="employee-name">{{ emp.first_name }} {{ emp.last_name }}</div>
-                                                <div class="employee-email">{{ emp.email }}</div>
+                                        </td>
+                                        <td>{{ employee.title_name or 'N/A' }}</td>
+                                        <td>{{ employee.department_name or 'Unassigned' }}</td>
+                                        <td>{{ employee.phone or 'N/A' }}</td>
+                                        <td>{{ employee.status }}</td>
+                                        <td>
+                                            <div style="display:flex;gap:8px;">
+                                                <a href="{{ url_for('admin_edit_employee', employee_id=employee.employee_id) }}" class="btn-sm secondary">Edit</a>
+                                                <button onclick="deleteEmployee({{ employee.employee_id }})" class="btn-sm danger">Delete</button>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td>{{ emp.title_name if emp.title_name else 'Not Assigned' }}</td>
-                                    <td>
-                                        <span class="pill">{{ emp.department_name if emp.department_name else 'Not Assigned' }}</span>
-                                    </td>
-                                    <td>{{ emp.phone if emp.phone else 'N/A' }}</td>
-                                    <td>
-                                        {% if emp.status == 'active' %}
-                                            <span class="pill" style="background:#dff8ea; border-color:#c9efd9; color:#2f8c52;">
-                                                {{ emp.status|capitalize }}
-                                            </span>
-                                        {% else %}
-                                            <span class="pill" style="background:#fde2e2; border-color:#f7c9c9; color:#c54949;">
-                                                {{ emp.status|capitalize if emp.status else 'Inactive' }}
-                                            </span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <div class="actions">
-                                            <a href="{{ url_for('admin_edit_employee', employee_id=emp.employee_id) }}" class="btn-sm">✏️ Edit</a>
-                                            <form method="POST" action="{{ url_for('admin_delete_employee', employee_id=emp.employee_id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete {{ emp.first_name }} {{ emp.last_name }}?');">
-                                                <button type="submit" class="btn-sm" style="background:#fde2e2; border-color:#f7c9c9; color:#c54949;">🗑️ Delete</button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
                                 {% endfor %}
                             {% else %}
                                 <tr>
@@ -405,6 +389,62 @@
                 row.style.display = matchFound ? '' : 'none';
             });
         });
+
+        // JS for Add Employee with fetch POST (simple prompt example; add modal for full form)
+        function addEmployee() {
+            // Example: Prompt for data (replace with modal form for production)
+            const first_name = prompt('First Name:');
+            const last_name = prompt('Last Name:');
+            const email = prompt('Email:');
+            const phone = prompt('Phone:');
+            const department = prompt('Department:');
+            const role = prompt('Role:');
+            const status = prompt('Status:');
+
+            if (first_name && last_name && email) {
+                fetch('/api/employees', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        first_name, last_name, email, phone, department, role, status
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Employee added!');
+                        location.reload();
+                    } else {
+                        alert(data.message || 'Error adding employee');
+                    }
+                })
+                .catch(err => console.error('Error:', err));
+            }
+        }
+
+        // JS for Delete Employee with fetch DELETE
+        function deleteEmployee(id) {
+            if (confirm('Are you sure you want to delete this employee?')) {
+                fetch(`/api/employees/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Employee deleted successfully!');
+                        location.reload();
+                    } else {
+                        alert(data.message || 'Error deleting employee');
+                    }
+                })
+                .catch(err => console.error('Error:', err));
+            }
+        }
     </script>
 </body>
 </html>
+''')
+</parameter>
+</xai:function_call>

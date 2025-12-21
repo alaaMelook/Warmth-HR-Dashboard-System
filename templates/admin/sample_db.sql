@@ -90,3 +90,29 @@ INSERT INTO `employees` (`employee_id`, `user_id`, `department_id`, `job_title_i
 -- (4, 5200.00, 350.00, 320.00, '2025-11-01', 'paid'),
 -- (5, 4500.00, 150.00, 250.00, '2025-11-01', 'paid'),
 -- (6, 6200.00, 750.00, 420.00, '2025-11-01', 'paid');
+
+-- ****************trial adds***********************
+-- -- Add holidays table
+-- CREATE TABLE `holidays` (
+--   `holiday_id` int(11) NOT NULL AUTO_INCREMENT,
+--   `name` varchar(100) NOT NULL,
+--   `date` date NOT NULL,
+--   PRIMARY KEY (`holiday_id`)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- -- Add notifications table
+-- CREATE TABLE `notifications` (
+--   `notification_id` int(11) NOT NULL AUTO_INCREMENT,
+--   `user_id` int(11) NOT NULL,
+--   `text` varchar(255) NOT NULL,
+--   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--   PRIMARY KEY (`notification_id`),
+--   KEY `user_id` (`user_id`),
+--   CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- -- Insert sample holidays
+-- INSERT INTO `holidays` (`name`, `date`) VALUES
+-- ('Christmas Day', '2025-12-25'),
+-- ('New Year\'s Day', '2026-01-01'),
+-- ('Republic Day', '2026-01-26');

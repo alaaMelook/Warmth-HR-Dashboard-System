@@ -103,7 +103,7 @@
                                         {{ holiday.created_at.strftime('%b %d, %Y') if holiday.created_at else 'N/A' }}
                                     </td>
                                     <td>
-                                        <form method="POST" action="{{ url_for('delete_holiday', holiday_id=holiday.holiday_id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this holiday?');">
+                                        <form method="POST" action="{{ url_for('delete_holiday', holiday_id=holiday.holiday_id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this holiday?');" data-requires-auth="true">>
                                             <button type="submit" class="btn-delete" style="padding:6px 12px; background:#c54949; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:13px;">
                                                 🗑️ Delete
                                             </button>
@@ -174,12 +174,12 @@
                                     </td>
                                     <td>
                                         <div style="display:flex; gap:8px;">
-                                            <form method="POST" action="{{ url_for('toggle_notification', notification_id=notif.notification_id) }}" style="display:inline;">
+                                            <form method="POST" action="{{ url_for('toggle_notification', notification_id=notif.notification_id) }}" style="display:inline;" data-requires-auth="true">
                                                 <button type="submit" class="btn-edit" style="padding:6px 12px; background:#f59e42; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:13px;">
                                                     {% if notif.is_active %}🔕 Deactivate{% else %}🔔 Activate{% endif %}
                                                 </button>
                                             </form>
-                                            <form method="POST" action="{{ url_for('delete_notification', notification_id=notif.notification_id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this notification?');">
+                                            <form method="POST" action="{{ url_for('delete_notification', notification_id=notif.notification_id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this notification?');" data-requires-auth="true">
                                                 <button type="submit" class="btn-delete" style="padding:6px 12px; background:#c54949; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:13px;">
                                                     🗑️ Delete
                                                 </button>
@@ -209,7 +209,7 @@
                 <h2 style="margin:0; color:var(--brown1);">Add Holiday</h2>
                 <button onclick="closeHolidayModal()" style="background:none; border:none; font-size:24px; cursor:pointer; color:#9b8f86;">&times;</button>
             </div>
-            <form method="POST" action="{{ url_for('add_holiday') }}">
+            <form method="POST" action="{{ url_for('add_holiday') }}" data-requires-auth="true">
                 <div class="form-group">
                     <label>Holiday Title *</label>
                     <input type="text" name="title" required placeholder="e.g., New Year's Day" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">
@@ -237,7 +237,7 @@
                 <h2 style="margin:0; color:var(--brown1);">Add Notification</h2>
                 <button onclick="closeNotificationModal()" style="background:none; border:none; font-size:24px; cursor:pointer; color:#9b8f86;">&times;</button>
             </div>
-            <form method="POST" action="{{ url_for('add_notification') }}">
+            <form method="POST" action="{{ url_for('add_notification') }}" data-requires-auth="true">>
                 <div class="form-group">
                     <label>Notification Title *</label>
                     <input type="text" name="title" required placeholder="e.g., System Maintenance" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;">

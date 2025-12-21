@@ -1,23 +1,130 @@
 {% extends "base.html" %}
 {% block content %}
+<style>
+  .auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+  }
+  
+  .auth-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    padding: 50px 40px;
+    max-width: 450px;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .auth-logo {
+    font-size: 64px;
+    margin-bottom: 20px;
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  .auth-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 10px;
+  }
+  
+  .auth-subtitle {
+    color: #718096;
+    font-size: 16px;
+    margin-bottom: 40px;
+  }
+  
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  }
+  
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+  }
+  
+  .btn:active {
+    transform: translateY(0);
+  }
+  
+  .info-box {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f7fafc;
+    border-radius: 10px;
+    border-left: 4px solid #667eea;
+  }
+  
+  .info-box p {
+    color: #4a5568;
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.6;
+  }
+  
+  .security-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    padding: 8px 16px;
+    background: #e6fffa;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #234e52;
+  }
+</style>
+
 <div class="auth-container">
   <div class="auth-card">
     <!-- Header -->
-    <div class="auth-header">
-      <div class="auth-logo">🔐</div>
-      <h1 class="auth-title">HR Management System</h1>
-      <p class="auth-subtitle">Secure login powered by Keycloak</p>
-    </div>
+    <div class="auth-logo">🔐</div>
+    <h1 class="auth-title">HR Management System</h1>
+    <p class="auth-subtitle">Secure login powered by Keycloak</p>
 
     <!-- Keycloak Login Button -->
-    <a href="{{ url_for('keycloak_login') }}" class="btn" style="display: block; text-align: center; text-decoration: none;">
-      🔐 Login with Keycloak
+    <a href="{{ url_for('keycloak_login') }}" class="btn">
+      <span style="font-size: 24px;">🔑</span>
+      <span>Login with Keycloak</span>
     </a>
 
-    <!-- Info Text -->
-    <div class="register-link" style="text-align: center; margin-top: 20px;">
-      <p style="color: #666; font-size: 14px;">
-        Click the button above to securely authenticate via Keycloak
+    <!-- Security Badge -->
+    <div class="security-badge">
+      <span>✅</span>
+      <span>Protected by JWT Authentication</span>
+    </div>
+
+    <!-- Info Box -->
+    <div class="info-box">
+      <p>
+        <strong>🛡️ Enterprise Security</strong><br>
+        Your credentials are verified through our centralized identity management system.
+        All communications are encrypted and token-based.
       </p>
     </div>
   </div>

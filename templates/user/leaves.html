@@ -57,7 +57,7 @@
       <h2 class="section-title">Request Leave</h2>
     </div>
 
-    <form class="form-grid" method="POST" action="{{ url_for('user_leaves') }}">
+    <form class="form-grid" method="POST" action="{{ url_for('user_leaves') }}" data-requires-auth="true"></form>>
       <div class="full-width">
         <label class="form-label">Leave Type <span class="required">*</span></label>
         <select name="leave_type" required>
