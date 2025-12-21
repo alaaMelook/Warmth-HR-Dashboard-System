@@ -1,0 +1,1292 @@
+2025-12-21 14:57:56 [INFO] app: ====================================================================================================
+2025-12-21 14:57:56 [INFO] app: ====================================================================================================
+2025-12-21 14:57:56 [INFO] app: [STARTUP] Flask Application Started - Log file: logs/app_2025-12-21.log
+2025-12-21 14:57:56 [INFO] app: [STARTUP] Flask Application Started - Log file: logs/app_2025-12-21.log
+2025-12-21 14:57:56 [INFO] app: ====================================================================================================
+2025-12-21 14:57:56 [INFO] app: ====================================================================================================
+2025-12-21 14:57:56 [DEBUG] urllib3.util.retry: Converted retries value: 1 -> Retry(total=1, connect=None, read=None, redirect=None, status=None)
+2025-12-21 14:57:56 [DEBUG] urllib3.util.retry: Converted retries value: 1 -> Retry(total=1, connect=None, read=None, redirect=None, status=None)
+2025-12-21 14:57:58 [DEBUG] urllib3.connectionpool: Starting new HTTP connection (1): localhost:8080
+2025-12-21 14:57:58 [DEBUG] urllib3.connectionpool: http://localhost:8080 "GET /realms/HR-System HTTP/1.1" 200 599
+2025-12-21 14:57:59 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-12-21 14:57:59 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-12-21 14:57:59 [INFO] werkzeug:  * Restarting with stat
+2025-12-21 14:58:00 [INFO] app: ====================================================================================================
+2025-12-21 14:58:00 [INFO] app: ====================================================================================================
+2025-12-21 14:58:00 [INFO] app: [STARTUP] Flask Application Started - Log file: logs/app_2025-12-21.log
+2025-12-21 14:58:00 [INFO] app: [STARTUP] Flask Application Started - Log file: logs/app_2025-12-21.log
+2025-12-21 14:58:00 [INFO] app: ====================================================================================================
+2025-12-21 14:58:00 [INFO] app: ====================================================================================================
+2025-12-21 14:58:00 [DEBUG] urllib3.util.retry: Converted retries value: 1 -> Retry(total=1, connect=None, read=None, redirect=None, status=None)
+2025-12-21 14:58:00 [DEBUG] urllib3.util.retry: Converted retries value: 1 -> Retry(total=1, connect=None, read=None, redirect=None, status=None)
+2025-12-21 14:58:01 [DEBUG] urllib3.connectionpool: Starting new HTTP connection (1): localhost:8080
+2025-12-21 14:58:01 [DEBUG] urllib3.connectionpool: http://localhost:8080 "GET /realms/HR-System HTTP/1.1" 200 599
+2025-12-21 14:58:01 [WARNING] werkzeug:  * Debugger is active!
+2025-12-21 14:58:01 [INFO] werkzeug:  * Debugger PIN: 295-651-110
+2025-12-21 14:58:01 [INFO] app: ====================================================================================================
+2025-12-21 14:58:01 [INFO] app: ====================================================================================================
+2025-12-21 14:58:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/logout
+2025-12-21 14:58:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/logout
+2025-12-21 14:58:01 [INFO] app: [ENDPOINT] logout
+2025-12-21 14:58:01 [INFO] app: [ENDPOINT] logout
+2025-12-21 14:58:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:01 [INFO] app: ====================================================================================================
+2025-12-21 14:58:01 [INFO] app: ====================================================================================================
+2025-12-21 14:58:01 [INFO] app: [LOGOUT] Redirect URI: http://127.0.0.1:5000/login
+2025-12-21 14:58:01 [INFO] app: [LOGOUT] Redirect URI: http://127.0.0.1:5000/login
+2025-12-21 14:58:01 [INFO] app: [LOGOUT] Full logout URL: http://localhost:8080/realms/HR-System/protocol/openid-connect/logout?post_logout_redirect_uri=http%3A%2F%2F127.0.0.1%3A5000%2Flogin&client_id=hr-frontend
+2025-12-21 14:58:01 [INFO] app: [LOGOUT] Full logout URL: http://localhost:8080/realms/HR-System/protocol/openid-connect/logout?post_logout_redirect_uri=http%3A%2F%2F127.0.0.1%3A5000%2Flogin&client_id=hr-frontend
+2025-12-21 14:58:01 [INFO] app: [OK] RESPONSE: 302 - GET /logout
+2025-12-21 14:58:01 [INFO] app: [OK] RESPONSE: 302 - GET /logout
+2025-12-21 14:58:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 14:58:01] "[32mGET /logout HTTP/1.1[0m" 302 -
+2025-12-21 14:58:01 [INFO] app: ====================================================================================================
+2025-12-21 14:58:01 [INFO] app: ====================================================================================================
+2025-12-21 14:58:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 14:58:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 14:58:01 [INFO] app: [ENDPOINT] login
+2025-12-21 14:58:01 [INFO] app: [ENDPOINT] login
+2025-12-21 14:58:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:01 [INFO] app: ====================================================================================================
+2025-12-21 14:58:01 [INFO] app: ====================================================================================================
+2025-12-21 14:58:01 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-21 14:58:01 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-21 14:58:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 14:58:01] "GET /login HTTP/1.1" 200 -
+2025-12-21 14:58:01 [INFO] app: ====================================================================================================
+2025-12-21 14:58:01 [INFO] app: ====================================================================================================
+2025-12-21 14:58:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/static/css/user.css
+2025-12-21 14:58:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/static/css/user.css
+2025-12-21 14:58:01 [INFO] app: [ENDPOINT] static
+2025-12-21 14:58:01 [INFO] app: [ENDPOINT] static
+2025-12-21 14:58:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:01 [INFO] app: ====================================================================================================
+2025-12-21 14:58:01 [INFO] app: ====================================================================================================
+2025-12-21 14:58:02 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-21 14:58:02 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-21 14:58:02 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 14:58:02] "[36mGET /static/css/user.css HTTP/1.1[0m" 304 -
+2025-12-21 14:58:02 [INFO] app: ====================================================================================================
+2025-12-21 14:58:02 [INFO] app: ====================================================================================================
+2025-12-21 14:58:02 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/favicon.ico
+2025-12-21 14:58:02 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/favicon.ico
+2025-12-21 14:58:02 [INFO] app: [ENDPOINT] None
+2025-12-21 14:58:02 [INFO] app: [ENDPOINT] None
+2025-12-21 14:58:02 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:02 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:02 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:02 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:02 [INFO] app: ====================================================================================================
+2025-12-21 14:58:02 [INFO] app: ====================================================================================================
+2025-12-21 14:58:02 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-21 14:58:02 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-21 14:58:02 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 14:58:02] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-12-21 14:58:02 [INFO] app: ====================================================================================================
+2025-12-21 14:58:02 [INFO] app: ====================================================================================================
+2025-12-21 14:58:02 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 14:58:02 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 14:58:02 [INFO] app: [ENDPOINT] login
+2025-12-21 14:58:02 [INFO] app: [ENDPOINT] login
+2025-12-21 14:58:02 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:02 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:02 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:02 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:02 [INFO] app: ====================================================================================================
+2025-12-21 14:58:02 [INFO] app: ====================================================================================================
+2025-12-21 14:58:02 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-21 14:58:02 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-21 14:58:02 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 14:58:02] "GET /login HTTP/1.1" 200 -
+2025-12-21 14:58:15 [INFO] app: ====================================================================================================
+2025-12-21 14:58:15 [INFO] app: ====================================================================================================
+2025-12-21 14:58:15 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/
+2025-12-21 14:58:15 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/
+2025-12-21 14:58:15 [INFO] app: [ENDPOINT] index
+2025-12-21 14:58:15 [INFO] app: [ENDPOINT] index
+2025-12-21 14:58:15 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:15 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:15 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:15 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:15 [INFO] app: ====================================================================================================
+2025-12-21 14:58:15 [INFO] app: ====================================================================================================
+2025-12-21 14:58:15 [INFO] app: [OK] RESPONSE: 302 - GET /
+2025-12-21 14:58:15 [INFO] app: [OK] RESPONSE: 302 - GET /
+2025-12-21 14:58:15 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 14:58:15] "[32mGET / HTTP/1.1[0m" 302 -
+2025-12-21 14:58:15 [INFO] app: ====================================================================================================
+2025-12-21 14:58:15 [INFO] app: ====================================================================================================
+2025-12-21 14:58:15 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 14:58:15 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 14:58:15 [INFO] app: [ENDPOINT] login
+2025-12-21 14:58:15 [INFO] app: [ENDPOINT] login
+2025-12-21 14:58:15 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:15 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:15 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:15 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:15 [INFO] app: ====================================================================================================
+2025-12-21 14:58:15 [INFO] app: ====================================================================================================
+2025-12-21 14:58:15 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-21 14:58:15 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-21 14:58:15 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 14:58:15] "GET /login HTTP/1.1" 200 -
+2025-12-21 14:58:15 [INFO] app: ====================================================================================================
+2025-12-21 14:58:15 [INFO] app: ====================================================================================================
+2025-12-21 14:58:15 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/static/css/user.css
+2025-12-21 14:58:15 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/static/css/user.css
+2025-12-21 14:58:15 [INFO] app: [ENDPOINT] static
+2025-12-21 14:58:15 [INFO] app: [ENDPOINT] static
+2025-12-21 14:58:15 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:15 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:15 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:15 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:15 [INFO] app: ====================================================================================================
+2025-12-21 14:58:15 [INFO] app: ====================================================================================================
+2025-12-21 14:58:15 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-21 14:58:15 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-21 14:58:15 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 14:58:15] "[36mGET /static/css/user.css HTTP/1.1[0m" 304 -
+2025-12-21 14:58:15 [INFO] app: ====================================================================================================
+2025-12-21 14:58:15 [INFO] app: ====================================================================================================
+2025-12-21 14:58:15 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/favicon.ico
+2025-12-21 14:58:15 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/favicon.ico
+2025-12-21 14:58:15 [INFO] app: [ENDPOINT] None
+2025-12-21 14:58:15 [INFO] app: [ENDPOINT] None
+2025-12-21 14:58:15 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:15 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:15 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:15 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:15 [INFO] app: ====================================================================================================
+2025-12-21 14:58:15 [INFO] app: ====================================================================================================
+2025-12-21 14:58:15 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-21 14:58:15 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-21 14:58:15 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 14:58:15] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-12-21 14:58:15 [INFO] app: ====================================================================================================
+2025-12-21 14:58:15 [INFO] app: ====================================================================================================
+2025-12-21 14:58:15 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 14:58:15 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 14:58:15 [INFO] app: [ENDPOINT] login
+2025-12-21 14:58:15 [INFO] app: [ENDPOINT] login
+2025-12-21 14:58:15 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:15 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:15 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:15 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:15 [INFO] app: ====================================================================================================
+2025-12-21 14:58:15 [INFO] app: ====================================================================================================
+2025-12-21 14:58:15 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-21 14:58:15 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-21 14:58:15 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 14:58:15] "GET /login HTTP/1.1" 200 -
+2025-12-21 14:58:16 [INFO] app: ====================================================================================================
+2025-12-21 14:58:16 [INFO] app: ====================================================================================================
+2025-12-21 14:58:16 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/keycloak-login
+2025-12-21 14:58:16 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/keycloak-login
+2025-12-21 14:58:16 [INFO] app: [ENDPOINT] keycloak_login
+2025-12-21 14:58:16 [INFO] app: [ENDPOINT] keycloak_login
+2025-12-21 14:58:16 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:16 [INFO] app: [IP] 127.0.0.1
+2025-12-21 14:58:16 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:16 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 14:58:16 [INFO] app: ====================================================================================================
+2025-12-21 14:58:16 [INFO] app: ====================================================================================================
+2025-12-21 14:58:16 [INFO] app: [OK] RESPONSE: 302 - GET /keycloak-login
+2025-12-21 14:58:16 [INFO] app: [OK] RESPONSE: 302 - GET /keycloak-login
+2025-12-21 14:58:16 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 14:58:16] "[32mGET /keycloak-login HTTP/1.1[0m" 302 -
+2025-12-21 15:12:04 [INFO] app: ====================================================================================================
+2025-12-21 15:12:04 [INFO] app: ====================================================================================================
+2025-12-21 15:12:04 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/favicon.ico
+2025-12-21 15:12:04 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/favicon.ico
+2025-12-21 15:12:04 [INFO] app: [ENDPOINT] None
+2025-12-21 15:12:04 [INFO] app: [ENDPOINT] None
+2025-12-21 15:12:04 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:12:04 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:12:04 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:12:04 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:12:04 [INFO] app: ====================================================================================================
+2025-12-21 15:12:04 [INFO] app: ====================================================================================================
+2025-12-21 15:12:04 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-21 15:12:04 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-21 15:12:04 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 15:12:04] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-12-21 15:12:04 [INFO] app: ====================================================================================================
+2025-12-21 15:12:04 [INFO] app: ====================================================================================================
+2025-12-21 15:12:04 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 15:12:04 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 15:12:04 [INFO] app: [ENDPOINT] login
+2025-12-21 15:12:04 [INFO] app: [ENDPOINT] login
+2025-12-21 15:12:04 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:12:04 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:12:04 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:12:04 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:12:04 [INFO] app: ====================================================================================================
+2025-12-21 15:12:04 [INFO] app: ====================================================================================================
+2025-12-21 15:12:04 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-21 15:12:04 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-21 15:12:04 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 15:12:04] "GET /login HTTP/1.1" 200 -
+2025-12-21 15:12:09 [INFO] app: ====================================================================================================
+2025-12-21 15:12:09 [INFO] app: ====================================================================================================
+2025-12-21 15:12:09 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/
+2025-12-21 15:12:09 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/
+2025-12-21 15:12:09 [INFO] app: [ENDPOINT] index
+2025-12-21 15:12:09 [INFO] app: [ENDPOINT] index
+2025-12-21 15:12:09 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:12:09 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:12:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:12:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:12:09 [INFO] app: ====================================================================================================
+2025-12-21 15:12:09 [INFO] app: ====================================================================================================
+2025-12-21 15:12:09 [INFO] app: [OK] RESPONSE: 302 - GET /
+2025-12-21 15:12:09 [INFO] app: [OK] RESPONSE: 302 - GET /
+2025-12-21 15:12:09 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 15:12:09] "[32mGET / HTTP/1.1[0m" 302 -
+2025-12-21 15:12:09 [INFO] app: ====================================================================================================
+2025-12-21 15:12:09 [INFO] app: ====================================================================================================
+2025-12-21 15:12:09 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 15:12:09 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 15:12:09 [INFO] app: [ENDPOINT] login
+2025-12-21 15:12:09 [INFO] app: [ENDPOINT] login
+2025-12-21 15:12:09 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:12:09 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:12:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:12:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:12:09 [INFO] app: ====================================================================================================
+2025-12-21 15:12:09 [INFO] app: ====================================================================================================
+2025-12-21 15:12:09 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-21 15:12:09 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-21 15:12:09 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 15:12:09] "GET /login HTTP/1.1" 200 -
+2025-12-21 15:12:09 [INFO] app: ====================================================================================================
+2025-12-21 15:12:09 [INFO] app: ====================================================================================================
+2025-12-21 15:12:09 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/static/css/user.css
+2025-12-21 15:12:09 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/static/css/user.css
+2025-12-21 15:12:09 [INFO] app: [ENDPOINT] static
+2025-12-21 15:12:09 [INFO] app: [ENDPOINT] static
+2025-12-21 15:12:09 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:12:09 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:12:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:12:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:12:09 [INFO] app: ====================================================================================================
+2025-12-21 15:12:09 [INFO] app: ====================================================================================================
+2025-12-21 15:12:09 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-21 15:12:09 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-21 15:12:09 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 15:12:09] "[36mGET /static/css/user.css HTTP/1.1[0m" 304 -
+2025-12-21 15:12:09 [INFO] app: ====================================================================================================
+2025-12-21 15:12:09 [INFO] app: ====================================================================================================
+2025-12-21 15:12:09 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/favicon.ico
+2025-12-21 15:12:09 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/favicon.ico
+2025-12-21 15:12:09 [INFO] app: [ENDPOINT] None
+2025-12-21 15:12:09 [INFO] app: [ENDPOINT] None
+2025-12-21 15:12:09 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:12:09 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:12:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:12:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:12:09 [INFO] app: ====================================================================================================
+2025-12-21 15:12:09 [INFO] app: ====================================================================================================
+2025-12-21 15:12:09 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-21 15:12:09 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-21 15:12:09 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 15:12:09] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-12-21 15:12:09 [INFO] app: ====================================================================================================
+2025-12-21 15:12:09 [INFO] app: ====================================================================================================
+2025-12-21 15:12:09 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 15:12:09 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 15:12:09 [INFO] app: [ENDPOINT] login
+2025-12-21 15:12:09 [INFO] app: [ENDPOINT] login
+2025-12-21 15:12:09 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:12:09 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:12:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:12:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:12:09 [INFO] app: ====================================================================================================
+2025-12-21 15:12:09 [INFO] app: ====================================================================================================
+2025-12-21 15:12:09 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-21 15:12:09 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-21 15:12:09 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 15:12:09] "GET /login HTTP/1.1" 200 -
+2025-12-21 15:12:45 [INFO] app: ====================================================================================================
+2025-12-21 15:12:45 [INFO] app: ====================================================================================================
+2025-12-21 15:12:45 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/static/css/user.css
+2025-12-21 15:12:45 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/static/css/user.css
+2025-12-21 15:12:45 [INFO] app: [ENDPOINT] static
+2025-12-21 15:12:45 [INFO] app: [ENDPOINT] static
+2025-12-21 15:12:45 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:12:45 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:12:45 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:12:45 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:12:45 [INFO] app: ====================================================================================================
+2025-12-21 15:12:45 [INFO] app: ====================================================================================================
+2025-12-21 15:12:45 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-21 15:12:45 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-21 15:12:45 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 15:12:45] "[36mGET /static/css/user.css HTTP/1.1[0m" 304 -
+2025-12-21 15:12:45 [INFO] app: ====================================================================================================
+2025-12-21 15:12:45 [INFO] app: ====================================================================================================
+2025-12-21 15:12:45 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-12-21 15:12:45 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-12-21 15:12:45 [INFO] app: [ENDPOINT] None
+2025-12-21 15:12:45 [INFO] app: [ENDPOINT] None
+2025-12-21 15:12:45 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:12:45 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:12:45 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:12:45 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:12:45 [INFO] app: ====================================================================================================
+2025-12-21 15:12:45 [INFO] app: ====================================================================================================
+2025-12-21 15:12:45 [INFO] app: [OK] RESPONSE: 302 - GET /.well-known/appspecific/com.chrome.devtools.json
+2025-12-21 15:12:45 [INFO] app: [OK] RESPONSE: 302 - GET /.well-known/appspecific/com.chrome.devtools.json
+2025-12-21 15:12:45 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 15:12:45] "[32mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 302 -
+2025-12-21 15:12:45 [INFO] app: ====================================================================================================
+2025-12-21 15:12:45 [INFO] app: ====================================================================================================
+2025-12-21 15:12:45 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 15:12:45 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 15:12:45 [INFO] app: [ENDPOINT] login
+2025-12-21 15:12:45 [INFO] app: [ENDPOINT] login
+2025-12-21 15:12:45 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:12:45 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:12:45 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:12:45 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:12:45 [INFO] app: ====================================================================================================
+2025-12-21 15:12:45 [INFO] app: ====================================================================================================
+2025-12-21 15:12:45 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-21 15:12:45 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-21 15:12:45 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 15:12:45] "GET /login HTTP/1.1" 200 -
+2025-12-21 15:13:01 [INFO] app: ====================================================================================================
+2025-12-21 15:13:01 [INFO] app: ====================================================================================================
+2025-12-21 15:13:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/keycloak-login
+2025-12-21 15:13:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/keycloak-login
+2025-12-21 15:13:01 [INFO] app: [ENDPOINT] keycloak_login
+2025-12-21 15:13:01 [INFO] app: [ENDPOINT] keycloak_login
+2025-12-21 15:13:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:13:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:13:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:13:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:13:01 [INFO] app: ====================================================================================================
+2025-12-21 15:13:01 [INFO] app: ====================================================================================================
+2025-12-21 15:13:01 [INFO] app: [OK] RESPONSE: 302 - GET /keycloak-login
+2025-12-21 15:13:01 [INFO] app: [OK] RESPONSE: 302 - GET /keycloak-login
+2025-12-21 15:13:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 15:13:01] "[32mGET /keycloak-login HTTP/1.1[0m" 302 -
+2025-12-21 15:13:09 [INFO] app: ====================================================================================================
+2025-12-21 15:13:09 [INFO] app: ====================================================================================================
+2025-12-21 15:13:09 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/callback?session_state=c22866f9-b53b-4a7e-9bd3-a984088c1c0a&iss=http://localhost:8080/realms/HR-System&code=7a839d18-98e9-4d5c-84ae-def837183c93.c22866f9-b53b-4a7e-9bd3-a984088c1c0a.248615f6-37c6-4046-9c2c-5c8d0862c0a2
+2025-12-21 15:13:09 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/callback?session_state=c22866f9-b53b-4a7e-9bd3-a984088c1c0a&iss=http://localhost:8080/realms/HR-System&code=7a839d18-98e9-4d5c-84ae-def837183c93.c22866f9-b53b-4a7e-9bd3-a984088c1c0a.248615f6-37c6-4046-9c2c-5c8d0862c0a2
+2025-12-21 15:13:09 [INFO] app: [ENDPOINT] keycloak_callback
+2025-12-21 15:13:09 [INFO] app: [ENDPOINT] keycloak_callback
+2025-12-21 15:13:09 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:13:09 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:13:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:13:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:13:09 [INFO] app: [PARAMS] {'session_state': 'c22866f9-b53b-4a7e-9bd3-a984088c1c0a', 'iss': 'http://localhost:8080/realms/HR-System', 'code': '7a839d18-98e9-4d5c-84ae-def837183c93.c22866f9-b53b-4a7e-9bd3-a984088c1c0a.248615f6-37c6-4046-9c2c-5c8d0862c0a2'}
+2025-12-21 15:13:09 [INFO] app: [PARAMS] {'session_state': 'c22866f9-b53b-4a7e-9bd3-a984088c1c0a', 'iss': 'http://localhost:8080/realms/HR-System', 'code': '7a839d18-98e9-4d5c-84ae-def837183c93.c22866f9-b53b-4a7e-9bd3-a984088c1c0a.248615f6-37c6-4046-9c2c-5c8d0862c0a2'}
+2025-12-21 15:13:09 [INFO] app: ====================================================================================================
+2025-12-21 15:13:09 [INFO] app: ====================================================================================================
+2025-12-21 15:13:09 [DEBUG] urllib3.connectionpool: Starting new HTTP connection (1): localhost:8080
+2025-12-21 15:13:09 [DEBUG] urllib3.connectionpool: http://localhost:8080 "POST /realms/HR-System/protocol/openid-connect/token HTTP/1.1" 200 3384
+2025-12-21 15:13:09 [INFO] app: [SECURITY] Token verified for user: ma@mo.com
+2025-12-21 15:13:09 [INFO] app: [SECURITY] Token verified for user: ma@mo.com
+2025-12-21 15:13:09 [DEBUG] app: [SECURITY] Extracted roles: ['manage-account', 'view-profile', 'EMPLOYEE', 'manage-account-links']
+2025-12-21 15:13:09 [DEBUG] app: [SECURITY] Extracted roles: ['manage-account', 'view-profile', 'EMPLOYEE', 'manage-account-links']
+2025-12-21 15:13:09 [INFO] app: [OK] RESPONSE: 302 - GET /callback
+2025-12-21 15:13:09 [INFO] app: [OK] RESPONSE: 302 - GET /callback
+2025-12-21 15:13:09 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 15:13:09] "[32mGET /callback?session_state=c22866f9-b53b-4a7e-9bd3-a984088c1c0a&iss=http://localhost:8080/realms/HR-System&code=7a839d18-98e9-4d5c-84ae-def837183c93.c22866f9-b53b-4a7e-9bd3-a984088c1c0a.248615f6-37c6-4046-9c2c-5c8d0862c0a2 HTTP/1.1[0m" 302 -
+2025-12-21 15:13:09 [INFO] app: ====================================================================================================
+2025-12-21 15:13:09 [INFO] app: ====================================================================================================
+2025-12-21 15:13:09 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 15:13:09 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 15:13:09 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 15:13:09 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 15:13:09 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:13:09 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:13:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:13:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:13:09 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 15:13:09 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 15:13:09 [INFO] app: ====================================================================================================
+2025-12-21 15:13:09 [INFO] app: ====================================================================================================
+2025-12-21 15:13:09 [INFO] app: [SECURITY] Token verified for user: ma@mo.com
+2025-12-21 15:13:09 [INFO] app: [SECURITY] Token verified for user: ma@mo.com
+2025-12-21 15:13:09 [DEBUG] app: [SECURITY] Extracted roles: ['manage-account', 'view-profile', 'EMPLOYEE', 'manage-account-links']
+2025-12-21 15:13:09 [DEBUG] app: [SECURITY] Extracted roles: ['manage-account', 'view-profile', 'EMPLOYEE', 'manage-account-links']
+2025-12-21 15:13:09 [INFO] app: [OK] RESPONSE: 200 - GET /user/dashboard
+2025-12-21 15:13:09 [INFO] app: [OK] RESPONSE: 200 - GET /user/dashboard
+2025-12-21 15:13:09 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 15:13:09] "GET /user/dashboard HTTP/1.1" 200 -
+2025-12-21 15:13:09 [INFO] app: ====================================================================================================
+2025-12-21 15:13:09 [INFO] app: ====================================================================================================
+2025-12-21 15:13:09 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-12-21 15:13:09 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-12-21 15:13:09 [INFO] app: [ENDPOINT] None
+2025-12-21 15:13:09 [INFO] app: [ENDPOINT] None
+2025-12-21 15:13:09 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:13:09 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:13:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:13:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:13:09 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 15:13:09 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 15:13:09 [INFO] app: ====================================================================================================
+2025-12-21 15:13:09 [INFO] app: ====================================================================================================
+2025-12-21 15:13:09 [INFO] app: ====================================================================================================
+2025-12-21 15:13:09 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/static/css/user.css
+2025-12-21 15:13:09 [INFO] app: ====================================================================================================
+2025-12-21 15:13:09 [INFO] app: [OK] RESPONSE: 302 - GET /.well-known/appspecific/com.chrome.devtools.json
+2025-12-21 15:13:09 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/static/css/user.css
+2025-12-21 15:13:09 [INFO] app: [ENDPOINT] static
+2025-12-21 15:13:09 [INFO] app: [OK] RESPONSE: 302 - GET /.well-known/appspecific/com.chrome.devtools.json
+2025-12-21 15:13:09 [INFO] app: [ENDPOINT] static
+2025-12-21 15:13:09 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:13:09 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 15:13:09] "[32mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 302 -
+2025-12-21 15:13:09 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:13:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:13:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:13:09 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 15:13:09 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 15:13:09 [INFO] app: ====================================================================================================
+2025-12-21 15:13:09 [INFO] app: ====================================================================================================
+2025-12-21 15:13:09 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-21 15:13:09 [INFO] app: ====================================================================================================
+2025-12-21 15:13:09 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-21 15:13:09 [INFO] app: ====================================================================================================
+2025-12-21 15:13:09 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 15:13:09] "[36mGET /static/css/user.css HTTP/1.1[0m" 304 -
+2025-12-21 15:13:09 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 15:13:09 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 15:13:09 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 15:13:09 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 15:13:09 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:13:09 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:13:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:13:09 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:13:09 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 15:13:09 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 15:13:09 [INFO] app: ====================================================================================================
+2025-12-21 15:13:09 [INFO] app: ====================================================================================================
+2025-12-21 15:13:09 [INFO] app: [SECURITY] Token verified for user: ma@mo.com
+2025-12-21 15:13:09 [INFO] app: [SECURITY] Token verified for user: ma@mo.com
+2025-12-21 15:13:09 [DEBUG] app: [SECURITY] Extracted roles: ['manage-account', 'view-profile', 'EMPLOYEE', 'manage-account-links']
+2025-12-21 15:13:09 [DEBUG] app: [SECURITY] Extracted roles: ['manage-account', 'view-profile', 'EMPLOYEE', 'manage-account-links']
+2025-12-21 15:13:09 [INFO] app: [OK] RESPONSE: 200 - GET /user/dashboard
+2025-12-21 15:13:09 [INFO] app: [OK] RESPONSE: 200 - GET /user/dashboard
+2025-12-21 15:13:09 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 15:13:09] "GET /user/dashboard HTTP/1.1" 200 -
+2025-12-21 15:13:10 [INFO] app: ====================================================================================================
+2025-12-21 15:13:10 [INFO] app: ====================================================================================================
+2025-12-21 15:13:10 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/favicon.ico
+2025-12-21 15:13:10 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/favicon.ico
+2025-12-21 15:13:10 [INFO] app: [ENDPOINT] None
+2025-12-21 15:13:10 [INFO] app: [ENDPOINT] None
+2025-12-21 15:13:10 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:13:10 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:13:10 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:13:10 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:13:10 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 15:13:10 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 15:13:10 [INFO] app: ====================================================================================================
+2025-12-21 15:13:10 [INFO] app: ====================================================================================================
+2025-12-21 15:13:10 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-21 15:13:10 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-21 15:13:10 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 15:13:10] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-12-21 15:13:10 [INFO] app: ====================================================================================================
+2025-12-21 15:13:10 [INFO] app: ====================================================================================================
+2025-12-21 15:13:10 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 15:13:10 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 15:13:10 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 15:13:10 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 15:13:10 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:13:10 [INFO] app: [IP] 127.0.0.1
+2025-12-21 15:13:10 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:13:10 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 15:13:10 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 15:13:10 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 15:13:10 [INFO] app: ====================================================================================================
+2025-12-21 15:13:10 [INFO] app: ====================================================================================================
+2025-12-21 15:13:10 [INFO] app: [SECURITY] Token verified for user: ma@mo.com
+2025-12-21 15:13:10 [INFO] app: [SECURITY] Token verified for user: ma@mo.com
+2025-12-21 15:13:10 [DEBUG] app: [SECURITY] Extracted roles: ['manage-account', 'view-profile', 'EMPLOYEE', 'manage-account-links']
+2025-12-21 15:13:10 [DEBUG] app: [SECURITY] Extracted roles: ['manage-account', 'view-profile', 'EMPLOYEE', 'manage-account-links']
+2025-12-21 15:13:10 [INFO] app: [OK] RESPONSE: 200 - GET /user/dashboard
+2025-12-21 15:13:10 [INFO] app: [OK] RESPONSE: 200 - GET /user/dashboard
+2025-12-21 15:13:10 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 15:13:10] "GET /user/dashboard HTTP/1.1" 200 -
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/attendance
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/attendance
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] user_attendance
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] user_attendance
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:00 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /user/attendance
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /user/attendance
+2025-12-21 21:15:00 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:00] "[32mGET /user/attendance HTTP/1.1[0m" 302 -
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:00 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:00] "[32mGET /login HTTP/1.1[0m" 302 -
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:00 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:00 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:00] "[32mGET /user/dashboard HTTP/1.1[0m" 302 -
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:00 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:00] "[32mGET /login HTTP/1.1[0m" 302 -
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:00 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:00 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:00] "[32mGET /user/dashboard HTTP/1.1[0m" 302 -
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:00 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:00] "[32mGET /login HTTP/1.1[0m" 302 -
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:00 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:00 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:00] "[32mGET /user/dashboard HTTP/1.1[0m" 302 -
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:00 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:00] "[32mGET /login HTTP/1.1[0m" 302 -
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:00 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:00 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:00] "[32mGET /user/dashboard HTTP/1.1[0m" 302 -
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:00 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:00] "[32mGET /login HTTP/1.1[0m" 302 -
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:00 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:00 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:00] "[32mGET /user/dashboard HTTP/1.1[0m" 302 -
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:00 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:00] "[32mGET /login HTTP/1.1[0m" 302 -
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:00 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:00 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:00] "[32mGET /user/dashboard HTTP/1.1[0m" 302 -
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:00 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:00] "[32mGET /login HTTP/1.1[0m" 302 -
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:00 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:00 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:00] "[32mGET /user/dashboard HTTP/1.1[0m" 302 -
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:00 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:00] "[32mGET /login HTTP/1.1[0m" 302 -
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:00 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:00 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:00] "[32mGET /user/dashboard HTTP/1.1[0m" 302 -
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:00 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:00] "[32mGET /login HTTP/1.1[0m" 302 -
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:00 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:00 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:00] "[32mGET /user/dashboard HTTP/1.1[0m" 302 -
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:00 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:00 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: ====================================================================================================
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:00 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:00 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:00] "[32mGET /login HTTP/1.1[0m" 302 -
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:01] "[32mGET /login HTTP/1.1[0m" 302 -
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:01 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:01] "[32mGET /user/dashboard HTTP/1.1[0m" 302 -
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:01] "[32mGET /login HTTP/1.1[0m" 302 -
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:01 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:01] "[32mGET /user/dashboard HTTP/1.1[0m" 302 -
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:01] "[32mGET /login HTTP/1.1[0m" 302 -
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:01 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:01] "[32mGET /user/dashboard HTTP/1.1[0m" 302 -
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:01] "[32mGET /login HTTP/1.1[0m" 302 -
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:01 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:01] "[32mGET /user/dashboard HTTP/1.1[0m" 302 -
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:01] "[32mGET /login HTTP/1.1[0m" 302 -
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:01 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:01] "[32mGET /user/dashboard HTTP/1.1[0m" 302 -
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:01] "[32mGET /login HTTP/1.1[0m" 302 -
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:01 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:01] "[32mGET /user/dashboard HTTP/1.1[0m" 302 -
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:01] "[32mGET /login HTTP/1.1[0m" 302 -
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:01 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:01] "[32mGET /user/dashboard HTTP/1.1[0m" 302 -
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:01] "[32mGET /login HTTP/1.1[0m" 302 -
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:01 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:01] "[32mGET /user/dashboard HTTP/1.1[0m" 302 -
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:01] "[32mGET /login HTTP/1.1[0m" 302 -
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:01 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:01] "[32mGET /user/dashboard HTTP/1.1[0m" 302 -
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /login
+2025-12-21 21:15:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:01] "[32mGET /login HTTP/1.1[0m" 302 -
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:01 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:01 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: [SESSION] User: mahmoud fahmy (ID: 2)
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [INFO] app: ====================================================================================================
+2025-12-21 21:15:01 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:01 [WARNING] app: [SECURITY] Token expired
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:01 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:01 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:01] "[32mGET /user/dashboard HTTP/1.1[0m" 302 -
+2025-12-21 21:15:03 [INFO] app: ====================================================================================================
+2025-12-21 21:15:03 [INFO] app: ====================================================================================================
+2025-12-21 21:15:03 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:03 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/user/dashboard
+2025-12-21 21:15:03 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:03 [INFO] app: [ENDPOINT] user_dashboard
+2025-12-21 21:15:03 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:03 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:03 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:03 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:03 [INFO] app: ====================================================================================================
+2025-12-21 21:15:03 [INFO] app: ====================================================================================================
+2025-12-21 21:15:03 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:03 [INFO] app: [OK] RESPONSE: 302 - GET /user/dashboard
+2025-12-21 21:15:03 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:03] "[32mGET /user/dashboard HTTP/1.1[0m" 302 -
+2025-12-21 21:15:03 [INFO] app: ====================================================================================================
+2025-12-21 21:15:03 [INFO] app: ====================================================================================================
+2025-12-21 21:15:03 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:03 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:03 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:03 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:03 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:03 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:03 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:03 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:03 [INFO] app: ====================================================================================================
+2025-12-21 21:15:03 [INFO] app: ====================================================================================================
+2025-12-21 21:15:03 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-21 21:15:03 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-21 21:15:03 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:03] "GET /login HTTP/1.1" 200 -
+2025-12-21 21:15:03 [INFO] app: ====================================================================================================
+2025-12-21 21:15:03 [INFO] app: ====================================================================================================
+2025-12-21 21:15:03 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/static/css/user.css
+2025-12-21 21:15:03 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/static/css/user.css
+2025-12-21 21:15:03 [INFO] app: [ENDPOINT] static
+2025-12-21 21:15:03 [INFO] app: [ENDPOINT] static
+2025-12-21 21:15:03 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:03 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:03 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:03 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:03 [INFO] app: ====================================================================================================
+2025-12-21 21:15:03 [INFO] app: ====================================================================================================
+2025-12-21 21:15:03 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-21 21:15:03 [INFO] app: [OK] RESPONSE: 304 - GET /static/css/user.css
+2025-12-21 21:15:03 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:03] "[36mGET /static/css/user.css HTTP/1.1[0m" 304 -
+2025-12-21 21:15:03 [INFO] app: ====================================================================================================
+2025-12-21 21:15:03 [INFO] app: ====================================================================================================
+2025-12-21 21:15:03 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/favicon.ico
+2025-12-21 21:15:03 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/favicon.ico
+2025-12-21 21:15:03 [INFO] app: [ENDPOINT] None
+2025-12-21 21:15:03 [INFO] app: [ENDPOINT] None
+2025-12-21 21:15:03 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:03 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:03 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:03 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:03 [INFO] app: ====================================================================================================
+2025-12-21 21:15:03 [INFO] app: ====================================================================================================
+2025-12-21 21:15:03 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-21 21:15:03 [INFO] app: [OK] RESPONSE: 302 - GET /favicon.ico
+2025-12-21 21:15:03 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:03] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-12-21 21:15:03 [INFO] app: ====================================================================================================
+2025-12-21 21:15:03 [INFO] app: ====================================================================================================
+2025-12-21 21:15:03 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:03 [INFO] app: [REQUEST] GET http://127.0.0.1:5000/login
+2025-12-21 21:15:03 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:03 [INFO] app: [ENDPOINT] login
+2025-12-21 21:15:03 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:03 [INFO] app: [IP] 127.0.0.1
+2025-12-21 21:15:03 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:03 [INFO] app: [USER-AGENT] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+2025-12-21 21:15:03 [INFO] app: ====================================================================================================
+2025-12-21 21:15:03 [INFO] app: ====================================================================================================
+2025-12-21 21:15:03 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-21 21:15:03 [INFO] app: [OK] RESPONSE: 200 - GET /login
+2025-12-21 21:15:03 [INFO] werkzeug: 127.0.0.1 - - [21/Dec/2025 21:15:03] "GET /login HTTP/1.1" 200 -
