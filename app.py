@@ -333,13 +333,14 @@ def login_required(f):
                 g.user_roles = get_user_roles(decoded_token)
                 return f(*args, **kwargs)
         
-        # Check if this is an API request (via path or Accept header)
+        # Check if this is an API request (AJAX or explicit JSON)
         is_api_request = request.path.startswith('/api/')
         is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
-        accepts_json = request.headers.get('Accept', '').find('application/json') != -1
+        is_json_content = request.headers.get('Content-Type', '').startswith('application/json')
+        wants_json = 'application/json' in request.headers.get('Accept', '').split(',')[0]
         
-        if is_api_request or is_ajax or accepts_json:
-            # Return JSON for API/AJAX requests
+        # Only return JSON for explicit API/AJAX requests
+        if is_api_request or is_ajax or is_json_content or (wants_json and request.method in ['POST', 'PUT', 'DELETE']):
             return jsonify({
                 "error": "Unauthorized",
                 "message": "Please login first."
@@ -533,12 +534,13 @@ def hr_management_required(f):
     def decorated(*args, **kwargs):
         # Check session
         if "user_id" not in session or "access_token" not in session:
-            # Check if this is an API request
-            is_api_request = request.path.startswith('/api/') or request.path.startswith('/admin/')
+            # Check if this is an API request (AJAX or explicit JSON)
             is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
-            accepts_json = request.headers.get('Accept', '').find('application/json') != -1
+            is_json_content = request.headers.get('Content-Type', '').startswith('application/json')
+            wants_json = 'application/json' in request.headers.get('Accept', '').split(',')[0]
             
-            if is_api_request or is_ajax or accepts_json:
+            # Only return JSON for explicit API/AJAX requests
+            if is_ajax or is_json_content or (wants_json and request.method in ['POST', 'PUT', 'DELETE']):
                 return jsonify({
                     "error": "Unauthorized",
                     "message": "Please login first."
@@ -550,12 +552,13 @@ def hr_management_required(f):
         # Verify token
         decoded_token = verify_keycloak_token(session["access_token"])
         if not decoded_token:
-            # Check if this is an API request
-            is_api_request = request.path.startswith('/api/') or request.path.startswith('/admin/')
+            # Check if this is an API request (AJAX or explicit JSON)
             is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
-            accepts_json = request.headers.get('Accept', '').find('application/json') != -1
+            is_json_content = request.headers.get('Content-Type', '').startswith('application/json')
+            wants_json = 'application/json' in request.headers.get('Accept', '').split(',')[0]
             
-            if is_api_request or is_ajax or accepts_json:
+            # Only return JSON for explicit API/AJAX requests
+            if is_ajax or is_json_content or (wants_json and request.method in ['POST', 'PUT', 'DELETE']):
                 return jsonify({
                     "error": "Unauthorized",
                     "message": "Invalid or expired session."
@@ -570,12 +573,13 @@ def hr_management_required(f):
         
         # Check if user has HR_ADMIN or HR_OFFICER role
         if "HR_ADMIN" not in user_roles and "HR_OFFICER" not in user_roles:
-            # Check if this is an API request
-            is_api_request = request.path.startswith('/api/') or request.path.startswith('/admin/')
+            # Check if this is an API request (AJAX or explicit JSON)
             is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
-            accepts_json = request.headers.get('Accept', '').find('application/json') != -1
+            is_json_content = request.headers.get('Content-Type', '').startswith('application/json')
+            wants_json = 'application/json' in request.headers.get('Accept', '').split(',')[0]
             
-            if is_api_request or is_ajax or accepts_json:
+            # Only return JSON for explicit API/AJAX requests
+            if is_ajax or is_json_content or (wants_json and request.method in ['POST', 'PUT', 'DELETE']):
                 return jsonify({
                     "error": "Forbidden",
                     "message": "Access denied. HR Management access required.",
