@@ -2805,6 +2805,13 @@ def unauthorized(e):
 
 @app.errorhandler(404)
 def not_found(e):
+    # Check if request expects JSON (API request)
+    if request.headers.get('Accept') == 'application/json' or \
+       request.headers.get('Content-Type') == 'application/json' or \
+       request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify({"error": "Resource not found"}), 404
+    
+    # For browser requests, redirect based on login status
     if "user_id" in session:
         if session.get("role_id") == 2:
             return redirect(url_for("admin_dashboard"))

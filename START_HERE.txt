@@ -170,3 +170,82 @@ Password: anything
 النتيجة المتوقعة:
 ✅ البحث يفشل أو يعطي نتائج فارغة
 ✅ لا يتم عرض كل الـ employees (لو كان vulnerable كان هيعرض كل البيانات)
+
+login as admin
+fetch('/user/dashboard', {credentials: 'include'})
+       .then(r => console.log('Status:', r.status))
+   ✅ Expected: Status: 200 (Token valid)      
+
+
+   Test JWT Verification - Invalid Token
+   - افتح Terminal → PowerShell
+   - Command:
+     Invoke-WebRequest -Uri "http://127.0.0.1:5000/api/attendance/check-in" -Method POST -UseBasicParsing
+   ✅ Expected: 401 Unauthorized + JSON error message
+
+  login as admin
+   fetch('/api/get-token', {credentials: 'include'})
+       .then(r => r.json())
+       .then(d => console.log('Token:', d.access_token.substring(0, 50)))
+   ✅ Expected: Token returned successfully
+
+
+  login as employee
+   http://127.0.0.1:5000/admin/employees
+   ✅ Expected: 403 Forbidden OR redirect to user dashboard
+
+
+   افتح app.py
+   - ابحث عن:
+     @hr_management_required
+     @admin_only_required
+     @login_required
+
+
+     Console Command:
+     fetch('/api/get-token', {credentials: 'include'})
+       .then(r => r.json())
+       .then(d => console.log('Access Token:', d.access_token ? '✓ Exists' : '✗ Missing'))
+   ✅ Expected: Access Token: ✓ Exists
+
+
+
+   Login كـ HR_ADMIN
+   - افتح Network tab → Clear
+   - اذهب إلى: Admin → Employees
+   - Click "Delete" على أي employee
+   - في Network tab:
+    Filter: /admin/employees/delete
+     * ابحث عن: Authorization: Bearer eyJ...   in request header
+   ✅ Expected: Authorization header present with Bearer token
+
+
+in terminal
+Command:
+     Get-ChildItem -Path templates -Filter "*.html" -Recurse | Select-String -Pattern "DB_CONFIG|mysql|DB_HOST"
+   ✅ Expected: No results found 
+
+
+   - افتح: static/js/keycloak_init.js
+   - ابحث عن: DB_CONFIG, mysql.connector, DB_PASSWORD
+
+
+
+   Login كـ ma@mo.com (EMPLOYEE)
+   - افتح Console
+   - Command:
+     fetch('http://127.0.0.1:5000/admin/payroll/update-salary', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Accept': 'application/json'  // ← ده المهم!
+  },
+  body: 'employee_id=1&basic_salary=5000',
+  credentials: 'include'
+}).then(r => {
+  console.log('Status:', r.status);
+  return r.json();
+}).then(d => console.log('Response:', d))
+   ✅ Expected:
+     Status: 403
+     Response: {"error":"Forbidden","message":"Access denied..."}
