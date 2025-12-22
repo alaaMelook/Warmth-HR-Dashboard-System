@@ -364,7 +364,7 @@
                 {% endif %}
             {% endwith %}
 
-            <form method="POST" action="{{ url_for('admin_add_employee') }}">
+            <form method="POST" action="{{ url_for('admin_add_employee') }}" data-requires-auth="true">>
                 <div class="form-grid">
                     <div class="form-group">
                         <label class="form-label">First Name *</label>

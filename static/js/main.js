@@ -1,261 +1,399 @@
-// ===== Search Functionality =====
-const searchInput = document.getElementById('searchInput');
-const employeesTable = document.getElementById('employeesTable');
+// ====================================
+// Keycloak Token Management - COMPLETE & FIXED
+// ====================================
 
-if (searchInput && employeesTable) {
-    searchInput.addEventListener('input', function(e) {
-        const searchTerm = e.target.value.toLowerCase().trim();
-        const rows = employeesTable.querySelectorAll('tbody tr');
+/**
+ * Get access token from backend session
+ */
+async function getAccessToken() {
+    try {
+        const response = await fetch('/api/get-token', {
+            method: 'GET',
+            credentials: 'include'
+        });
         
-        rows.forEach(row => {
-            // Skip empty state row
-            if (row.querySelector('.empty-state')) {
+        if (!response.ok) {
+            console.error('❌ Failed to get token:', response.status);
+            return null;
+        }
+        
+        const data = await response.json();
+        console.log('✅ Token retrieved successfully');
+        return data.access_token;
+    } catch (error) {
+        console.error('❌ Error fetching token:', error);
+        return null;
+    }
+}
+
+/**
+ * Make authenticated API call with JWT token
+ */
+async function authenticatedFetch(url, options = {}) {
+    const token = await getAccessToken();
+    
+    if (!token) {
+        console.error('❌ No access token available');
+        window.location.href = '/login';
+        return null;
+    }
+    
+    console.log('🔐 Making authenticated request to:', url);
+    console.log('🎫 Using token:', token.substring(0, 20) + '...');
+    
+    const headers = {
+        ...options.headers,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+    };
+    
+    try {
+        const response = await fetch(url, {
+            ...options,
+            headers,
+            credentials: 'include'
+        });
+        
+        console.log('📬 Response status:', response.status);
+        
+        if (response.status === 401) {
+            console.warn('⚠️ Token expired, redirecting to login...');
+            alert('Your session has expired. Please login again.');
+            window.location.href = '/login';
+            return null;
+        }
+        
+        if (response.status === 403) {
+            console.error('🚫 Access forbidden');
+            alert('Access denied. You do not have permission for this action.');
+            return response;
+        }
+        
+        return response;
+    } catch (error) {
+        console.error('❌ Fetch error:', error);
+        throw error;
+    }
+}
+
+// ====================================
+// DELETE BUTTON HANDLER (CRITICAL FIX)
+// ====================================
+
+/**
+ * Setup delete buttons with proper Authorization header
+ * This intercepts ALL delete form submissions
+ */
+function setupDeleteButtons() {
+    // Find all delete forms (they use POST method with hidden _method or actual DELETE)
+    const deleteForms = document.querySelectorAll('form[action*="delete"], button[data-action*="delete"]');
+    
+    console.log(`🔍 Found ${deleteForms.length} delete forms/buttons`);
+    
+    deleteForms.forEach(form => {
+        // If it's a button, find its parent form
+        const actualForm = form.tagName === 'FORM' ? form : form.closest('form');
+        
+        if (!actualForm) return;
+        
+        console.log('🗑️ Setting up delete handler for:', actualForm.action);
+        
+        actualForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const actionUrl = this.action;
+            const confirmMsg = this.dataset.confirm || 'Are you sure you want to delete this item?';
+            
+            // Confirm deletion
+            if (!confirm(confirmMsg)) {
+                console.log('❌ Delete cancelled by user');
                 return;
             }
             
-            const name = row.querySelector('.employee-name')?.textContent.toLowerCase() || '';
-            const email = row.querySelector('.employee-email')?.textContent.toLowerCase() || '';
-            const role = row.cells[1]?.textContent.toLowerCase() || '';
-            const department = row.cells[2]?.textContent.toLowerCase() || '';
-            const contact = row.cells[3]?.textContent.toLowerCase() || '';
+            console.log('🔐 Sending DELETE request to:', actionUrl);
             
-            const matchFound = name.includes(searchTerm) || 
-                              email.includes(searchTerm) || 
-                              role.includes(searchTerm) || 
-                              department.includes(searchTerm) ||
-                              contact.includes(searchTerm);
+            // Get token
+            const token = await getAccessToken();
+            if (!token) {
+                alert('Authentication required. Please login again.');
+                window.location.href = '/login';
+                return;
+            }
             
-            if (matchFound) {
-                row.classList.remove('hidden');
-            } else {
-                row.classList.add('hidden');
+            console.log('🎫 Token obtained:', token.substring(0, 30) + '...');
+            
+            try {
+                // Send DELETE request with Authorization header
+                const response = await fetch(actionUrl, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include'
+                });
+                
+                console.log('📬 Delete response status:', response.status);
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('✅ Delete successful:', result);
+                    
+                    alert(result.message || 'Item deleted successfully');
+                    
+                    // Redirect or reload
+                    if (this.dataset.redirect) {
+                        window.location.href = this.dataset.redirect;
+                    } else {
+                        window.location.reload();
+                    }
+                } else if (response.status === 403) {
+                    alert('Access denied. You do not have permission to delete this item.');
+                } else if (response.status === 401) {
+                    alert('Session expired. Please login again.');
+                    window.location.href = '/login';
+                } else {
+                    const error = await response.json().catch(() => ({ message: 'Delete failed' }));
+                    alert('Error: ' + (error.message || 'Failed to delete item'));
+                }
+            } catch (error) {
+                console.error('❌ Delete error:', error);
+                alert('An error occurred while deleting. Please try again.');
             }
         });
-        
-        // Check if all rows are hidden
-        const visibleRows = employeesTable.querySelectorAll('tbody tr:not(.hidden)');
-        if (visibleRows.length === 0 || (visibleRows.length === 1 && visibleRows[0].querySelector('.empty-state'))) {
-            showNoResults();
-        } else {
-            hideNoResults();
-        }
     });
 }
 
-// ===== Department Filter =====
-const departmentFilter = document.getElementById('departmentFilter');
-let currentFilter = 'all';
+// ====================================
+// FORM INTERCEPTORS - Add Authorization to Forms
+// ====================================
 
-if (departmentFilter) {
-    departmentFilter.addEventListener('click', function() {
-        // In a real implementation, this would show a dropdown menu
-        // For now, we'll cycle through departments
-        const departments = ['all', 'engineering', 'product', 'design', 'human resources', 'marketing', 'sales'];
-        const currentIndex = departments.indexOf(currentFilter);
-        const nextIndex = (currentIndex + 1) % departments.length;
-        currentFilter = departments[nextIndex];
-        
-        filterByDepartment(currentFilter);
-        updateFilterButtonText(currentFilter);
-    });
-}
-
-function filterByDepartment(department) {
-    const rows = employeesTable.querySelectorAll('tbody tr');
+/**
+ * Intercept form submissions that require authentication
+ */
+function setupFormInterceptors() {
+    // Find all forms with data-requires-auth attribute
+    const authForms = document.querySelectorAll('form[data-requires-auth="true"]');
     
-    rows.forEach(row => {
-        if (row.querySelector('.empty-state')) {
-            return;
-        }
+    console.log(`🔍 Found ${authForms.length} authenticated forms`);
+    
+    authForms.forEach(form => {
+        console.log('📝 Setting up auth form:', form.action);
         
-        if (department === 'all') {
-            row.classList.remove('hidden');
-        } else {
-            const rowDepartment = row.getAttribute('data-department');
-            if (rowDepartment === department.toLowerCase()) {
-                row.classList.remove('hidden');
-            } else {
-                row.classList.add('hidden');
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const actionUrl = this.action;
+            const method = this.method.toUpperCase() || 'POST';
+            
+            console.log(`🔐 Submitting authenticated form: ${method} ${actionUrl}`);
+            
+            // Get token
+            const token = await getAccessToken();
+            if (!token) {
+                alert('Authentication required. Please login again.');
+                window.location.href = '/login';
+                return;
             }
-        }
+            
+            const formData = new FormData(this);
+            
+            try {
+                const response = await fetch(actionUrl, {
+                    method: method,
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData,
+                    credentials: 'include'
+                });
+                
+                console.log('📬 Form response status:', response.status);
+                
+                if (response.ok) {
+                    console.log('✅ Form submitted successfully');
+                    
+                    // Redirect or reload
+                    if (this.dataset.redirect) {
+                        window.location.href = this.dataset.redirect;
+                    } else {
+                        window.location.reload();
+                    }
+                } else if (response.status === 403) {
+                    alert('Access denied. You do not have permission for this action.');
+                } else if (response.status === 401) {
+                    alert('Session expired. Please login again.');
+                    window.location.href = '/login';
+                } else {
+                    alert('Error submitting form. Please try again.');
+                }
+            } catch (error) {
+                console.error('❌ Form submission error:', error);
+                alert('An error occurred. Please try again.');
+            }
+        });
     });
 }
 
-function updateFilterButtonText(department) {
-    const filterText = departmentFilter.querySelector('span:last-child');
-    if (filterText) {
-        if (department === 'all') {
-            filterText.textContent = 'All Departments';
-        } else {
-            filterText.textContent = department.split(' ')
-                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                .join(' ');
-        }
+// ====================================
+// AJAX BUTTON HANDLERS (Check-in/Check-out)
+// ====================================
+
+/**
+ * Handle check-in/check-out buttons
+ */
+function setupAttendanceButtons() {
+    const checkInBtn = document.getElementById('check-in-btn');
+    const checkOutBtn = document.getElementById('check-out-btn');
+    
+    if (checkInBtn) {
+        console.log('⏰ Setting up check-in button');
+        checkInBtn.addEventListener('click', async () => {
+            const response = await authenticatedFetch('/api/attendance/check-in', {
+                method: 'POST'
+            });
+            
+            if (!response) return;
+            
+            if (response.ok) {
+                const result = await response.json();
+                alert(result.message || 'Checked in successfully!');
+                window.location.reload();
+            }
+        });
     }
-}
-
-// ===== Edit Employee Function =====
-function editEmployee(employeeId) {
-    // Redirect to edit page or show edit modal
-    console.log('Editing employee:', employeeId);
     
-    // Example: redirect to edit page
-    window.location.href = `/admin/employees/edit/${employeeId}`;
-    
-    // Or you can implement a modal for editing
-}
-
-// ===== Delete Employee Function =====
-function deleteEmployee(employeeId, employeeName) {
-    // Show confirmation dialog
-    const confirmed = confirm(`Are you sure you want to delete ${employeeName}?`);
-    
-    if (confirmed) {
-        // Send delete request
-        fetch(`/admin/employees/delete/${employeeId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Remove row from table
-                const row = document.querySelector(`tr[data-employee-id="${employeeId}"]`);
-                if (row) {
-                    row.remove();
-                }
-                
-                // Show success message
-                showNotification('Employee deleted successfully', 'success');
-                
-                // Check if table is empty
-                const remainingRows = employeesTable.querySelectorAll('tbody tr').length;
-                if (remainingRows === 0) {
-                    showEmptyState();
-                }
-            } else {
-                showNotification('Failed to delete employee', 'error');
+    if (checkOutBtn) {
+        console.log('⏰ Setting up check-out button');
+        checkOutBtn.addEventListener('click', async () => {
+            const response = await authenticatedFetch('/api/attendance/check-out', {
+                method: 'POST'
+            });
+            
+            if (!response) return;
+            
+            if (response.ok) {
+                const result = await response.json();
+                alert(result.message || 'Checked out successfully!');
+                window.location.reload();
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showNotification('An error occurred while deleting employee', 'error');
         });
     }
 }
 
-// ===== Notification System =====
-function showNotification(message, type = 'info') {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.textContent = message;
-    
-    // Add styles
-    notification.style.cssText = `
-        position: fixed;
-        top: 24px;
-        right: 24px;
-        padding: 16px 24px;
-        background: ${type === 'success' ? '#D1FAE5' : '#FEE2E2'};
-        color: ${type === 'success' ? '#065F46' : '#991B1B'};
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        z-index: 9999;
-        animation: slideIn 0.3s ease-out;
-        font-weight: 500;
-    `;
-    
-    // Add animation
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        @keyframes slideOut {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-        }
-    `;
-    document.head.appendChild(style);
-    
-    // Add to page
-    document.body.appendChild(notification);
-    
-    // Remove after 3 seconds
-    setTimeout(() => {
-        notification.style.animation = 'slideOut 0.3s ease-in';
-        setTimeout(() => {
-            notification.remove();
-        }, 300);
-    }, 3000);
-}
+// ====================================
+// API FUNCTIONS (Examples)
+// ====================================
 
-// ===== Helper Functions =====
-function showNoResults() {
-    const tbody = employeesTable.querySelector('tbody');
-    let noResultsRow = tbody.querySelector('.no-results-row');
+/**
+ * Get employees
+ */
+async function getEmployees() {
+    const response = await authenticatedFetch('/api/employees');
+    if (!response) return;
     
-    if (!noResultsRow) {
-        noResultsRow = document.createElement('tr');
-        noResultsRow.className = 'no-results-row';
-        noResultsRow.innerHTML = `
-            <td colspan="6" class="empty-state">
-                <div style="font-size: 48px; margin-bottom: 16px;">🔍</div>
-                <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">No results found</div>
-                <div style="font-size: 14px;">Try adjusting your search or filters</div>
-            </td>
-        `;
-        tbody.appendChild(noResultsRow);
-    }
-    
-    noResultsRow.style.display = '';
-}
-
-function hideNoResults() {
-    const noResultsRow = employeesTable.querySelector('.no-results-row');
-    if (noResultsRow) {
-        noResultsRow.style.display = 'none';
+    if (response.ok) {
+        return await response.json();
     }
 }
 
-function showEmptyState() {
-    const tbody = employeesTable.querySelector('tbody');
-    tbody.innerHTML = `
-        <tr>
-            <td colspan="6" class="empty-state">
-                <div style="font-size: 48px; margin-bottom: 16px;">📋</div>
-                <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">No employees found</div>
-                <div style="font-size: 14px;">Add your first employee to get started</div>
-            </td>
-        </tr>
-    `;
+/**
+ * Create employee
+ */
+async function createEmployee(employeeData) {
+    const response = await authenticatedFetch('/api/employees', {
+        method: 'POST',
+        body: JSON.stringify(employeeData)
+    });
+    
+    if (!response) return;
+    
+    if (response.ok) {
+        const result = await response.json();
+        console.log('Employee created:', result);
+        return result;
+    } else if (response.status === 403) {
+        alert('You do not have permission to create employees');
+    } else {
+        console.error('Failed to create employee:', response.status);
+    }
 }
 
-// ===== Initialize on page load =====
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Employee Management System Loaded');
+/**
+ * Delete employee (can also be called programmatically)
+ */
+async function deleteEmployee(employeeId) {
+    if (!confirm('Are you sure you want to delete this employee?')) return;
     
-    // Add any initialization code here
-    const employeeCount = employeesTable.querySelectorAll('tbody tr:not(.empty-state)').length;
-    console.log(`Total employees: ${employeeCount}`);
+    const response = await authenticatedFetch(`/api/employees/${employeeId}`, {
+        method: 'DELETE'
+    });
+    
+    if (!response) return;
+    
+    if (response.ok) {
+        alert('Employee deleted successfully');
+        window.location.reload();
+    }
+}
+
+/**
+ * Check if user is authenticated
+ */
+async function isAuthenticated() {
+    const token = await getAccessToken();
+    return !!token;
+}
+
+/**
+ * Logout function
+ */
+function logout() {
+    window.location.href = '/logout';
+}
+
+// ====================================
+// PAGE LOAD INITIALIZATION
+// ====================================
+
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log('🔐 Keycloak Integration Initializing...');
+    console.log('📍 Current page:', window.location.pathname);
+    
+    // Check if user is authenticated
+    const token = await getAccessToken();
+    if (token) {
+        console.log('✅ User is authenticated');
+        console.log('🎫 Token preview:', token.substring(0, 30) + '...');
+    } else {
+        console.log('⚠️ No token found (might be on login page)');
+    }
+    
+    // Setup all interceptors and handlers
+    setupDeleteButtons();     // 🗑️ Critical for delete functionality
+    setupFormInterceptors();  // 📝 For forms with data-requires-auth
+    setupAttendanceButtons(); // ⏰ For check-in/check-out
+    
+    console.log('✅ All handlers initialized successfully');
+    
+    // Test on employees page
+    if (window.location.pathname.includes('/admin/employees')) {
+        console.log('📋 On employees page - ready for operations');
+    }
 });
 
-// ===== Export functions for use in inline scripts =====
-window.editEmployee = editEmployee;
-window.deleteEmployee = deleteEmployee;
+// ====================================
+// EXPORT FOR GLOBAL USE
+// ====================================
+window.keycloakAuth = {
+    getAccessToken,
+    authenticatedFetch,
+    getEmployees,
+    createEmployee,
+    deleteEmployee,
+    isAuthenticated,
+    logout
+};
+
+console.log('✅ Keycloak Auth loaded. Available at: window.keycloakAuth');

@@ -130,3 +130,43 @@ http://127.0.0.1:5000/api/security/test/authenticated            1. Login (as an
 
 http://127.0.0.1:5000/security-test
 http://127.0.0.1:5000/api/security/test/all
+
+
+
+
+
+fetch("mysql://127.0.0.1:3306/hr_management") in console
+CTRL + U  seacrh: mysql - insert - password - 3306
+fetch("/api/employees/1", { method: "DELETE" })    in console
+  .then(r => r.status)
+  .then(console.log)
+
+
+  http://127.0.0.1:5000/api/employees in search 
+
+  fetch("/api/employees/1", { method: "DELETE" })
+  .then(r => r.status)
+  .then(console.log)   when as admin or user 
+
+
+Test 1: محاولة وصول غير مصرح:
+
+افتح المتصفح
+اذهب إلى: http://127.0.0.1:5000/admin/employees
+النتيجة المتوقعة: Redirect to login ✅
+
+2. Login (محمي بـ Keycloak)
+في صفحة Login:
+
+Email: ' OR '1'='1
+Password: anything
+
+
+سجل دخول كـ HR_ADMIN
+
+في Search box أعلى صفحة الـ employees اكتب:
+
+أو جرب:  ' OR 1=1 --                admin' OR '1'='1
+النتيجة المتوقعة:
+✅ البحث يفشل أو يعطي نتائج فارغة
+✅ لا يتم عرض كل الـ employees (لو كان vulnerable كان هيعرض كل البيانات)

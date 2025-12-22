@@ -18,12 +18,12 @@ from mysql.connector import Error
 from keycloak import KeycloakOpenID
 from jose import jwt, JWTError
 import requests
-
 # ========== Load Environment Variables ==========
 from dotenv import load_dotenv
 load_dotenv()  # This loads the .env file
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET", "dev-secret-key-change-in-production")
+app.config['KEYCLOAK_URL'] = os.environ.get("KEYCLOAK_SERVER_URL", "http://localhost:8080")
 
 # ========== Session Configuration ==========
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=8)  # Session expires after 8 hours of inactivity
@@ -315,15 +315,37 @@ def login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         # First check session (for compatibility)
+                # أولاً: جرب جيب الـ token من Authorization header (للـ API calls من JS)
+        auth_header = request.headers.get("Authorization")
+        if auth_header and auth_header.startswith("Bearer "):
+            token = auth_header.split(" ")[1]
+            decoded_token = verify_keycloak_token(token)
+            if decoded_token:
+                g.user_email = decoded_token.get("email")
+                g.user_roles = get_user_roles(decoded_token)
+                return f(*args, **kwargs)
+
+        # ثانياً: fallback للـ session (للـ HTML routes أو الطريقة القديمة)
         if "user_id" in session and "access_token" in session:
-            # Verify token is still valid
             decoded_token = verify_keycloak_token(session["access_token"])
             if decoded_token:
                 g.user_email = decoded_token.get("email")
                 g.user_roles = get_user_roles(decoded_token)
                 return f(*args, **kwargs)
         
-        # No valid session, redirect to login
+        # Check if this is an API request (via path or Accept header)
+        is_api_request = request.path.startswith('/api/')
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+        accepts_json = request.headers.get('Accept', '').find('application/json') != -1
+        
+        if is_api_request or is_ajax or accepts_json:
+            # Return JSON for API/AJAX requests
+            return jsonify({
+                "error": "Unauthorized",
+                "message": "Please login first."
+            }), 401
+        
+        # Redirect to login for web pages
         flash("Please login first.", "danger")
         return redirect(url_for("login"))
     
@@ -410,9 +432,19 @@ def role_required(*required_roles):
     def decorator(f):
         @wraps(f)
         def decorated(*args, **kwargs):
-            if "access_token" not in session:
-                app.logger.warning(f"[SECURITY] Unauthorized access attempt to {f.__name__}")
+                        # أولاً: جرب جيب الـ token من Authorization header
+            auth_header = request.headers.get("Authorization")
+            if auth_header and auth_header.startswith("Bearer "):
+                token = auth_header.split(" ")[1]
+            else:
+                # لو مفيش header، جرب من الـ session (fallback)
+                token = session.get("access_token")
+
+            if not token:
+                app.logger.warning(f"[SECURITY] No token provided for {f.__name__}")
                 return jsonify({"error": "Unauthorized", "message": "Authentication required"}), 401
+
+            decoded_token = verify_keycloak_token(token)
             
             decoded_token = verify_keycloak_token(session["access_token"])
             if not decoded_token:
@@ -501,12 +533,34 @@ def hr_management_required(f):
     def decorated(*args, **kwargs):
         # Check session
         if "user_id" not in session or "access_token" not in session:
+            # Check if this is an API request
+            is_api_request = request.path.startswith('/api/') or request.path.startswith('/admin/')
+            is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+            accepts_json = request.headers.get('Accept', '').find('application/json') != -1
+            
+            if is_api_request or is_ajax or accepts_json:
+                return jsonify({
+                    "error": "Unauthorized",
+                    "message": "Please login first."
+                }), 401
+            
             flash("Please login first.", "danger")
             return redirect(url_for("login"))
         
         # Verify token
         decoded_token = verify_keycloak_token(session["access_token"])
         if not decoded_token:
+            # Check if this is an API request
+            is_api_request = request.path.startswith('/api/') or request.path.startswith('/admin/')
+            is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+            accepts_json = request.headers.get('Accept', '').find('application/json') != -1
+            
+            if is_api_request or is_ajax or accepts_json:
+                return jsonify({
+                    "error": "Unauthorized",
+                    "message": "Invalid or expired session."
+                }), 401
+            
             flash("Invalid or expired session.", "danger")
             session.clear()
             return redirect(url_for("login"))
@@ -516,6 +570,19 @@ def hr_management_required(f):
         
         # Check if user has HR_ADMIN or HR_OFFICER role
         if "HR_ADMIN" not in user_roles and "HR_OFFICER" not in user_roles:
+            # Check if this is an API request
+            is_api_request = request.path.startswith('/api/') or request.path.startswith('/admin/')
+            is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+            accepts_json = request.headers.get('Accept', '').find('application/json') != -1
+            
+            if is_api_request or is_ajax or accepts_json:
+                return jsonify({
+                    "error": "Forbidden",
+                    "message": "Access denied. HR Management access required.",
+                    "required_roles": ["HR_ADMIN", "HR_OFFICER"],
+                    "user_roles": user_roles
+                }), 403
+            
             flash("Access denied. HR Management access required.", "danger")
             return redirect(url_for("user_dashboard"))
         
@@ -537,12 +604,18 @@ def admin_only_required(f):
     def decorated(*args, **kwargs):
         # Check session
         if "user_id" not in session or "access_token" not in session:
+            # Check if it's an API request
+            if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest" or request.path.startswith("/api/"):
+                return jsonify({"error": "Please login first.", "message": "Please login first."}), 401
             flash("Please login first.", "danger")
             return redirect(url_for("login"))
         
         # Verify token
         decoded_token = verify_keycloak_token(session["access_token"])
         if not decoded_token:
+            # Check if it's an API request
+            if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest" or request.path.startswith("/api/"):
+                return jsonify({"error": "Invalid or expired session.", "message": "Invalid or expired session."}), 401
             flash("Invalid or expired session.", "danger")
             session.clear()
             return redirect(url_for("login"))
@@ -552,7 +625,10 @@ def admin_only_required(f):
         
         # Check if user has HR_ADMIN role only
         if "HR_ADMIN" not in user_roles:
-            flash("Access denied , Admin only.", "danger")
+            # Check if it's an API request (AJAX/fetch from JavaScript)
+            if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest" or request.path.startswith("/api/"):
+                return jsonify({"error": "Access denied, Admin only.", "message": "Access denied, Admin only."}), 403
+            flash("Access denied, Admin only.", "danger")
             # Return to previous page instead of redirecting to another page
             return redirect(request.referrer or url_for("admin_dashboard"))
         
@@ -680,6 +756,8 @@ def keycloak_callback():
         
         token_data = response.json()
         access_token = token_data.get('access_token')
+        refresh_token = token_data.get('refresh_token')
+        session["refresh_token"] = refresh_token   # نخزن الـ refresh token في الـ session
         
         print(f"✅ Token received successfully!")
         
@@ -738,7 +816,73 @@ def keycloak_callback():
         traceback.print_exc()
         flash(f"Login error: {str(e)}", "danger")
         return redirect(url_for("login"))
+    
+@app.route("/api/get-token")
+@login_required
+def api_get_token():
+    """
+    يرجع الـ access token و refresh token للـ JavaScript عشان يخزنهم في localStorage
+    """
+    return jsonify({
+        "access_token": session.get("access_token"),
+        "refresh_token": session.get("refresh_token")
+    })
 
+# ==================== API Routes for Employees ====================
+
+@app.route("/api/employees", methods=["GET"])
+@login_required
+@role_required('HR_ADMIN', 'HR_MANAGER', 'HR_OFFICER')  # Adjust roles as per your system
+def api_get_employees():
+    """Get all employees - JSON API"""
+    employees = qall("SELECT * FROM employees")
+    return jsonify(employees), 200
+
+@app.route("/api/employees", methods=["POST"])
+@login_required
+@role_required('HR_ADMIN', 'HR_MANAGER')
+def api_add_employee():
+    """Add new employee - JSON API"""
+    data = request.json  # Expect JSON from frontend
+    try:
+        last_id, _ = exec_sql("""
+            INSERT INTO employees (first_name, last_name, email, phone, department, role, status)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """, (data['first_name'], data['last_name'], data['email'], data['phone'], data['department'], data['role'], data['status']), commit=True)
+        return jsonify({"success": True, "message": "Employee added", "id": last_id}), 201
+    except Exception as e:
+        app.logger.error(f"Add employee error: {str(e)}")
+        return jsonify({"success": False, "message": "Failed to add employee"}), 500
+
+@app.route("/api/employees/<int:id>", methods=["PUT"])
+@login_required
+@role_required('HR_ADMIN', 'HR_MANAGER')
+def api_update_employee(id):
+    """Update employee - JSON API"""
+    data = request.json
+    try:
+        exec_sql("""
+            UPDATE employees 
+            SET first_name=%s, last_name=%s, email=%s, phone=%s, department=%s, role=%s, status=%s
+            WHERE id=%s
+        """, (data['first_name'], data['last_name'], data['email'], data['phone'], data['department'], data['role'], data['status'], id), commit=True)
+        return jsonify({"success": True, "message": "Employee updated"}), 200
+    except Exception as e:
+        app.logger.error(f"Update employee error: {str(e)}")
+        return jsonify({"success": False, "message": "Failed to update employee"}), 500
+
+@app.route("/api/employees/<int:id>", methods=["DELETE"])
+@login_required
+@role_required('HR_ADMIN')
+def api_delete_employee(id):
+    """Delete employee - JSON API"""
+    try:
+        exec_sql("DELETE FROM employees WHERE employee_id=%s", (id,), commit=True)
+        return jsonify({"success": True, "message": "Employee deleted"}), 200
+    except Exception as e:
+        app.logger.error(f"Delete employee error: {str(e)}")
+        return jsonify({"success": False, "message": "Failed to delete employee"}), 500
+    
 # ==================== LOGIN & REGISTER ====================
 
 @app.route("/login", methods=["GET"])
@@ -1060,10 +1204,13 @@ def admin_edit_employee(employee_id):
 @app.route("/admin/employees/delete/<int:employee_id>", methods=["DELETE", "POST"])
 @admin_only_required
 def admin_delete_employee(employee_id):
+    # Check if request is from JavaScript (AJAX/fetch)
+    is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest" or request.is_json or request.method == "DELETE"
+    
     try:
         emp_row = q1("SELECT user_id FROM employees WHERE employee_id=%s", (employee_id,))
         if not emp_row:
-            if request.method == "DELETE":
+            if is_ajax:
                 return jsonify({"success": False, "message": "Employee not found"}), 404
             flash("Employee not found.", "danger")
             return redirect(url_for("admin_employees"))
@@ -1086,12 +1233,12 @@ def admin_delete_employee(employee_id):
         # 5. Delete user account
         exec_sql("DELETE FROM users WHERE user_id=%s", (user_id,))
 
-        if request.method == "DELETE":
+        if is_ajax:
             return jsonify({"success": True, "message": "Employee deleted successfully"})
         flash("Employee deleted successfully!", "success")
         return redirect(url_for("admin_employees"))
     except Exception as e:
-        if request.method == "DELETE":
+        if is_ajax:
             return jsonify({"success": False, "message": str(e)}), 500
         flash(f"Error deleting employee: {str(e)}", "danger")
         return redirect(url_for("admin_employees"))
@@ -2550,23 +2697,31 @@ def api_check_in():
         if not employee:
             return jsonify({"success": False, "message": "Employee not found"}), 404
 
+        # شوفي لو checked in النهارده
         existing = q1("""
-            SELECT attendance_id
-            FROM attendance
+            SELECT attendance_id FROM attendance
             WHERE employee_id=%s AND attendance_date=CURDATE()
-            LIMIT 1
         """, (employee["employee_id"],))
         if existing:
             return jsonify({"success": False, "message": "Already checked in today"}), 400
 
-        exec_sql("""
-            INSERT INTO attendance (employee_id, attendance_date, check_in, status)
-            VALUES (%s, CURDATE(), CURTIME(), 'present')
-        """, (employee["employee_id"],))
+        last_id, _ = exec_sql("""
+            INSERT INTO attendance (employee_id, attendance_date, check_in)
+            VALUES (%s, CURDATE(), CURTIME())
+        """, (employee["employee_id"],), commit=True)
 
-        return jsonify({"success": True, "message": "Checked in successfully", "check_in_time": datetime.now().strftime("%H:%M:%S")})
+        check_in_time = datetime.now().strftime("%H:%M:%S")
+        app.logger.info(f"Employee {employee['employee_id']} checked in at {check_in_time}")
+
+        return jsonify({
+            "success": True,
+            "message": "Checked in successfully",
+            "check_in_time": check_in_time
+        }), 201
+
     except Exception as e:
-        return jsonify({"success": False, "message": str(e)}), 500
+        app.logger.error(f"Check-in error: {str(e)}")
+        return jsonify({"success": False, "message": "Internal server error"}), 500
 
 @app.route("/api/attendance/check-out", methods=["POST"])
 @login_required
@@ -2589,11 +2744,20 @@ def api_check_out():
             UPDATE attendance
             SET check_out = CURTIME()
             WHERE attendance_id=%s
-        """, (att["attendance_id"],))
+        """, (att["attendance_id"],), commit=True)
 
-        return jsonify({"success": True, "message": "Checked out successfully", "check_out_time": datetime.now().strftime("%H:%M:%S")})
+        check_out_time = datetime.now().strftime("%H:%M:%S")
+        app.logger.info(f"Employee {employee['employee_id']} checked out at {check_out_time}")
+
+        return jsonify({
+            "success": True, 
+            "message": "Checked out successfully", 
+            "check_out_time": check_out_time
+        }), 200
+
     except Exception as e:
-        return jsonify({"success": False, "message": str(e)}), 500
+        app.logger.error(f"Check-out error: {str(e)}")
+        return jsonify({"success": False, "message": "Internal server error"}), 500
 
 # ==================== ERROR HANDLERS ====================
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 20, 2025 at 03:09 AM
+-- Generation Time: Dec 22, 2025 at 02:02 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -47,7 +47,7 @@ INSERT INTO `attendance` (`attendance_id`, `employee_id`, `attendance_date`, `ch
 (7, 8, '2025-12-16', '01:31:39', NULL, 'present'),
 (8, 3, '2025-12-19', '20:38:09', '21:05:50', 'present'),
 (9, 3, '2025-12-20', '03:18:25', '03:18:32', 'present'),
-(11, 11, '2025-12-20', '03:24:37', '03:24:43', 'present');
+(12, 3, '2025-12-21', '21:32:56', '21:33:02', 'present');
 
 -- --------------------------------------------------------
 
@@ -102,8 +102,7 @@ INSERT INTO `employees` (`employee_id`, `user_id`, `department_id`, `job_title_i
 (3, 2, NULL, NULL, '2025-12-15', 'active'),
 (4, 4, 5, 10, '2025-12-15', 'active'),
 (8, 8, 1, 17, '2025-12-16', 'active'),
-(10, 10, NULL, NULL, '2025-12-19', 'active'),
-(11, 11, NULL, NULL, '2025-12-20', 'active');
+(10, 10, NULL, NULL, '2025-12-19', 'active');
 
 -- --------------------------------------------------------
 
@@ -127,7 +126,7 @@ CREATE TABLE `holidays` (
 INSERT INTO `holidays` (`holiday_id`, `title`, `holiday_date`, `description`, `created_at`, `created_by`) VALUES
 (16, 'Christmas', '2025-12-25', 'Merry Christmas', '2025-12-15 23:22:23', 3),
 (17, 'New year', '2025-12-31', NULL, '2025-12-15 23:25:21', 3),
-(23, 'Champion', '2025-12-27', NULL, '2025-12-20 01:48:35', 10);
+(27, 'b nln', '2025-12-24', NULL, '2025-12-21 23:55:33', 4);
 
 -- --------------------------------------------------------
 
@@ -198,7 +197,6 @@ INSERT INTO `leaves` (`leave_id`, `employee_id`, `leave_type`, `start_date`, `en
 (6, 3, 'sick', '2025-12-18', '2025-12-27', 'sick', 'approved'),
 (7, 3, '', '2025-12-16', '2025-12-17', NULL, 'approved'),
 (10, 4, 'vacation', '2025-12-24', '2025-12-27', NULL, 'approved'),
-(11, 11, 'vacation', '2025-12-27', '2025-12-31', 'تعبان جدا', 'approved'),
 (12, 3, 'sick', '2025-12-30', '2025-12-31', NULL, 'approved'),
 (13, 3, 'sick', '2026-01-01', '2026-01-02', NULL, 'approved'),
 (14, 3, 'vacation', '2026-02-19', '2026-02-20', NULL, 'rejected'),
@@ -228,7 +226,7 @@ CREATE TABLE `notifications` (
 INSERT INTO `notifications` (`notification_id`, `title`, `message`, `notification_type`, `created_at`, `created_by`, `is_active`) VALUES
 (1, 'Welcome to HR System', 'Welcome to the new HR Management System. Please update your profile information.', 'info', '2025-12-15 23:22:23', 3, 1),
 (6, 'انا هتجوز', 'كلكم معزومين', 'info', '2025-12-15 23:26:12', 3, 1),
-(7, 'goooooooooooooooal', 'goal', 'info', '2025-12-20 01:50:38', 4, 1);
+(12, '.,nk', ',mkm', 'info', '2025-12-21 23:55:44', 4, 1);
 
 -- --------------------------------------------------------
 
@@ -254,7 +252,7 @@ INSERT INTO `payroll` (`payroll_id`, `employee_id`, `basic_salary`, `bonus`, `de
 (2, 3, 3500.00, 1000.00, 0.00, '2025-12-01', 'paid'),
 (3, 4, 2000.00, 500.00, 100.00, '2025-12-01', 'paid'),
 (6, 8, 10000.00, 1000.00, 0.00, '2025-12-01', 'paid'),
-(7, 10, 7000.00, 500.00, 0.00, '2025-12-01', 'pending');
+(7, 10, 7000.00, 600.00, 0.00, '2025-12-01', 'paid');
 
 -- --------------------------------------------------------
 
@@ -305,8 +303,7 @@ INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `email`, `phone`, `ad
 (3, 'Admin', 'System', 'admin@hr.com', '01234567890', 'Main Office', 'Emergency Contact', 'HR Manager', '01111111111', 'scrypt:32768:8:1$L5tkdrLMjeZILNzg$69d9b5fe267ddd1110ac747e6eb1829b173f0f294ed318c402a4bd2a91881c7cf261287709b12fa03152b9ac039e7d33f0a33deb4191e72a6579aff7834081ab', 2, '2025-12-15 16:02:13'),
 (4, 'omar', 'farg', 'om@fa.com', '01234567890', 'None', 'Jane Doe', 'Spouse', '+1 (555) 123-0000', 'scrypt:32768:8:1$P0SgkzQY2f9yXKEb$ff06a47adc69523d092afc9e633c09652fda1ae2c6408331bc52beea88c3e609ef62f1fec71cf38278fba50e17459927f6bbcdc178d1bf9a9c8271f385b25e76', 1, '2025-12-15 18:31:28'),
 (8, 'تيسير', 'فهمي', 'tyser@fa.com', '123456789', NULL, NULL, NULL, NULL, 'scrypt:32768:8:1$sYqMEDxXBY9wP2Wq$cc9c995dcd172b9b5fcfdc747a2623ebae36b1e31750445d3200c8e17623ef118976ce2cbd439c66c9104f0201d3ae5044a6220244a249175319e325ee4492a7', 1, '2025-12-15 23:30:33'),
-(10, 'HR', 'Admin', 'hr-admin@hr.com', '01000000000', NULL, NULL, NULL, NULL, 'dummy-password-not-used', 2, '2025-12-19 15:20:34'),
-(11, 'john', 'User', 'john@jo.com', 'None', NULL, NULL, NULL, NULL, 'scrypt:32768:8:1$HY4DVOzerEucE2V8$009e2ee79a5080d36de4d8edc6ef80f4f75dc33b5bdc7b16a52c66fa6c7380f8d381eb6cd39e83ce2b628d815d55a77b236ab8e34787399724af098a58065d62', 1, '2025-12-20 00:08:37');
+(10, 'HR', 'Admin', 'hr-admin@hr.com', '01000000000', NULL, NULL, NULL, NULL, 'dummy-password-not-used', 2, '2025-12-19 15:20:34');
 
 --
 -- Indexes for dumped tables
@@ -394,7 +391,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `attendance_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `attendance_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `departments`
@@ -406,13 +403,13 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `employee_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `employee_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `holidays`
 --
 ALTER TABLE `holidays`
-  MODIFY `holiday_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `holiday_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `job_titles`
@@ -424,19 +421,19 @@ ALTER TABLE `job_titles`
 -- AUTO_INCREMENT for table `leaves`
 --
 ALTER TABLE `leaves`
-  MODIFY `leave_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `leave_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `payroll`
 --
 ALTER TABLE `payroll`
-  MODIFY `payroll_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `payroll_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -448,7 +445,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- Constraints for dumped tables
