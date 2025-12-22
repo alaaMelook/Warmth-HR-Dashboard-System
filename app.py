@@ -347,7 +347,7 @@ def login_required(f):
             }), 401
         
         # Redirect to login for web pages
-        flash("Please login first.", "danger")
+        flash("401 Unauthorized.", "danger")
         return redirect(url_for("login"))
     
     return decorated
@@ -358,7 +358,7 @@ def admin_required(f):
     def decorated(*args, **kwargs):
         # Check session
         if "user_id" not in session or "access_token" not in session:
-            flash("Please login first.", "danger")
+            flash("401 Unauthorized.", "danger")
             return redirect(url_for("login"))
         
         # Verify token
@@ -373,7 +373,7 @@ def admin_required(f):
         
         # Check if user has HR_ADMIN role
         if "HR_ADMIN" not in user_roles:
-            flash("Access denied , Admin only.", "danger")
+            flash("403 Forbidden.", "danger")
             return redirect(url_for("user_dashboard"))
         
         g.user_email = decoded_token.get("email")
@@ -389,7 +389,7 @@ def user_required(f):
     def decorated(*args, **kwargs):
         # Check session
         if "user_id" not in session or "access_token" not in session:
-            flash("Please login first.", "danger")
+            flash("401 Unauthorized.", "danger")
             return redirect(url_for("login"))
         
         # Verify token
@@ -546,7 +546,7 @@ def hr_management_required(f):
                     "message": "Please login first."
                 }), 401
             
-            flash("Please login first.", "danger")
+            flash("401 Unauthorized.", "danger")
             return redirect(url_for("login"))
         
         # Verify token
@@ -611,7 +611,7 @@ def admin_only_required(f):
             # Check if it's an API request
             if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest" or request.path.startswith("/api/"):
                 return jsonify({"error": "Please login first.", "message": "Please login first."}), 401
-            flash("Please login first.", "danger")
+            flash("401 Unauthorized.", "danger")
             return redirect(url_for("login"))
         
         # Verify token
@@ -631,8 +631,8 @@ def admin_only_required(f):
         if "HR_ADMIN" not in user_roles:
             # Check if it's an API request (AJAX/fetch from JavaScript)
             if request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest" or request.path.startswith("/api/"):
-                return jsonify({"error": "Access denied, Admin only.", "message": "Access denied, Admin only."}), 403
-            flash("Access denied, Admin only.", "danger")
+                return jsonify({"error": "403 Forbidden.", "message": "403 Forbidden."}), 403
+            flash("403 Forbidden.", "danger")
             # Return to previous page instead of redirecting to another page
             return redirect(request.referrer or url_for("admin_dashboard"))
         
@@ -2805,13 +2805,6 @@ def unauthorized(e):
 
 @app.errorhandler(404)
 def not_found(e):
-    # Check if request expects JSON (API request)
-    if request.headers.get('Accept') == 'application/json' or \
-       request.headers.get('Content-Type') == 'application/json' or \
-       request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        return jsonify({"error": "Resource not found"}), 404
-    
-    # For browser requests, redirect based on login status
     if "user_id" in session:
         if session.get("role_id") == 2:
             return redirect(url_for("admin_dashboard"))

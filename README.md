@@ -38,6 +38,42 @@ The UI is built around a warm, elegant color scheme:
 | Alert | `#B77466` | Important actions, warnings, delete buttons |
 
 ---
+## System Architecture
+
+The system is designed according to the multi-layer secured architecture specified in the project requirements, consisting of four main components:
+
+1. **Frontend Application**  
+   Server-side rendered views using Flask templates (HTML, CSS) with client-side Keycloak integration via Authorization Code Flow  
+   Responsible for user interaction only. Never handles or stores passwords. Redirects users to Keycloak for authentication using the **Authorization Code Flow**.
+
+2. **Backend (API)**  
+   Built with Flask (Python)  
+   Acts as a resource server. Validates incoming requests by:  
+   - Verifying JWT token signature  
+   - Checking token expiration  
+   - Enforcing role-based access control based on roles from Keycloak  
+   Only validated requests can access business logic and the database.
+
+3. **Database Management System**  
+   Uses [PostgreSQL / MySQL / etc. – اكتب اللي استخدمتوه].  
+   Contains application data (at least 3 related tables with full CRUD operations).  
+   Accessed exclusively by the backend after successful JWT validation. Never directly accessed by the frontend.
+
+4. **Keycloak (Centralized IAM Server)**  
+   Manages digital identity, authentication, and authorization.  
+   Issues signed JWT access tokens after successful login.  
+   Handles user management, roles, and custom login theme.
+
+**Authentication & Authorization Flow**  
+- User clicks login → Frontend redirects to custom Keycloak login page  
+- After successful login → Keycloak redirects back with authorization code  
+- Backend exchanges code for JWT access + refresh tokens  
+- Frontend stores access token and attaches it in `Authorization: Bearer <token>` header for all API calls  
+- Backend validates token on every request and enforces RBAC  
+- Proper HTTP status codes returned: 200 OK, 201 Created, 401 Unauthorized, 403 Forbidden
+
+This ensures full separation between authentication, authorization, business logic, and data storage.
+
 
 ## 🔐 Keycloak Setup (Docker + Realm Import)
 
@@ -106,42 +142,47 @@ docker cp keycloak:/tmp/hr-realm.json .
 * **Backend Client:** `hr-backend` (OpenID Connect, secret enabled)
 * Use the credentials from the imported Realm JSON
 
----
 
-## 🚀 Project Status
+## Roles Description
+Here are the descriptions of the three roles used in our HR Management System. These roles are created and managed in Keycloak, assigned to users, and enforced in the backend APIs for role-based access control (RBAC):
 
-🔨 **Currently in development** - UI Design Phase
+- **Employee**: Has read-only access. Can view data but cannot create, update, or delete any records.
+- **HR Officer**: Can perform create, read, and update operations. Cannot delete any records.
+- **HR Admin**: Has full CRUD access (Create, Read, Update, Delete). Can perform all operations without restrictions.
 
-This project is in its early stages. The structure and implementation details will be updated as development progresses.
+## Test User Credentials
+Use these test accounts to log in via the custom Keycloak login page. These users were imported from the Excel file using Keycloak's bulk import tools / Admin REST API. Each user is assigned their respective role in Keycloak to allow easy testing of RBAC:
 
----
+| Role        | Username | Email             | Password |
+|-------------|----------|-------------------|----------|
+| hr_admin    | admin    | hr-admin@hr.com   | admin123 |
+| employee    | mahmoud  | ma@mo.com         | 123456   |
+| hr_officer  | omar     | om@fa.com         | 123456   |
 
 ## 📸 Preview
 
-*UI screenshots and previews will be added soon*
+## Screenshots of the System
 
----
+### Custom Keycloak Login Page (with HR branding, logo, and custom colors)
+![Custom Keycloak Login](system_screenshots/custom_keycloak.png)
 
-## 🎯 Design Principles
+### HR Admin Dashboard (Full CRUD access)
+![HR Admin Dashboard](system_screenshots/admin_dashboard.png)
 
-- **Minimalism** - Clean layouts with purposeful whitespace
-- **Consistency** - Unified design language across all pages
-- **Accessibility** - WCAG compliant color contrasts
-- **Responsiveness** - Mobile-first approach
-- **User-Centric** - Intuitive navigation and clear hierarchy
+### HR Officer Dashboard (CRUD without Delete)
+![HR Officer View](system_screenshots/officer_dashboard.png)
 
----
+### Employee View (Read-Only)
+![Employee View](system_screenshots/employee_readonly.png)
 
-## 🤝 Contributing
+### Access Denied: 403 Forbidden (Officer trying to delete)
+![403 Forbidden](system_screenshots/403%20Forbidden.png)
 
-Contributions are welcome! Please follow these steps:
+### Unauthorized: 401 (No token or invalid)
+![401 Unauthorized](system_screenshots/401%20Unauthorized.png)
 
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
+### Keycloak Admin Console (Roles and Users)
+![Keycloak Roles](system_screenshots/admin_roles.png)
 ---
 
 ## 📝 License
