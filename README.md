@@ -26,18 +26,6 @@
 
 ---
 
-## 🎨 Color Palette
-
-The UI is built around a warm, elegant color scheme:
-
-| Color | Hex Code | Usage |
-|-------|----------|-------|
-| Primary | `#957C62` | Headers, primary buttons, sidebar highlights |
-| Secondary | `#E2B59A` | Cards, backgrounds, secondary elements |
-| Accent | `#FFE1AF` | Highlights, notifications, badges |
-| Alert | `#B77466` | Important actions, warnings, delete buttons |
-
----
 ## System Architecture
 
 The system is designed according to the multi-layer secured architecture specified in the project requirements, consisting of four main components:
@@ -185,11 +173,6 @@ Use these test accounts to log in via the custom Keycloak login page. These user
 ![Keycloak Roles](system_screenshots/admin_roles.png)
 ---
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
 
 ## 👥 Authors
 
@@ -199,14 +182,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Manar Ahmed** - *Initial Design* - [@Manarelmaradny](https://github.com/Manarelmaradny)
 - **Mahmoud zaghloula** - *Initial Design* - [@zaghloula](https://github.com/zaghloula)
 - **Abdelrahman Elmoghazy** - *Initial Design* - [@abdelrahman-elmoghazy](https://github.com/abdelrahman-elmoghazy)
-
----
-
-## 🙏 Acknowledgments
-
-- Inspired by modern HR management systems
-- Color palette designed for warmth and professionalism
-- Built with attention to user experience
 
 ---
 
